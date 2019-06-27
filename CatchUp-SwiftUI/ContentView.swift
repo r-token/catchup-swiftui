@@ -8,16 +8,36 @@
 
 import SwiftUI
 
-struct ContentView : View {
+let contactUtility = Contacts()
+
+struct Home : View {
     var body: some View {
-        Text("Hello World")
+
+        NavigationView {
+            VStack {
+                List {
+                    HomeCell()
+                    HomeCell()
+                    HomeCell()
+                }
+                
+                Button(action: {
+                    contactUtility.verifyAccessToContactsDatabase()
+                }) {
+                    Text("Add Contacts")
+                        .font(.headline)
+                        .padding()
+                }
+                .navigationBarTitle(Text("CatchUp"), displayMode: .large)
+            }
+        }
     }
 }
 
 #if DEBUG
-struct ContentView_Previews : PreviewProvider {
+struct Home_Previews : PreviewProvider {
     static var previews: some View {
-        ContentView()
+        Home()
     }
 }
 #endif

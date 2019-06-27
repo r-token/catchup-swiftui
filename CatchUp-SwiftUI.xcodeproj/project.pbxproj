@@ -14,6 +14,8 @@
 		F48E37FB22C455CB008B0B8B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F48E37FA22C455CB008B0B8B /* Assets.xcassets */; };
 		F48E37FE22C455CB008B0B8B /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F48E37FD22C455CB008B0B8B /* Preview Assets.xcassets */; };
 		F48E380122C455CB008B0B8B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F48E37FF22C455CB008B0B8B /* LaunchScreen.storyboard */; };
+		F48E380922C45A19008B0B8B /* HomeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F48E380822C45A19008B0B8B /* HomeCell.swift */; };
+		F48E380F22C46397008B0B8B /* Contacts.swift in Sources */ = {isa = PBXBuildFile; fileRef = F48E380E22C46397008B0B8B /* Contacts.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +28,8 @@
 		F48E37FD22C455CB008B0B8B /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		F48E380022C455CB008B0B8B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		F48E380222C455CB008B0B8B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F48E380822C45A19008B0B8B /* HomeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeCell.swift; sourceTree = "<group>"; };
+		F48E380E22C46397008B0B8B /* Contacts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Contacts.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -61,7 +65,9 @@
 				F48E37F122C455C3008B0B8B /* AppDelegate.swift */,
 				F48E37F322C455C3008B0B8B /* SceneDelegate.swift */,
 				F48E37F822C455C3008B0B8B /* ContentView.swift */,
+				F48E380822C45A19008B0B8B /* HomeCell.swift */,
 				F48E37FA22C455CB008B0B8B /* Assets.xcassets */,
+				F48E380E22C46397008B0B8B /* Contacts.swift */,
 				F48E37FF22C455CB008B0B8B /* LaunchScreen.storyboard */,
 				F48E380222C455CB008B0B8B /* Info.plist */,
 				F48E37F522C455C3008B0B8B /* CatchUp_SwiftUI.xcdatamodeld */,
@@ -153,6 +159,8 @@
 				F48E37F722C455C3008B0B8B /* CatchUp_SwiftUI.xcdatamodeld in Sources */,
 				F48E37F922C455C3008B0B8B /* ContentView.swift in Sources */,
 				F48E37F422C455C3008B0B8B /* SceneDelegate.swift in Sources */,
+				F48E380922C45A19008B0B8B /* HomeCell.swift in Sources */,
+				F48E380F22C46397008B0B8B /* Contacts.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
