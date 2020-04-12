@@ -9,7 +9,7 @@
 import UIKit
 import Contacts
 
-class ContactUtilityFunctions {
+class ContactService {
 	func getContactPicture(for contact: CNContact) -> String {
 		let picture: String
 		

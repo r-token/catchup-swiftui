@@ -9,16 +9,18 @@
 import SwiftUI
 import Contacts
 
-struct Home : View {
-	
+struct HomeScreen : View {
+	@State private var showingContactPicker = false
 	@Environment(\.managedObjectContext) var managedObjectContext
-	
 	@FetchRequest(entity: SelectedContact.entity(),
 	sortDescriptors: [])
 	
 	var selectedContacts: FetchedResults<SelectedContact>
 	
-	@State private var showingContactPicker = false
+	init() {
+        //Use this if NavigationBarTitle is with Large Font
+		UINavigationBar.appearance().largeTitleTextAttributes = [.foregroundColor: UIColor.systemOrange]
+    }
 	
 	func printSelectedContacts() {
 		print("total saved contacts: \(selectedContacts.count)")
@@ -48,8 +50,8 @@ struct Home : View {
         NavigationView {
             VStack {
                 List {
-					if selectedContacts.count > 0 {
-						ForEach(selectedContacts) { contact in
+					ForEach(selectedContacts) { contact in
+						NavigationLink(destination: DetailScreen(contact: contact)) {
 							HStack {
 								Image("DefaultPhoto")
 									.resizable()
@@ -62,11 +64,10 @@ struct Home : View {
 										.font(.caption)
 								}
 							}
-						}.onDelete(perform: deleteContact)
-					} else {
-						Text("")
-					}
+						}
+					}.onDelete(perform: deleteContact)
 				}
+				.padding(.top)
                 
                 Button(action: {
 					self.showingContactPicker = true
@@ -76,13 +77,8 @@ struct Home : View {
                         .padding()
                 }
 					
-				Button("Print Selected Contacts") {
-					self.printSelectedContacts()
-				}
-					
 				.navigationBarTitle(Text("CatchUp"))
 					.font(.largeTitle)
-					.foregroundColor(.blue)
             }
 			.sheet(isPresented: $showingContactPicker) {
 				ContactPicker()
@@ -92,12 +88,12 @@ struct Home : View {
 }
 
 #if DEBUG
-struct Home_Previews : PreviewProvider {
+struct HomeScreen_Previews : PreviewProvider {
     static var previews: some View {
 		
         let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
         
-        return Home().environment(\.managedObjectContext, context)
+        return HomeScreen().environment(\.managedObjectContext, context)
     }
 }
 #endif

@@ -63,20 +63,20 @@ class ContactPickerViewController: UIViewController, CNContactPickerDelegate {
 	func saveSelectedContact(for contact: CNContact) {
 		print("saving...")
 		
-		let contactUtility = ContactUtilityFunctions()
+		let service = ContactService()
 		
 		let id = UUID()
-		let address = contactUtility.getContactPrimaryAddress(for: contact)
-		let anniversary = contactUtility.getContactAnniversary(for: contact)
-		let birthday = contactUtility.getContactBirthday(for: contact)
-		let email = contactUtility.getContactPrimaryEmail(for: contact)
-		let name = contactUtility.getContactName(for: contact)
+		let address = service.getContactPrimaryAddress(for: contact)
+		let anniversary = service.getContactAnniversary(for: contact)
+		let birthday = service.getContactBirthday(for: contact)
+		let email = service.getContactPrimaryEmail(for: contact)
+		let name = service.getContactName(for: contact)
 		let notification_preference = "No Reminder Set"
-		let phone = contactUtility.getContactPrimaryPhone(for: contact)
-		let picture = contactUtility.getContactPicture(for: contact)
-		let secondary_email = contactUtility.getContactSecondaryEmail(for: contact)
-		let secondary_address = contactUtility.getContactSecondaryAddress(for: contact)
-		let secondary_phone = contactUtility.getContactSecondaryPhone(for: contact)
+		let phone = service.getContactPrimaryPhone(for: contact)
+		let picture = service.getContactPicture(for: contact)
+		let secondary_email = service.getContactSecondaryEmail(for: contact)
+		let secondary_address = service.getContactSecondaryAddress(for: contact)
+		let secondary_phone = service.getContactSecondaryPhone(for: contact)
 		
 		guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
 			return
