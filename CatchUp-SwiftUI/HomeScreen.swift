@@ -67,23 +67,22 @@ struct HomeScreen : View {
 						}
 					}.onDelete(perform: deleteContact)
 				}
-				.padding(.top)
                 
                 Button(action: {
 					self.showingContactPicker = true
                 }) {
                     Text("Add Contacts")
                         .font(.headline)
+						.foregroundColor(.blue)
                         .padding()
                 }
 					
 				.navigationBarTitle(Text("CatchUp"))
-					.font(.largeTitle)
             }
 			.sheet(isPresented: $showingContactPicker) {
 				ContactPicker()
 			}
-        }
+		}.accentColor(.orange)
     }
 }
 

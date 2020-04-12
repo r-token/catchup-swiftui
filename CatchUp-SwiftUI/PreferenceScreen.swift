@@ -13,6 +13,7 @@ struct PreferenceScreen: View {
 	@State private var notificationChoice = 0
 	@State private var dayChoice = 0
 	@State private var notificationTime = Date()
+	@Environment(\.managedObjectContext) var managedObjectContext
 	
 	let now = Date()
     var notificationOptions = ["Never", "Daily", "Weekly", "Monthly", "Custom"]
@@ -21,6 +22,13 @@ struct PreferenceScreen: View {
 
     var body: some View {
 		VStack(alignment: .leading, spacing: 10) {
+			Text("Preference")
+				.font(.largeTitle)
+				.bold()
+				.foregroundColor(.orange)
+				.padding(.top)
+				.padding(5)
+			
 			Text("How often should we notify you to CatchUp with \(contact.name)?")
 				.padding(5)
 			
@@ -29,6 +37,7 @@ struct PreferenceScreen: View {
                     Text(self.notificationOptions[index]).tag(index)
                 }
             }.pickerStyle(SegmentedPickerStyle())
+				
 			.padding(.top)
 			
 			VStack(alignment: .leading, spacing: 20) {
@@ -45,11 +54,14 @@ struct PreferenceScreen: View {
 					if notificationChoice == 3 { // Monthly
 						Text("What day? We'll pick a random week of the month.")
 					}
-					Picker(selection: $dayChoice, label: Text("Which day of the week?")) {
-						ForEach(0..<dayOptions.count) { index in
-							Text(self.dayOptions[index]).tag(index)
-						}
-					}.pickerStyle(SegmentedPickerStyle())
+					
+					if notificationChoice == 2 || notificationChoice == 3 {
+						Picker(selection: $dayChoice, label: Text("Which day of the week?")) {
+							ForEach(0..<dayOptions.count) { index in
+								Text(self.dayOptions[index]).tag(index)
+							}
+						}.pickerStyle(SegmentedPickerStyle())
+					}
 				}
 				
 				if notificationChoice == 4 { // Yearly
@@ -63,11 +75,8 @@ struct PreferenceScreen: View {
 			}
 			
 			Spacer()
-
-			.navigationBarTitle(Text("Preference"))
         }
 		.padding(8)
     }
 }
-
 

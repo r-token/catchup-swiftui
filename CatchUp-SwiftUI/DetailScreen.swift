@@ -9,6 +9,7 @@
 import SwiftUI
 
 struct DetailScreen: View {
+	@State private var showingPreferenceScreen = false
 	let contact: SelectedContact
 	
     var body: some View {
@@ -29,11 +30,13 @@ struct DetailScreen: View {
 					Text("Preference: ")
 					Text(contact.notification_preference)
 				}
-				NavigationLink(destination: PreferenceScreen(contact: contact)) {
-					Text("Change Notification Preference")
-						.font(.headline)
+				Button(action: {
+					self.showingPreferenceScreen = true
+                }) {
+                    Text("Change Notification Preference")
+                        .font(.headline)
 						.foregroundColor(.orange)
-				}
+                }
 			}
 			
 			List {
@@ -96,6 +99,9 @@ struct DetailScreen: View {
 			}
 			
 			Spacer()
+		}
+		.sheet(isPresented: $showingPreferenceScreen) {
+			PreferenceScreen(contact: self.contact)
 		}
     }
 }

@@ -10,8 +10,8 @@ import SwiftUI
 
 struct GradientView: View {
     var body: some View {
-		let colors = Gradient(colors: [.blue, .white])
-		let conic = RadialGradient(gradient: colors, center: .center, startRadius: 50, endRadius: 200)
+		let colors = Gradient(colors: [.blue, .clear])
+		let conic = RadialGradient(gradient: colors, center: .bottom, startRadius: 80, endRadius: 210)
 		
 		return Rectangle()
 			.fill(conic)
@@ -20,6 +20,11 @@ struct GradientView: View {
 
 struct Gradient_Previews: PreviewProvider {
     static var previews: some View {
-        GradientView()
+		VStack {
+			GradientView()
+				.edgesIgnoringSafeArea(.top)
+				.frame(height: 150)
+			Spacer()
+		}
     }
 }
