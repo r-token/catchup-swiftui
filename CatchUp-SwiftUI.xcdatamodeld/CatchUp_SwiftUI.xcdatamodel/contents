@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="16119" systemVersion="19E287" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithCloudKit="YES" userDefinedModelVersionIdentifier="">
-    <entity name="SelectedContact" representedClassName=".SelectedContact" syncable="YES">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="16119" systemVersion="19E287" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="SelectedContact" representedClassName="SelectedContact" syncable="YES">
         <attribute name="address" optional="YES" attributeType="String"/>
         <attribute name="anniversary" optional="YES" attributeType="String"/>
         <attribute name="birthday" optional="YES" attributeType="String"/>
         <attribute name="email" optional="YES" attributeType="String"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="name" optional="YES" attributeType="String"/>
+        <attribute name="notification_identifier" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="notification_preference" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="phone" optional="YES" attributeType="String"/>
         <attribute name="picture" optional="YES" attributeType="String"/>
@@ -15,6 +16,6 @@
         <attribute name="secondary_phone" optional="YES" attributeType="String"/>
     </entity>
     <elements>
-        <element name="SelectedContact" positionX="-63" positionY="-18" width="128" height="28"/>
+        <element name="SelectedContact" positionX="-63" positionY="-18" width="128" height="238"/>
     </elements>
 </model>

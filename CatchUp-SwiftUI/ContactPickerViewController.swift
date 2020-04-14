@@ -71,40 +71,67 @@ class ContactPickerViewController: UIViewController, CNContactPickerDelegate {
 		let birthday = service.getContactBirthday(for: contact)
 		let email = service.getContactPrimaryEmail(for: contact)
 		let name = service.getContactName(for: contact)
-		let notification_preference = "No Reminder Set"
+		let notification_preference = 0
 		let phone = service.getContactPrimaryPhone(for: contact)
 		let picture = service.getContactPicture(for: contact)
 		let secondary_email = service.getContactSecondaryEmail(for: contact)
 		let secondary_address = service.getContactSecondaryAddress(for: contact)
 		let secondary_phone = service.getContactSecondaryPhone(for: contact)
 		
+		if !contactAlreadyAdded(name: name) {
+			guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
+				return
+			}
+			
+			let managedObjectContext = appDelegate.persistentContainer.viewContext
+			let entity = NSEntityDescription.entity(forEntityName: "SelectedContact", in: managedObjectContext)!
+			
+			let selectedContact = NSManagedObject(entity: entity, insertInto: managedObjectContext)
+			
+			selectedContact.setValue(id, forKeyPath: "id")
+			selectedContact.setValue(address, forKeyPath: "address")
+			selectedContact.setValue(anniversary, forKeyPath: "anniversary")
+			selectedContact.setValue(birthday, forKeyPath: "birthday")
+			selectedContact.setValue(email, forKeyPath: "email")
+			selectedContact.setValue(name, forKeyPath: "name")
+			selectedContact.setValue(notification_preference, forKeyPath: "notification_preference")
+			selectedContact.setValue(phone, forKeyPath: "phone")
+			selectedContact.setValue(picture, forKeyPath: "picture")
+			selectedContact.setValue(secondary_address, forKeyPath: "secondary_address")
+			selectedContact.setValue(secondary_email, forKeyPath: "secondary_email")
+			selectedContact.setValue(secondary_phone, forKeyPath: "secondary_phone")
+			
+			do {
+				try managedObjectContext.save()
+			} catch let error as NSError {
+				print("Could not save. \(error), \(error.userInfo)")
+			}
+		} else {
+			print("Do nothing. Contact was already added to the database")
+		}
+	}
+	
+	func contactAlreadyAdded(name: String) -> Bool {
+		print("Checking \(name)")
 		guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
-			return
+			return true
 		}
-		
 		let managedObjectContext = appDelegate.persistentContainer.viewContext
-		let entity = NSEntityDescription.entity(forEntityName: "SelectedContact", in: managedObjectContext)!
 		
-		let selectedContact = NSManagedObject(entity: entity, insertInto: managedObjectContext)
-		
-		selectedContact.setValue(id, forKeyPath: "id")
-		selectedContact.setValue(address, forKeyPath: "address")
-		selectedContact.setValue(anniversary, forKeyPath: "anniversary")
-		selectedContact.setValue(birthday, forKeyPath: "birthday")
-		selectedContact.setValue(email, forKeyPath: "email")
-		selectedContact.setValue(name, forKeyPath: "name")
-		selectedContact.setValue(notification_preference, forKeyPath: "notification_preference")
-		selectedContact.setValue(phone, forKeyPath: "phone")
-		selectedContact.setValue(picture, forKeyPath: "picture")
-		selectedContact.setValue(secondary_address, forKeyPath: "secondary_address")
-		selectedContact.setValue(secondary_email, forKeyPath: "secondary_email")
-		selectedContact.setValue(secondary_phone, forKeyPath: "secondary_phone")
-		
+		let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "SelectedContact")
+		fetchRequest.predicate = NSPredicate(format: "name = %@", name)
+
+		var contactsWithThatName = 0
+
 		do {
-			try managedObjectContext.save()
-		} catch let error as NSError {
-			print("Could not save. \(error), \(error.userInfo)")
+			contactsWithThatName = try managedObjectContext.count(for: fetchRequest)
 		}
+		catch {
+			print("error executing fetch request: \(error)")
+		}
+
+		print("contacts with that name: \(contactsWithThatName)")
+		return contactsWithThatName > 0
 	}
 
 }

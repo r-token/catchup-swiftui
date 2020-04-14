@@ -22,7 +22,7 @@ class ContactService {
 			picture = imageData.base64EncodedString()
 		}
 		
-		print(picture)
+		//print(picture)
 		return picture
 	}
 

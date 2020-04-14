@@ -13,9 +13,9 @@ struct HomeScreen : View {
 	@State private var showingContactPicker = false
 	@Environment(\.managedObjectContext) var managedObjectContext
 	@FetchRequest(entity: SelectedContact.entity(),
-	sortDescriptors: [])
+				  sortDescriptors: []) var selectedContacts: FetchedResults<SelectedContact>
 	
-	var selectedContacts: FetchedResults<SelectedContact>
+	let converter = Conversions()
 	
 	init() {
         //Use this if NavigationBarTitle is with Large Font
@@ -60,7 +60,7 @@ struct HomeScreen : View {
 								VStack(alignment: .leading, spacing: 10) {
 									Text(contact.name)
 										.font(.headline)
-									Text(contact.notification_preference)
+									Text(self.converter.convertNotificationPreferenceIntToString(preference: Int(contact.notification_preference)))
 										.font(.caption)
 								}
 							}
