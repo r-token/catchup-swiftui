@@ -8,7 +8,6 @@
 
 import SwiftUI
 import Contacts
-import Combine
 
 struct ContactPicker: UIViewControllerRepresentable {
     typealias UIViewControllerType = ContactPickerViewController

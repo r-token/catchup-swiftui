@@ -7,8 +7,8 @@
 //
 
 import Foundation
-import ContactsUI
 import CoreData
+import ContactsUI
 
 protocol ContactPickerViewControllerDelegate: class {
     func ContactPickerViewControllerDidCancel(_ viewController: ContactPickerViewController)
@@ -64,6 +64,8 @@ class ContactPickerViewController: UIViewController, CNContactPickerDelegate {
 		print("saving...")
 		
 		let service = ContactService()
+		let hour = Calendar.current.component(.hour, from: Date())
+		let minute = Calendar.current.component(.minute, from: Date())
 		
 		let id = UUID()
 		let address = service.getContactPrimaryAddress(for: contact)
@@ -72,6 +74,10 @@ class ContactPickerViewController: UIViewController, CNContactPickerDelegate {
 		let email = service.getContactPrimaryEmail(for: contact)
 		let name = service.getContactName(for: contact)
 		let notification_preference = 0
+		let notification_preference_hour = hour
+		let notification_preference_minute = minute
+		let notification_preference_weekday = 0
+		let notification_preference_customdate = Date()
 		let phone = service.getContactPrimaryPhone(for: contact)
 		let picture = service.getContactPicture(for: contact)
 		let secondary_email = service.getContactSecondaryEmail(for: contact)
@@ -95,6 +101,10 @@ class ContactPickerViewController: UIViewController, CNContactPickerDelegate {
 			selectedContact.setValue(email, forKeyPath: "email")
 			selectedContact.setValue(name, forKeyPath: "name")
 			selectedContact.setValue(notification_preference, forKeyPath: "notification_preference")
+			selectedContact.setValue(notification_preference_hour, forKeyPath: "notification_preference_hour")
+			selectedContact.setValue(notification_preference_minute, forKeyPath: "notification_preference_minute")
+			selectedContact.setValue(notification_preference_weekday, forKeyPath: "notification_preference_weekday")
+			selectedContact.setValue(notification_preference_customdate, forKeyPath: "notification_preference_customdate")
 			selectedContact.setValue(phone, forKeyPath: "phone")
 			selectedContact.setValue(picture, forKeyPath: "picture")
 			selectedContact.setValue(secondary_address, forKeyPath: "secondary_address")

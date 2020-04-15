@@ -2,7 +2,7 @@
 //  SelectedContact+CoreDataClass.swift
 //  CatchUp-SwiftUI
 //
-//  Created by Ryan Token on 4/12/20.
+//  Created by Ryan Token on 4/14/20.
 //  Copyright © 2020 Token Solutions. All rights reserved.
 //
 //

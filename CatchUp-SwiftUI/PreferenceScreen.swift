@@ -10,9 +10,10 @@ import SwiftUI
 import UserNotifications
 
 struct PreferenceScreen: View {
-	@State private var dayChoice = 0
-	@State private var notificationTime = Date()
-	@State var notificationPreference: Int
+	@State private var notificationPreference: Int
+	@State private var notificationPreferenceTime: Date
+	@State private var notificationPreferenceWeekday: Int
+	@State private var notificationPreferenceCustomDate: Date
 	@Environment(\.managedObjectContext) var managedObjectContext
 	
 	let now = Date()
@@ -20,14 +21,18 @@ struct PreferenceScreen: View {
 	var dayOptions = ["Mon", "Tues", "Wed", "Thur", "Fri", "Sat", "Sun"]
 	var contact: SelectedContact
 	
-	// before using this init, I had notification preference initialized at 0
-	// this caused the preference to reset back to 0 every time this sheet appeared
-	// this is the only way I could find to pull in the user's current notification_preference from Core Data as the default for the picker
-	// (https://stackoverflow.com/questions/60572944/swiftui-setting-initial-picker-value-from-coredata)
+	// set default values equal to their Core Data values
+	// for new contacts who haven't been changed yet, many of these defaults are set in ContactPickerViewController.swift
 	init(contact: SelectedContact) {
-		self.contact = contact
+		let calendar = Calendar.current
+		let dateComponents = DateComponents(calendar: calendar, hour: Int(contact.notification_preference_hour), minute: Int(contact.notification_preference_minute))
+		let time = Calendar.current.date(from: dateComponents)
 		
+		self.contact = contact
 		self._notificationPreference = State<Int>(initialValue: Int(contact.notification_preference))
+		self._notificationPreferenceTime = State<Date>(initialValue: time!)
+		self._notificationPreferenceWeekday = State<Int>(initialValue: Int(contact.notification_preference_weekday))
+		self._notificationPreferenceCustomDate = State<Date>(initialValue: contact.notification_preference_customdate)
 	}
 
     var body: some View {
@@ -51,13 +56,11 @@ struct PreferenceScreen: View {
 				
 			.padding(.top)
 				
-				// This [self.notificationPreference].publisher.first() BS
-				// is not documented anywhere
-				// found buried in comments on Stack Overflow.
-				// But it works (https://stackoverflow.com/questions/58676483/is-there-a-way-to-call-a-function-when-a-swiftui-picker-selection-changes)
-			.onReceive([self.notificationPreference].publisher.first()) { (value) in
-				print(value)
-				self.updateNotificationPreference(selection: value)
+				// This [self.notificationPreference].publisher.first() BS is not documented anywhere.
+				// Found it buried in comments on Stack Overflow. But it works.
+				// (https://stackoverflow.com/questions/58676483/is-there-a-way-to-call-a-function-when-a-swiftui-picker-selection-changes)
+			.onReceive([self.notificationPreference].publisher.first()) { (preference) in
+				self.updateNotificationPreference(selection: preference)
 			}
 			
 			VStack(alignment: .leading, spacing: 20) {
@@ -65,8 +68,15 @@ struct PreferenceScreen: View {
 				if notificationPreference != 0 && notificationPreference != 4 { // Daily, Weekly, or Monthly
 					Text("What time?")
 						.padding(.top)
-					DatePicker("What time should we notify you?", selection: $notificationTime, displayedComponents: .hourAndMinute)
+					
+					DatePicker("What time should we notify you?", selection: $notificationPreferenceTime, displayedComponents: .hourAndMinute)
 						.labelsHidden()
+					
+						.onReceive([self.notificationPreferenceTime].publisher.first()) { (datetime) in
+							let calendar = Calendar.current
+							let components = calendar.dateComponents([.hour, .minute], from : datetime)
+							self.updateNotificationTime(hour: components.hour!, minute: components.minute!)
+					}
 					
 					if notificationPreference == 2 { // Weekly
 						Text("What day?")
@@ -76,11 +86,15 @@ struct PreferenceScreen: View {
 					}
 					
 					if notificationPreference == 2 || notificationPreference == 3 {
-						Picker(selection: $dayChoice, label: Text("Which day of the week?")) {
+						Picker(selection: $notificationPreferenceWeekday, label: Text("Which day of the week?")) {
 							ForEach(0..<dayOptions.count) { index in
 								Text(self.dayOptions[index]).tag(index)
 							}
 						}.pickerStyle(SegmentedPickerStyle())
+						
+							.onReceive([self.notificationPreferenceWeekday].publisher.first()) { (weekday) in
+								self.updateNotificationPreferenceWeekday(weekday: weekday)
+							}
 					}
 				}
 				
@@ -88,8 +102,13 @@ struct PreferenceScreen: View {
 					VStack(alignment: .leading, spacing: 20) {
 						Text("When would you like to be notified?")
 							.padding(.top)
-						DatePicker("What day and time should we notify you?", selection: $notificationTime, in: Date()..., displayedComponents: .date)
+						
+						DatePicker("What day and time should we notify you?", selection: $notificationPreferenceCustomDate, in: Date()..., displayedComponents: .date)
 							.labelsHidden()
+						
+							.onReceive([self.notificationPreferenceCustomDate].publisher.first()) { (date) in
+								self.updateNotificationCustomDate(date: date)
+							}
 					}
 				}
 			}
@@ -134,6 +153,51 @@ struct PreferenceScreen: View {
 			print("notification preference updated to \(contact.notification_preference)")
 		} catch let error as NSError {
 			print("Could not update the notification preference. \(error), \(error.userInfo)")
+		}
+	}
+	
+	func updateNotificationTime(hour: Int, minute: Int) {
+		let newHour = hour
+		let newMinute = minute
+		managedObjectContext.performAndWait {
+			contact.notification_preference_hour = Int16(newHour)
+			contact.notification_preference_minute = Int16(newMinute)
+		}
+		
+		do {
+			try managedObjectContext.save()
+			print("Hour updated to \(contact.notification_preference_hour)")
+			print("Minute updated to \(contact.notification_preference_minute)")
+		} catch let error as NSError {
+			print("Could not update the notification time. \(error), \(error.userInfo)")
+		}
+	}
+	
+	func updateNotificationPreferenceWeekday(weekday: Int) {
+		let newWeekday = weekday
+		managedObjectContext.performAndWait {
+			contact.notification_preference_weekday = Int16(newWeekday)
+		}
+		
+		do {
+			try managedObjectContext.save()
+			print("notification weekday updated to \(contact.notification_preference_weekday)")
+		} catch let error as NSError {
+			print("Could not update the notification weekday. \(error), \(error.userInfo)")
+		}
+	}
+	
+	func updateNotificationCustomDate(date: Date) {
+		let newDate = date
+		managedObjectContext.performAndWait {
+			contact.notification_preference_customdate = newDate
+		}
+		
+		do {
+			try managedObjectContext.save()
+			print("Custom date updated to \(contact.notification_preference_customdate)")
+		} catch let error as NSError {
+			print("Could not update the custom date. \(error), \(error.userInfo)")
 		}
 	}
 	
