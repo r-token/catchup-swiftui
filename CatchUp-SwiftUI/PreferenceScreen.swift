@@ -119,17 +119,23 @@ struct PreferenceScreen: View {
 						Text("When would you like to be notified?")
 							.padding(.top)
 						
-						// Show Custom Date Picker
-						DatePicker("When would you like to be notified?", selection: $notificationPreferenceCustomDate, in: Date()..., displayedComponents: .date)
-							.labelsHidden()
-						
-							.onReceive([self.notificationPreferenceCustomDate].publisher.first()) { (date) in
-								let year = Calendar.current.component(.year, from: date)
-								let month = Calendar.current.component(.month, from: date)
-								let day = Calendar.current.component(.day, from: date)
-								self.updateNotificationCustomDate(month: month, day: day, year: year)
-								self.createNewNotification(for: self.contact)
-							}
+						HStack {
+							Spacer()
+							
+							// Show Custom Date Picker
+							DatePicker("When would you like to be notified?", selection: $notificationPreferenceCustomDate, in: Date()..., displayedComponents: .date)
+								.labelsHidden()
+							
+								.onReceive([self.notificationPreferenceCustomDate].publisher.first()) { (date) in
+									let year = Calendar.current.component(.year, from: date)
+									let month = Calendar.current.component(.month, from: date)
+									let day = Calendar.current.component(.day, from: date)
+									self.updateNotificationCustomDate(month: month, day: day, year: year)
+									self.createNewNotification(for: self.contact)
+								}
+							
+							Spacer()
+						}
 					}
 				}
 			}
