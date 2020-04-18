@@ -8,8 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		F416505A24440579001DB205 /* CatchUp-SwiftUI.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F416505824440579001DB205 /* CatchUp-SwiftUI.xcdatamodeld */; };
-		F42440B624468EA0001ABD14 /* SelectedContact+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42440B424468EA0001ABD14 /* SelectedContact+CoreDataClass.swift */; };
-		F42440B724468EA0001ABD14 /* SelectedContact+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42440B524468EA0001ABD14 /* SelectedContact+CoreDataProperties.swift */; };
 		F48E37F222C455C3008B0B8B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F48E37F122C455C3008B0B8B /* AppDelegate.swift */; };
 		F48E37F422C455C3008B0B8B /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F48E37F322C455C3008B0B8B /* SceneDelegate.swift */; };
 		F48E37F922C455C3008B0B8B /* HomeScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = F48E37F822C455C3008B0B8B /* HomeScreen.swift */; };
@@ -24,12 +22,12 @@
 		F4A9B8572442A1F7001D8C55 /* GradientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A9B8562442A1F7001D8C55 /* GradientView.swift */; };
 		F4A9B8592442AB81001D8C55 /* PreferenceScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A9B8582442AB81001D8C55 /* PreferenceScreen.swift */; };
 		F4A9B85B2443FFF3001D8C55 /* Conversions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A9B85A2443FFF3001D8C55 /* Conversions.swift */; };
+		F4AD59AA244A960800296568 /* SelectedContact+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AD59A8244A960800296568 /* SelectedContact+CoreDataClass.swift */; };
+		F4AD59AB244A960800296568 /* SelectedContact+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AD59A9244A960800296568 /* SelectedContact+CoreDataProperties.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		F416505924440579001DB205 /* CatchUp_SwiftUI.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = CatchUp_SwiftUI.xcdatamodel; sourceTree = "<group>"; };
-		F42440B424468EA0001ABD14 /* SelectedContact+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SelectedContact+CoreDataClass.swift"; sourceTree = SOURCE_ROOT; };
-		F42440B524468EA0001ABD14 /* SelectedContact+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SelectedContact+CoreDataProperties.swift"; sourceTree = SOURCE_ROOT; };
 		F48E37EE22C455C3008B0B8B /* CatchUp-SwiftUI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "CatchUp-SwiftUI.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F48E37F122C455C3008B0B8B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F48E37F322C455C3008B0B8B /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -46,6 +44,8 @@
 		F4A9B8562442A1F7001D8C55 /* GradientView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientView.swift; sourceTree = "<group>"; };
 		F4A9B8582442AB81001D8C55 /* PreferenceScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferenceScreen.swift; sourceTree = "<group>"; };
 		F4A9B85A2443FFF3001D8C55 /* Conversions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Conversions.swift; sourceTree = "<group>"; };
+		F4AD59A8244A960800296568 /* SelectedContact+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SelectedContact+CoreDataClass.swift"; sourceTree = SOURCE_ROOT; };
+		F4AD59A9244A960800296568 /* SelectedContact+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SelectedContact+CoreDataProperties.swift"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -71,8 +71,8 @@
 		F42440B324468480001ABD14 /* CoreData */ = {
 			isa = PBXGroup;
 			children = (
-				F42440B424468EA0001ABD14 /* SelectedContact+CoreDataClass.swift */,
-				F42440B524468EA0001ABD14 /* SelectedContact+CoreDataProperties.swift */,
+				F4AD59A8244A960800296568 /* SelectedContact+CoreDataClass.swift */,
+				F4AD59A9244A960800296568 /* SelectedContact+CoreDataProperties.swift */,
 				F416505824440579001DB205 /* CatchUp-SwiftUI.xcdatamodeld */,
 			);
 			path = CoreData;
@@ -219,8 +219,8 @@
 				F494F95624422ACC003CE7B5 /* ContactPicker.swift in Sources */,
 				F416505A24440579001DB205 /* CatchUp-SwiftUI.xcdatamodeld in Sources */,
 				F4A9B8592442AB81001D8C55 /* PreferenceScreen.swift in Sources */,
-				F42440B624468EA0001ABD14 /* SelectedContact+CoreDataClass.swift in Sources */,
-				F42440B724468EA0001ABD14 /* SelectedContact+CoreDataProperties.swift in Sources */,
+				F4AD59AA244A960800296568 /* SelectedContact+CoreDataClass.swift in Sources */,
+				F4AD59AB244A960800296568 /* SelectedContact+CoreDataProperties.swift in Sources */,
 				F48E37F922C455C3008B0B8B /* HomeScreen.swift in Sources */,
 				F48E37F422C455C3008B0B8B /* SceneDelegate.swift in Sources */,
 				F4A9B8522442A0F5001D8C55 /* DetailScreen.swift in Sources */,

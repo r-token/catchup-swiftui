@@ -8,6 +8,7 @@
 
 import SwiftUI
 import Contacts
+import UserNotifications
 
 struct HomeScreen : View {
 	@State private var showingContactPicker = false
@@ -36,6 +37,10 @@ struct HomeScreen : View {
 		for index in offsets {
 			let contact = selectedContacts[index]
 			managedObjectContext.delete(contact)
+			
+			UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [contact.notification_identifier.uuidString, contact.birthday_notification_id.uuidString, contact.anniversary_notification_id.uuidString])
+			
+			print("Deleted \(contact.name) and removed all notifications associated with them")
 		}
 		
 		// this causes a crash at the moment
@@ -46,6 +51,14 @@ struct HomeScreen : View {
 //		}
 	}
 	
+	func getContactPicture(from string: String) -> Image {
+		let imageData = NSData(base64Encoded: string)
+		let uiImage = UIImage(data: imageData! as Data)!
+		let image = Image(uiImage: uiImage)
+		
+		return image
+	}
+	
     var body: some View {
         NavigationView {
             VStack {
@@ -53,9 +66,11 @@ struct HomeScreen : View {
 					ForEach(selectedContacts) { contact in
 						NavigationLink(destination: DetailScreen(contact: contact)) {
 							HStack {
-								Image("DefaultPhoto")
+								self.getContactPicture(from: contact.picture)
+									.renderingMode(.original)
 									.resizable()
-									.frame(width: 50, height: 50, alignment: .leading)
+									.frame(width: 45, height: 45, alignment: .leading)
+									.clipShape(Circle())
 								
 								VStack(alignment: .leading, spacing: 10) {
 									Text(contact.name)
@@ -82,7 +97,9 @@ struct HomeScreen : View {
 			.sheet(isPresented: $showingContactPicker) {
 				ContactPicker()
 			}
-		}.accentColor(.orange)
+		}
+		.accentColor(.orange)
+		.onAppear(perform: printSelectedContacts)
     }
 }
 

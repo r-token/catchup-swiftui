@@ -11,7 +11,9 @@
         <attribute name="name" optional="YES" attributeType="String"/>
         <attribute name="notification_identifier" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="notification_preference" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
-        <attribute name="notification_preference_customdate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="notification_preference_custom_day" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="notification_preference_custom_month" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="notification_preference_custom_year" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="notification_preference_hour" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="notification_preference_minute" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="notification_preference_weekday" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
@@ -22,6 +24,6 @@
         <attribute name="secondary_phone" optional="YES" attributeType="String"/>
     </entity>
     <elements>
-        <element name="SelectedContact" positionX="-63" positionY="-18" width="128" height="328"/>
+        <element name="SelectedContact" positionX="-63" positionY="-18" width="128" height="28"/>
     </elements>
 </model>

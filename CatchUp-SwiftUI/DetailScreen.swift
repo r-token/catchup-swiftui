@@ -14,13 +14,37 @@ struct DetailScreen: View {
 	let contact: SelectedContact
 	let converter = Conversions()
 	
+	func getContactPicture(from string: String) -> Image {
+		let imageData = NSData(base64Encoded: string)
+		let uiImage = UIImage(data: imageData! as Data)!
+		let image = Image(uiImage: uiImage)
+		return image
+	}
+	
+	func getTappablePhoneNumber(from phoneNumber: String) -> URL {
+		let tel = "tel://"
+		let cleanNumber = phoneNumber.replacingOccurrences(of: "[^\\d+]", with: "", options: [.regularExpression])
+		let formattedString = tel + cleanNumber
+		let tappableNumber = URL(string: formattedString)!
+		
+		return tappableNumber
+	}
+	
+	func getTappableEmail(from emailAddress: String) -> URL {
+		let mailto = "mailto:"
+		let formattedString = mailto + emailAddress
+		let tappableEmail = URL(string: formattedString)!
+		
+		return tappableEmail
+	}
+	
     var body: some View {
 		VStack {
 			GradientView()
 				.edgesIgnoringSafeArea(.top)
 				.frame(height: 75)
 			
-			ContactPhoto(image: Image("DefaultPhoto"))
+			ContactPhoto(image: self.getContactPicture(from: contact.picture))
 				.offset(x: 0, y: -130)
 				.padding(.bottom, -130)
 			
@@ -46,28 +70,44 @@ struct DetailScreen: View {
 					VStack(alignment: .leading, spacing: 3) {
 						Text("Phone")
 							.font(.caption)
-						Text(contact.phone)
+						
+						Button(contact.phone) {
+							UIApplication.shared.open(self.getTappablePhoneNumber(from: self.contact.phone))
+						}
+						.foregroundColor(.blue)
 					}
 				}
 				if contact.secondary_phone != "" {
 					VStack(alignment: .leading, spacing: 3) {
 						Text("Secondary Phone")
 							.font(.caption)
-						Text(contact.secondary_phone)
+						
+						Button(contact.secondary_phone) {
+							UIApplication.shared.open(self.getTappablePhoneNumber(from: self.contact.secondary_phone))
+						}
+						.foregroundColor(.blue)
 					}
 				}
 				if contact.email != "" {
 					VStack(alignment: .leading, spacing: 3) {
 						Text("Email")
 							.font(.caption)
-						Text(contact.email)
+						
+						Button(contact.email) {
+							UIApplication.shared.open(self.getTappableEmail(from: self.contact.email))
+						}
+						.foregroundColor(.blue)
 					}
 				}
 				if contact.secondary_email != "" {
 					VStack(alignment: .leading, spacing: 3) {
 						Text("Secondary Email")
 							.font(.caption)
-						Text(contact.secondary_email)
+						
+						Button(contact.secondary_email) {
+							UIApplication.shared.open(self.getTappableEmail(from: self.contact.secondary_email))
+						}
+						.foregroundColor(.blue)
 					}
 				}
 				if contact.address != "" {

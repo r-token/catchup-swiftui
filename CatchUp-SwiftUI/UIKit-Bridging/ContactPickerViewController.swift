@@ -64,20 +64,28 @@ class ContactPickerViewController: UIViewController, CNContactPickerDelegate {
 		print("saving...")
 		
 		let service = ContactService()
-		let hour = Calendar.current.component(.hour, from: Date())
-		let minute = Calendar.current.component(.minute, from: Date())
+		let currentMinute = Calendar.current.component(.minute, from: Date())
+		let currentHour = Calendar.current.component(.hour, from: Date())
+		let currentDay = Calendar.current.component(.day, from: Date())
+		let currentMonth = Calendar.current.component(.month, from: Date())
+		let currentYear = Calendar.current.component(.year, from: Date())
 		
 		let id = UUID()
 		let address = service.getContactPrimaryAddress(for: contact)
 		let anniversary = service.getContactAnniversary(for: contact)
+		let anniversary_notification_ID = UUID()
 		let birthday = service.getContactBirthday(for: contact)
+		let birthday_notification_ID = UUID()
 		let email = service.getContactPrimaryEmail(for: contact)
 		let name = service.getContactName(for: contact)
+		let notification_identifier = UUID()
 		let notification_preference = 0
-		let notification_preference_hour = hour
-		let notification_preference_minute = minute
+		let notification_preference_hour = currentHour
+		let notification_preference_minute = currentMinute
 		let notification_preference_weekday = 0
-		let notification_preference_customdate = Date()
+		let notification_preference_custom_year = currentYear
+		let notification_preference_custom_month = currentMonth
+		let notification_preference_custom_day = currentDay
 		let phone = service.getContactPrimaryPhone(for: contact)
 		let picture = service.getContactPicture(for: contact)
 		let secondary_email = service.getContactSecondaryEmail(for: contact)
@@ -97,14 +105,19 @@ class ContactPickerViewController: UIViewController, CNContactPickerDelegate {
 			selectedContact.setValue(id, forKeyPath: "id")
 			selectedContact.setValue(address, forKeyPath: "address")
 			selectedContact.setValue(anniversary, forKeyPath: "anniversary")
+			selectedContact.setValue(anniversary_notification_ID, forKeyPath: "anniversary_notification_id")
 			selectedContact.setValue(birthday, forKeyPath: "birthday")
+			selectedContact.setValue(birthday_notification_ID, forKeyPath: "birthday_notification_id")
 			selectedContact.setValue(email, forKeyPath: "email")
 			selectedContact.setValue(name, forKeyPath: "name")
+			selectedContact.setValue(notification_identifier, forKeyPath: "notification_identifier")
 			selectedContact.setValue(notification_preference, forKeyPath: "notification_preference")
 			selectedContact.setValue(notification_preference_hour, forKeyPath: "notification_preference_hour")
 			selectedContact.setValue(notification_preference_minute, forKeyPath: "notification_preference_minute")
 			selectedContact.setValue(notification_preference_weekday, forKeyPath: "notification_preference_weekday")
-			selectedContact.setValue(notification_preference_customdate, forKeyPath: "notification_preference_customdate")
+			selectedContact.setValue(notification_preference_custom_year, forKeyPath: "notification_preference_custom_year")
+			selectedContact.setValue(notification_preference_custom_month, forKeyPath: "notification_preference_custom_month")
+			selectedContact.setValue(notification_preference_custom_day, forKeyPath: "notification_preference_custom_day")
 			selectedContact.setValue(phone, forKeyPath: "phone")
 			selectedContact.setValue(picture, forKeyPath: "picture")
 			selectedContact.setValue(secondary_address, forKeyPath: "secondary_address")

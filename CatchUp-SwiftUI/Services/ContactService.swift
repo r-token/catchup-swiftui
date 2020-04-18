@@ -14,7 +14,8 @@ class ContactService {
 		let picture: String
 		
 		if contact.imageDataAvailable == true {
-			picture = (contact.thumbnailImageData?.base64EncodedString())!
+			let dataPicture: NSData = contact.thumbnailImageData! as NSData
+			picture = dataPicture.base64EncodedString()
 		} else {
 			// there is not an image for this contact, use the default image
 			let image = UIImage(named: "DefaultPhoto")
@@ -22,7 +23,6 @@ class ContactService {
 			picture = imageData.base64EncodedString()
 		}
 		
-		//print(picture)
 		return picture
 	}
 
@@ -137,50 +137,35 @@ class ContactService {
 	}
 
 	func getContactBirthday(for contact: CNContact) -> String {
-		var birthday:String
+		var birthdayString: String
 		
 		if contact.birthday != nil {
 			
-			let birthdayDate = contact.birthday?.date
+			let birthday = contact.birthday?.date
 			
 			let formatter = DateFormatter()
-			formatter.dateFormat = "MM-dd-yyyy"
+			formatter.dateFormat = "MM-dd"
 			
-			birthday = formatter.string(from: birthdayDate!)
+			birthdayString = formatter.string(from: birthday!)
 			
-			let month = DateFormatter()
-			month.dateFormat = "MM-"
-			let year = DateFormatter()
-			year.dateFormat = "-yyyy"
-			
-			//contacts is returning a birthday and anniversary that is one day before the actual day...
-			//pull out the substring day from  from the full date
-			let start = birthday.index(birthday.startIndex, offsetBy: 3)
-			let end = birthday.index(birthday.endIndex, offsetBy: -5)
-			let range = start..<end
-			
-			//increment the day by one
-			let daySubstring = birthday[range]  //day of the anniversary
-			var dayInt = Int(daySubstring)!
-			dayInt = dayInt+1
-			let newDay = "\(dayInt)"
-			
-			//add the new full date as the birthday
-			//scrapped the year in case they didn't set one, and I don't want to deal with that
-			birthday = month.string(from: birthdayDate!) + newDay
+			// Contacts returns the day before the actual birthday for some reason
+			// I need to get the next day and return that
+			let birthdayDate = formatter.date(from: birthdayString)!
+			let nextDay = Calendar.current.date(byAdding: .day, value: 1, to: birthdayDate)
+			birthdayString = formatter.string(from: nextDay!)
 			
 		} else {
-			birthday = ""
+			birthdayString = ""
 		}
 		
-		return birthday
+		return birthdayString
 	}
 
 	func getContactAnniversary(for contact: CNContact) -> String {
 		//check for anniversary and set value for anniversary and reminder preference
-		var anniversary: String
+		var anniversaryString: String
 		
-		let anniversaryDate = contact.dates.filter { date -> Bool in
+		let anniversary = contact.dates.filter { date -> Bool in
 			
 			guard let label = date.label else {
 				return false
@@ -190,39 +175,24 @@ class ContactService {
 			
 			} .first?.value as DateComponents?
 		
-		if anniversaryDate?.date != nil {
+		if anniversary?.date != nil {
 			
 			let formatter = DateFormatter()
-			formatter.dateFormat = "MM-dd-yyyy"
+			formatter.dateFormat = "MM-dd"
 			
-			anniversary = formatter.string(from: (anniversaryDate?.date!)!)
+			anniversaryString = formatter.string(from: (anniversary?.date!)!)
 			
-			let month = DateFormatter()
-			month.dateFormat = "MM-"
-			let year = DateFormatter()
-			year.dateFormat = "-yyyy"
-			
-			//contacts is returning a birthday and anniversary that is one day before the actual day...
-			//pull out the substring day from the full date
-			let start = anniversary.index(anniversary.startIndex, offsetBy: 3)
-			let end = anniversary.index(anniversary.endIndex, offsetBy: -5)
-			let range = start..<end
-			
-			//increment the day by one
-			let daySubstring = anniversary[range]  //day of the anniversary
-			var dayInt = Int(daySubstring)!
-			dayInt = dayInt+1
-			let newDay = "\(dayInt)"
-			
-			//add the new full date as the anniversary
-			//scrapped the year in case they didn't set one, and I don't want to deal with that
-			anniversary = month.string(from: (anniversaryDate?.date!)!) + newDay
+			// Contacts returns the day before the actual birthday for some reason
+			// I need to get the next day and return that
+			let anniversaryDate = formatter.date(from: anniversaryString)!
+			let nextDay = Calendar.current.date(byAdding: .day, value: 1, to: anniversaryDate)
+			anniversaryString = formatter.string(from: nextDay!)
 			
 		} else {
-			anniversary = ""
+			anniversaryString = ""
 		}
 		
-		return anniversary
+		return anniversaryString
 	}
 
 }

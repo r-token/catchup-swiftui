@@ -11,6 +11,6 @@ import Foundation
 import CoreData
 
 @objc(SelectedContact)
-public class SelectedContact: NSManagedObject {
+public class SelectedContact: NSManagedObject, Identifiable {
 
 }
