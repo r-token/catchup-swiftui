@@ -14,30 +14,6 @@ struct DetailScreen: View {
 	let contact: SelectedContact
 	let converter = Conversions()
 	
-	func getContactPicture(from string: String) -> Image {
-		let imageData = NSData(base64Encoded: string)
-		let uiImage = UIImage(data: imageData! as Data)!
-		let image = Image(uiImage: uiImage)
-		return image
-	}
-	
-	func getTappablePhoneNumber(from phoneNumber: String) -> URL {
-		let tel = "tel://"
-		let cleanNumber = phoneNumber.replacingOccurrences(of: "[^\\d+]", with: "", options: [.regularExpression])
-		let formattedString = tel + cleanNumber
-		let tappableNumber = URL(string: formattedString)!
-		
-		return tappableNumber
-	}
-	
-	func getTappableEmail(from emailAddress: String) -> URL {
-		let mailto = "mailto:"
-		let formattedString = mailto + emailAddress
-		let tappableEmail = URL(string: formattedString)!
-		
-		return tappableEmail
-	}
-	
     var body: some View {
 		VStack {
 			GradientView()
@@ -52,9 +28,9 @@ struct DetailScreen: View {
 				Text(contact.name)
 					.font(.largeTitle)
 					.bold()
-				HStack {
+				HStack(spacing: 0) {
 					Text("Preference: ")
-					Text(converter.convertNotificationPreferenceIntToString(preference: Int(contact.notification_preference)))
+					Text(converter.convertNotificationPreferenceIntToString(preference: Int(contact.notification_preference), contact: contact))
 				}
 				Button(action: {
 					self.showingPreferenceScreen = true
@@ -149,4 +125,28 @@ struct DetailScreen: View {
 			PreferenceScreen(contact: self.contact).environment(\.managedObjectContext, self.managedObjectContext)
 		}
     }
+	
+	func getContactPicture(from string: String) -> Image {
+		let imageData = NSData(base64Encoded: string)
+		let uiImage = UIImage(data: imageData! as Data)!
+		let image = Image(uiImage: uiImage)
+		return image
+	}
+	
+	func getTappablePhoneNumber(from phoneNumber: String) -> URL {
+		let tel = "tel://"
+		let cleanNumber = phoneNumber.replacingOccurrences(of: "[^\\d+]", with: "", options: [.regularExpression])
+		let formattedString = tel + cleanNumber
+		let tappableNumber = URL(string: formattedString)!
+		
+		return tappableNumber
+	}
+	
+	func getTappableEmail(from emailAddress: String) -> URL {
+		let mailto = "mailto:"
+		let formattedString = mailto + emailAddress
+		let tappableEmail = URL(string: formattedString)!
+		
+		return tappableEmail
+	}
 }
