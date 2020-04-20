@@ -30,13 +30,11 @@ class ContactPickerViewController: UIViewController, CNContactPickerDelegate {
 		
         let viewController = CNContactPickerViewController()
         viewController.delegate = self
-        self.present(viewController, animated: false)
+		self.present(viewController, animated: false)
     }
 
 	// runs when user swipes down on the contact picker to get out/cancel
     func contactPickerDidCancel(_ picker: CNContactPickerViewController) {
-		print("inside contactPickerDidCancel")
-		
         self.dismiss(animated: false) {
             self.delegate?.ContactPickerViewControllerDidCancel(self)
         }
@@ -50,7 +48,6 @@ class ContactPickerViewController: UIViewController, CNContactPickerDelegate {
 			print("Inside self.dismiss")
 			
 			let viewController = CNContactPickerViewController()
-            //self.delegate?.ContactPickerViewController(self, didSelect: contacts)
 			
 			for selectedContact in contacts {
 				self.saveSelectedContact(for: selectedContact)
@@ -60,6 +57,7 @@ class ContactPickerViewController: UIViewController, CNContactPickerDelegate {
         }
     }
 	
+	// save selected contacts and their properties to Core Data
 	func saveSelectedContact(for contact: CNContact) {
 		print("saving...")
 		

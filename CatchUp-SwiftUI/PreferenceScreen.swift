@@ -14,6 +14,7 @@ struct PreferenceScreen: View {
 	@State private var notificationPreferenceTime: Date
 	@State private var notificationPreferenceWeekday: Int
 	@State private var notificationPreferenceCustomDate: Date
+	@Environment(\.presentationMode) var presentationMode
 	@Environment(\.managedObjectContext) var managedObjectContext
 	
 	let now = Date()
@@ -24,6 +25,7 @@ struct PreferenceScreen: View {
 	// set default values equal to their Core Data values
 	// for new contacts who haven't been changed yet, many of these defaults are set in ContactPickerViewController.swift
 	init(contact: SelectedContact) {
+		
 		let calendar = Calendar.current
 		let timeComponents = DateComponents(calendar: calendar, hour: Int(contact.notification_preference_hour), minute: Int(contact.notification_preference_minute))
 		let time = Calendar.current.date(from: timeComponents)
@@ -41,12 +43,21 @@ struct PreferenceScreen: View {
     var body: some View {
 		VStack(alignment: .leading, spacing: 10) {
 			
+			HStack {
+				Spacer()
+				Button("Done") {
+					self.presentationMode.wrappedValue.dismiss()
+				}
+				.foregroundColor(.blue)
+				.font(.headline)
+				.padding(.top)
+				.padding(.trailing)
+			}
+			
 			Text("Preference")
 				.font(.largeTitle)
 				.bold()
 				.foregroundColor(.orange)
-				.padding(.top)
-				.padding(5)
 			
 			Text("How often should we notify you to CatchUp with \(contact.name)?")
 				.padding(5)

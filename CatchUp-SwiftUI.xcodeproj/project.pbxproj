@@ -24,11 +24,14 @@
 		F4A9B85B2443FFF3001D8C55 /* Conversions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A9B85A2443FFF3001D8C55 /* Conversions.swift */; };
 		F4AD59AA244A960800296568 /* SelectedContact+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AD59A8244A960800296568 /* SelectedContact+CoreDataClass.swift */; };
 		F4AD59AB244A960800296568 /* SelectedContact+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AD59A9244A960800296568 /* SelectedContact+CoreDataProperties.swift */; };
+		F4AD59AE244C9FF600296568 /* IAPService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AD59AD244C9FF600296568 /* IAPService.swift */; };
+		F4AD59B0244CA12C00296568 /* AboutScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AD59AF244CA12C00296568 /* AboutScreen.swift */; };
+		F4AD59B3244CC9D600296568 /* UserDefaults+isFirstLaunch.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AD59B2244CC9D600296568 /* UserDefaults+isFirstLaunch.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		F416505924440579001DB205 /* CatchUp_SwiftUI.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = CatchUp_SwiftUI.xcdatamodel; sourceTree = "<group>"; };
-		F48E37EE22C455C3008B0B8B /* CatchUp-SwiftUI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "CatchUp-SwiftUI.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		F48E37EE22C455C3008B0B8B /* CatchUp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CatchUp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F48E37F122C455C3008B0B8B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F48E37F322C455C3008B0B8B /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		F48E37F822C455C3008B0B8B /* HomeScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeScreen.swift; sourceTree = "<group>"; };
@@ -47,6 +50,9 @@
 		F4AD59A8244A960800296568 /* SelectedContact+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SelectedContact+CoreDataClass.swift"; sourceTree = SOURCE_ROOT; };
 		F4AD59A9244A960800296568 /* SelectedContact+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SelectedContact+CoreDataProperties.swift"; sourceTree = SOURCE_ROOT; };
 		F4AD59AC244B7B6000296568 /* CatchUp-SwiftUI.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "CatchUp-SwiftUI.entitlements"; sourceTree = "<group>"; };
+		F4AD59AD244C9FF600296568 /* IAPService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IAPService.swift; sourceTree = "<group>"; };
+		F4AD59AF244CA12C00296568 /* AboutScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutScreen.swift; sourceTree = "<group>"; };
+		F4AD59B2244CC9D600296568 /* UserDefaults+isFirstLaunch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults+isFirstLaunch.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -90,7 +96,7 @@
 		F48E37EF22C455C3008B0B8B /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				F48E37EE22C455C3008B0B8B /* CatchUp-SwiftUI.app */,
+				F48E37EE22C455C3008B0B8B /* CatchUp.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -100,6 +106,7 @@
 			children = (
 				F4AD59AC244B7B6000296568 /* CatchUp-SwiftUI.entitlements */,
 				F48E37FA22C455CB008B0B8B /* Assets.xcassets */,
+				F4AD59B1244CC9C100296568 /* Extensions */,
 				F4A9B85024429E40001D8C55 /* Services */,
 				F4A9B8532442A162001D8C55 /* Supporting Views */,
 				F42440B22446842E001ABD14 /* UIKit-Bridging */,
@@ -107,6 +114,7 @@
 				F48E37F822C455C3008B0B8B /* HomeScreen.swift */,
 				F4A9B8512442A0F5001D8C55 /* DetailScreen.swift */,
 				F4A9B8582442AB81001D8C55 /* PreferenceScreen.swift */,
+				F4AD59AF244CA12C00296568 /* AboutScreen.swift */,
 				F48E37FF22C455CB008B0B8B /* LaunchScreen.storyboard */,
 				F48E37F122C455C3008B0B8B /* AppDelegate.swift */,
 				F48E37F322C455C3008B0B8B /* SceneDelegate.swift */,
@@ -129,6 +137,7 @@
 			children = (
 				F494F95724424A03003CE7B5 /* ContactService.swift */,
 				F4A9B85A2443FFF3001D8C55 /* Conversions.swift */,
+				F4AD59AD244C9FF600296568 /* IAPService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -140,6 +149,14 @@
 				F4A9B8562442A1F7001D8C55 /* GradientView.swift */,
 			);
 			path = "Supporting Views";
+			sourceTree = "<group>";
+		};
+		F4AD59B1244CC9C100296568 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				F4AD59B2244CC9D600296568 /* UserDefaults+isFirstLaunch.swift */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -159,7 +176,7 @@
 			);
 			name = "CatchUp-SwiftUI";
 			productName = "CatchUp-SwiftUI";
-			productReference = F48E37EE22C455C3008B0B8B /* CatchUp-SwiftUI.app */;
+			productReference = F48E37EE22C455C3008B0B8B /* CatchUp.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -220,10 +237,13 @@
 				F494F95824424A03003CE7B5 /* ContactService.swift in Sources */,
 				F494F95624422ACC003CE7B5 /* ContactPicker.swift in Sources */,
 				F416505A24440579001DB205 /* CatchUp-SwiftUI.xcdatamodeld in Sources */,
+				F4AD59B0244CA12C00296568 /* AboutScreen.swift in Sources */,
 				F4A9B8592442AB81001D8C55 /* PreferenceScreen.swift in Sources */,
 				F4AD59AA244A960800296568 /* SelectedContact+CoreDataClass.swift in Sources */,
+				F4AD59B3244CC9D600296568 /* UserDefaults+isFirstLaunch.swift in Sources */,
 				F4AD59AB244A960800296568 /* SelectedContact+CoreDataProperties.swift in Sources */,
 				F48E37F922C455C3008B0B8B /* HomeScreen.swift in Sources */,
+				F4AD59AE244C9FF600296568 /* IAPService.swift in Sources */,
 				F48E37F422C455C3008B0B8B /* SceneDelegate.swift in Sources */,
 				F4A9B8522442A0F5001D8C55 /* DetailScreen.swift in Sources */,
 				F494F95424422AA7003CE7B5 /* ContactPickerViewController.swift in Sources */,
@@ -368,6 +388,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "CatchUp-SwiftUI/CatchUp-SwiftUI.entitlements";
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_ASSET_PATHS = "CatchUp-SwiftUI/Preview\\ Content";
 				DEVELOPMENT_TEAM = DJAHJZFYK7;
 				ENABLE_PREVIEWS = YES;
@@ -376,9 +397,10 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.ryantoken.CatchUp-SwiftUI";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SUPPORTS_MACCATALYST = YES;
+				MARKETING_VERSION = 2.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tokensolutions.CatchUp;
+				PRODUCT_NAME = CatchUp;
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -390,6 +412,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "CatchUp-SwiftUI/CatchUp-SwiftUI.entitlements";
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_ASSET_PATHS = "CatchUp-SwiftUI/Preview\\ Content";
 				DEVELOPMENT_TEAM = DJAHJZFYK7;
 				ENABLE_PREVIEWS = YES;
@@ -398,9 +421,10 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.ryantoken.CatchUp-SwiftUI";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SUPPORTS_MACCATALYST = YES;
+				MARKETING_VERSION = 2.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tokensolutions.CatchUp;
+				PRODUCT_NAME = CatchUp;
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

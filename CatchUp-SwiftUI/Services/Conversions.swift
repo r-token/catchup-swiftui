@@ -155,7 +155,11 @@ struct Conversions {
 			suffix = ""
 		}
 		
-		let minute = String(contact.notification_preference_minute)
+		var minute = String(contact.notification_preference_minute)
+		if minute.count == 1 {
+			minute = "0" + minute
+		}
+		
 		let time = (hour+minute+suffix)
 		
 		return time

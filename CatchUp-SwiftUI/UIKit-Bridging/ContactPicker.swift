@@ -14,12 +14,12 @@ struct ContactPicker: UIViewControllerRepresentable {
 
     final class Coordinator: NSObject, ContactPickerViewControllerDelegate {
         func ContactPickerViewController(_ viewController: ContactPickerViewController, didSelect contacts: [CNContact]) {
-            // do nothing for now
+			// Do nothing for now
         }
 
 		// runs whether the user taps 'Done' or swipes down to get out of the contact picker
         func ContactPickerViewControllerDidCancel(_ viewController: ContactPickerViewController) {
-            print("Canceled. Inside ContactPickerViewControllerDidCancel")
+            //print("Canceled. Inside ContactPickerViewControllerDidCancel")
         }
     }
 

@@ -10,8 +10,13 @@ import SwiftUI
 import Contacts
 import UserNotifications
 
+enum ActiveSheet {
+	case contactPicker, about
+}
+
 struct HomeScreen : View {
-	@State private var showingContactPicker = false
+	@State private var showSheet = false
+	@State private var activeSheet: ActiveSheet = .contactPicker
 	@Environment(\.managedObjectContext) var managedObjectContext
 	@FetchRequest(entity: SelectedContact.entity(),
 				  sortDescriptors: []) var selectedContacts: FetchedResults<SelectedContact>
@@ -48,7 +53,8 @@ struct HomeScreen : View {
 				}
                 
                 Button(action: {
-					self.showingContactPicker = true
+					self.showSheet = true
+					self.activeSheet = .contactPicker
                 }) {
 					HStack(alignment: .center, spacing: 6) {
 						Image(systemName: "person.crop.circle.fill.badge.plus")
@@ -62,50 +68,67 @@ struct HomeScreen : View {
                 }
 					
 				.navigationBarTitle(Text("CatchUp"))
+					
+				.navigationBarItems(trailing:
+					Button(action: {
+						self.showSheet = true
+						self.activeSheet = .about
+					}) {
+						Image(systemName: "ellipsis.circle")
+							.font(.title)
+							.foregroundColor(.blue)
+					}
+				)
             }
-			.sheet(isPresented: $showingContactPicker) {
-				ContactPicker()
+				
+			.sheet(isPresented: $showSheet) {
+				if self.activeSheet == .contactPicker {
+					ContactPicker()
+				} else {
+					AboutScreen()
+				}
 			}
 		}
 		.accentColor(.orange)
-		.onAppear(perform: printSelectedContacts)
+		.onAppear(perform: saveMOC)
     }
 	
 	func printSelectedContacts() {
-			print("total saved contacts: \(selectedContacts.count)")
-			let paths = NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.documentDirectory, FileManager.SearchPathDomainMask.userDomainMask, true)
-			print("path to sqlite db: \(paths[0])")
-			
-			for contact in selectedContacts {
-				print (contact.name)
-			}
-		}
+		print("total saved contacts: \(selectedContacts.count)")
+		let paths = NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.documentDirectory, FileManager.SearchPathDomainMask.userDomainMask, true)
+		print("path to sqlite db: \(paths[0])")
 		
-		func deleteContact(at offsets: IndexSet) {
-			for index in offsets {
-				let contact = selectedContacts[index]
-				managedObjectContext.delete(contact)
-				
-				UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [contact.notification_identifier.uuidString, contact.birthday_notification_id.uuidString, contact.anniversary_notification_id.uuidString])
-				
-				print("Deleted \(contact.name) and removed all notifications associated with them")
-			}
-			
-			// this causes a crash at the moment
-	//		do {
-	//			try managedObjectContext.save()
-	//		} catch {
-	//			print("Couldn't save after deleting the contact")
-	//		}
+		for contact in selectedContacts {
+			print (contact.name)
 		}
+	}
+	
+	func deleteContact(at offsets: IndexSet) {
+		for index in offsets {
+			let contact = selectedContacts[index]
+			
+			UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [contact.notification_identifier.uuidString, contact.birthday_notification_id.uuidString, contact.anniversary_notification_id.uuidString])
+			
+			managedObjectContext.delete(contact)
+			print("Deleted contact and removed all notifications associated with them")
+		}
+	}
+	
+	func getContactPicture(from string: String) -> Image {
+		let imageData = NSData(base64Encoded: string)
+		let uiImage = UIImage(data: imageData! as Data)!
+		let image = Image(uiImage: uiImage)
 		
-		func getContactPicture(from string: String) -> Image {
-			let imageData = NSData(base64Encoded: string)
-			let uiImage = UIImage(data: imageData! as Data)!
-			let image = Image(uiImage: uiImage)
-			
-			return image
+		return image
+	}
+
+	func saveMOC() {
+		do {
+			try self.managedObjectContext.save()
+		} catch {
+			print("Couldn't save after deleting the contact")
 		}
+	}
 }
 
 #if DEBUG
