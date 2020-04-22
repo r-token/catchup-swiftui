@@ -90,7 +90,7 @@ struct HomeScreen : View {
 			}
 		}
 		.accentColor(.orange)
-		.onAppear(perform: saveMOC)
+		.onAppear(perform: clearBadgeAndSaveMOC)
     }
 	
 	func printSelectedContacts() {
@@ -122,7 +122,9 @@ struct HomeScreen : View {
 		return image
 	}
 
-	func saveMOC() {
+	func clearBadgeAndSaveMOC() {
+		UIApplication.shared.applicationIconBadgeNumber = 0
+		
 		do {
 			try self.managedObjectContext.save()
 		} catch {

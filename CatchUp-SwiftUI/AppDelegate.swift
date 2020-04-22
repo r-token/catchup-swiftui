@@ -18,8 +18,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
 		if UserDefaults.isFirstLaunch() {
-			print("Clearing any pending notifications")
 			UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
+			print("Cleared any pending notifications due to first launch")
+		}
+		
+		if UserDefaults.isFirstVersion2Launch() {
+			UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
+			print("Cleared any pending notifications due to first v2 launch")
 		}
 		
         return true

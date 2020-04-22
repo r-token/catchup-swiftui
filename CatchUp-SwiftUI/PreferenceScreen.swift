@@ -7,7 +7,6 @@
 //
 
 import SwiftUI
-import UserNotifications
 
 struct PreferenceScreen: View {
 	@State private var notificationPreference: Int
@@ -17,10 +16,11 @@ struct PreferenceScreen: View {
 	@Environment(\.presentationMode) var presentationMode
 	@Environment(\.managedObjectContext) var managedObjectContext
 	
+	let notificationService = NotificationService()
 	let now = Date()
+	var contact: SelectedContact
     var notificationOptions = ["Never", "Daily", "Weekly", "Monthly", "Custom"]
 	var dayOptions = ["Sun", "Mon", "Tues", "Wed", "Thur", "Fri", "Sat"]
-	var contact: SelectedContact
 	
 	// set default values equal to their Core Data values
 	// for new contacts who haven't been changed yet, many of these defaults are set in ContactPickerViewController.swift
@@ -74,8 +74,9 @@ struct PreferenceScreen: View {
 				// Found it buried in comments on Stack Overflow. But it works.
 				// (https://stackoverflow.com/questions/58676483/is-there-a-way-to-call-a-function-when-a-swiftui-picker-selection-changes)
 			.onReceive([self.notificationPreference].publisher.first()) { (preference) in
-				self.updateNotificationPreference(selection: preference)
+				print("Received overall preference change")
 				self.removeExistingNotifications(for: self.contact)
+				self.updateNotificationPreference(for: self.contact, selection: preference)
 			}
 			
 			VStack(alignment: .leading, spacing: 20) {
@@ -94,10 +95,11 @@ struct PreferenceScreen: View {
 						Spacer()
 							
 						.onReceive([self.notificationPreferenceTime].publisher.first()) { (datetime) in
-						let calendar = Calendar.current
-						let components = calendar.dateComponents([.hour, .minute], from : datetime)
-						self.updateNotificationTime(hour: components.hour!, minute: components.minute!)
-						self.createNewNotification(for: self.contact)
+							let calendar = Calendar.current
+							let components = calendar.dateComponents([.hour, .minute], from : datetime)
+							print("Received time picker change")
+							self.updateNotificationTime(for: self.contact, hour: components.hour!, minute: components.minute!)
+							self.createNewNotification(for: self.contact)
 						}
 					
 					}
@@ -119,8 +121,8 @@ struct PreferenceScreen: View {
 						}.pickerStyle(SegmentedPickerStyle())
 						
 							.onReceive([self.notificationPreferenceWeekday].publisher.first()) { (weekday) in
-								print("weekday: \(weekday)")
-								self.updateNotificationPreferenceWeekday(weekday: weekday)
+								print("received weekday change: \(weekday)")
+								self.updateNotificationPreferenceWeekday(for: self.contact, weekday: weekday)
 							}
 					}
 				}
@@ -141,7 +143,8 @@ struct PreferenceScreen: View {
 									let year = Calendar.current.component(.year, from: date)
 									let month = Calendar.current.component(.month, from: date)
 									let day = Calendar.current.component(.day, from: date)
-									self.updateNotificationCustomDate(month: month, day: day, year: year)
+									print("Received custom change")
+									self.updateNotificationCustomDate(for: self.contact, month: month, day: day, year: year)
 									self.createNewNotification(for: self.contact)
 								}
 							
@@ -155,7 +158,7 @@ struct PreferenceScreen: View {
         }
 		.padding(8)
 		
-		.onAppear(perform: requestAuthorizationForNotifications)
+		.onAppear(perform: notificationService.requestAuthorizationForNotifications)
     }
 	
 	func removeExistingNotifications(for contact: SelectedContact) {
@@ -173,8 +176,9 @@ struct PreferenceScreen: View {
 			
 			let content = UNMutableNotificationContent()
 			content.title = "👋 CatchUp with \(contact.name)"
-			content.subtitle = "It's time to get back in touch with \(contact.name)"
+			content.body = self.notificationService.generateRandomNotificationSubtitle()
 			content.sound = UNNotificationSound.default
+			content.badge = 1
 
 			let identifier = UUID()
 			var dateComponents = DateComponents()
@@ -232,9 +236,10 @@ struct PreferenceScreen: View {
 			var birthdayDateComponents = DateComponents()
 			if contact.birthday != "" {
 				let content = UNMutableNotificationContent()
-				content.title = "🎂 It's \(contact.name)'s birthday!"
-				content.subtitle = "Be sure to CatchUp and wish them a great one!"
+				content.title = "🎂 Today is \(contact.name)'s birthday!"
+				content.body = "Be sure to CatchUp and wish them a great one!"
 				content.sound = UNNotificationSound.default
+				content.badge = 1
 
 				let identifier = UUID()
 				
@@ -268,8 +273,9 @@ struct PreferenceScreen: View {
 			if contact.anniversary != "" {
 				let content = UNMutableNotificationContent()
 				content.title = "😍 Tomorrow is \(contact.name)'s anniversary!"
-				content.subtitle = "Be sure to CatchUp and wish them the best."
+				content.body = "Be sure to CatchUp and wish them the best."
 				content.sound = UNNotificationSound.default
+				content.badge = 1
 
 				let identifier = UUID()
 				
@@ -321,7 +327,7 @@ struct PreferenceScreen: View {
 		}
 	}
 	
-	func updateNotificationPreference(selection: Int) {
+	func updateNotificationPreference(for contact: SelectedContact, selection: Int) {
 		let newPreference = selection
 		managedObjectContext.performAndWait {
 			contact.notification_preference = Int16(newPreference)
@@ -335,7 +341,7 @@ struct PreferenceScreen: View {
 		}
 	}
 	
-	func updateNotificationTime(hour: Int, minute: Int) {
+	func updateNotificationTime(for contact: SelectedContact, hour: Int, minute: Int) {
 		let newHour = hour
 		let newMinute = minute
 		managedObjectContext.performAndWait {
@@ -352,7 +358,7 @@ struct PreferenceScreen: View {
 		}
 	}
 	
-	func updateNotificationPreferenceWeekday(weekday: Int) {
+	func updateNotificationPreferenceWeekday(for contact: SelectedContact, weekday: Int) {
 		let newWeekday = weekday
 		managedObjectContext.performAndWait {
 			contact.notification_preference_weekday = Int16(newWeekday)
@@ -366,7 +372,7 @@ struct PreferenceScreen: View {
 		}
 	}
 	
-	func updateNotificationCustomDate(month: Int, day: Int, year: Int) {
+	func updateNotificationCustomDate(for contact: SelectedContact, month: Int, day: Int, year: Int) {
 		let customMonth = month
 		let customDay = day
 		let customYear = year
@@ -384,14 +390,4 @@ struct PreferenceScreen: View {
 		}
 	}
 	
-}
-
-func requestAuthorizationForNotifications() {
-	UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { success, error in
-		if success {
-			print("User authorized CatchUp to send notifications")
-		} else if let error = error {
-			print(error.localizedDescription)
-		}
-	}
 }

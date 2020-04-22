@@ -12,6 +12,8 @@ struct AboutScreen: View {
 	@State private var showingAlert = false
 	@Environment(\.presentationMode) var presentationMode
 	
+	let generator = UINotificationFeedbackGenerator()
+	
     var body: some View {
 		VStack(alignment: .center, spacing: 15) {
 			
@@ -103,14 +105,17 @@ struct AboutScreen: View {
     }
 	
 	func graciousTipPressed() {
+		generator.notificationOccurred(.success)
 		IAPService.shared.leaveATip(index: 1)
     }
 	
 	func generousTipPressed() {
+		generator.notificationOccurred(.success)
 		IAPService.shared.leaveATip(index: 0)
     }
 	
 	func gratuitousTipPressed() {
+		generator.notificationOccurred(.success)
 		IAPService.shared.leaveATip(index: 2)
     }
 	

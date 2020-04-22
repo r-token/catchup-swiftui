@@ -22,4 +22,16 @@ extension UserDefaults {
 		isFirstLaunch ? print("It is the first launch") : print("It is not the first launch")
         return isFirstLaunch
     }
+	
+	// check for first launch on version 2.0
+	static func isFirstVersion2Launch() -> Bool {
+        let hasLaunchedVersion2BeforeFlag = "hasLaunchedVersion2BeforeFlag"
+        let isFirstVersion2Launch = !UserDefaults.standard.bool(forKey: hasLaunchedVersion2BeforeFlag)
+        if (isFirstVersion2Launch) {
+            UserDefaults.standard.set(true, forKey: hasLaunchedVersion2BeforeFlag)
+            UserDefaults.standard.synchronize()
+        }
+		isFirstVersion2Launch ? print("It is the first launch on version 2.0") : print("It is not the first launch on version 2.0")
+        return isFirstVersion2Launch
+    }
 }

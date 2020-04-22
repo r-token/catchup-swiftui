@@ -11,8 +11,8 @@ import SwiftUI
 struct DetailScreen: View {
 	@State private var showingPreferenceScreen = false
 	@Environment(\.managedObjectContext) var managedObjectContext
-	let contact: SelectedContact
 	let converter = Conversions()
+	let contact: SelectedContact
 	
     var body: some View {
 		VStack {
@@ -124,6 +124,7 @@ struct DetailScreen: View {
 			// (https://stackoverflow.com/questions/58328201/saving-core-data-entity-in-popover-in-swiftui-throws-nilerror-without-passing-e)
 			PreferenceScreen(contact: self.contact).environment(\.managedObjectContext, self.managedObjectContext)
 		}
+		.onAppear(perform: clearBadge)
     }
 	
 	func getContactPicture(from string: String) -> Image {
@@ -148,5 +149,9 @@ struct DetailScreen: View {
 		let tappableEmail = URL(string: formattedString)!
 		
 		return tappableEmail
+	}
+	
+	func clearBadge() {
+		UIApplication.shared.applicationIconBadgeNumber = 0
 	}
 }
