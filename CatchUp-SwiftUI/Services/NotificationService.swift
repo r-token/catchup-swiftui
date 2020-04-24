@@ -9,9 +9,9 @@
 import SwiftUI
 import UserNotifications
 
-class NotificationService {
+struct NotificationService {
 	
-	class func setBadgeIndicator(badgeCount: Int) {
+    static func setBadgeIndicator(badgeCount: Int) {
 	  let application = UIApplication.shared
 	  if #available(iOS 10.0, *) {
 		let center = UNUserNotificationCenter.current()
@@ -21,16 +21,6 @@ class NotificationService {
 	  }
 	  application.registerForRemoteNotifications()
 	  application.applicationIconBadgeNumber = badgeCount
-	}
-	
-	func requestAuthorizationForNotifications() {
-		UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { success, error in
-			if success {
-				print("User authorized CatchUp to send notifications")
-			} else if let error = error {
-				print(error.localizedDescription)
-			}
-		}
 	}
 	
 	func generateRandomNotificationSubtitle() -> String {
@@ -81,4 +71,14 @@ class NotificationService {
 				return "Keep in touch"
         }
 	}
+    
+    func requestAuthorizationForNotifications() {
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { success, error in
+            if success {
+                print("User authorized CatchUp to send notifications")
+            } else if let error = error {
+                print(error.localizedDescription)
+            }
+        }
+    }
 }
