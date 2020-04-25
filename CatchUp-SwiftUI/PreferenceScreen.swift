@@ -60,7 +60,6 @@ struct PreferenceScreen: View {
 				.foregroundColor(.orange)
 			
 			Text("How often should we notify you to CatchUp with \(contact.name)?")
-				.padding(5)
 			
 			Picker(selection: $notificationPreference, label: Text("How often should we notify you to CatchUp with \(contact.name)?")) {
                 ForEach(0..<notificationOptions.count) { index in
@@ -74,8 +73,6 @@ struct PreferenceScreen: View {
 				// Found it buried in comments on Stack Overflow. But it works.
 				// (https://stackoverflow.com/questions/58676483/is-there-a-way-to-call-a-function-when-a-swiftui-picker-selection-changes)
 			.onReceive([self.notificationPreference].publisher.first()) { (preference) in
-				print("Received overall preference change")
-				self.removeExistingNotifications(for: self.contact)
 				self.updateNotificationPreference(for: self.contact, selection: preference)
 			}
 			
@@ -97,7 +94,6 @@ struct PreferenceScreen: View {
 						.onReceive([self.notificationPreferenceTime].publisher.first()) { (datetime) in
 							let calendar = Calendar.current
 							let components = calendar.dateComponents([.hour, .minute], from : datetime)
-							print("Received time picker change")
 							self.updateNotificationTime(for: self.contact, hour: components.hour!, minute: components.minute!)
 						}
 					
@@ -120,7 +116,6 @@ struct PreferenceScreen: View {
 						}.pickerStyle(SegmentedPickerStyle())
 						
 							.onReceive([self.notificationPreferenceWeekday].publisher.first()) { (weekday) in
-								print("received weekday change: \(weekday)")
 								self.updateNotificationPreferenceWeekday(for: self.contact, weekday: weekday)
 							}
 					}
@@ -154,18 +149,10 @@ struct PreferenceScreen: View {
 			
 			Spacer()
         }
-		.padding(8)
+		.padding(15)
 		
         .onAppear(perform: notificationService.requestAuthorizationForNotifications)
     }
-	
-	func removeExistingNotifications(for contact: SelectedContact) {
-		UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [contact.notification_identifier.uuidString, contact.birthday_notification_id.uuidString, contact.anniversary_notification_id.uuidString])
-		
-		print("removed general notifications with id \(contact.notification_identifier)")
-		print("removed birthday notificaiton with id \(contact.birthday_notification_id)")
-		print("removed annivesary notification with id \(contact.anniversary_notification_id)")
-	}
 	
 	func updateNotificationPreference(for contact: SelectedContact, selection: Int) {
 		let newPreference = selection

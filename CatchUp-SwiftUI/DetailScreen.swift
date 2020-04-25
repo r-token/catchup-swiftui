@@ -32,7 +32,9 @@ struct DetailScreen: View {
 					.bold()
 				HStack(spacing: 0) {
 					Text("Preference: ")
+						.foregroundColor(.gray)
 					Text(converter.convertNotificationPreferenceIntToString(preference: Int(contact.notification_preference), contact: contact))
+						.foregroundColor(.gray)
 				}
 				Button(action: {
 					self.showingPreferenceScreen = true
@@ -120,7 +122,13 @@ struct DetailScreen: View {
 			
 			Spacer()
 		}
-        .sheet(isPresented: $showingPreferenceScreen, onDismiss: { self.createNewNotification(for: self.contact) } ) {
+        .sheet(
+			isPresented: $showingPreferenceScreen,
+			onDismiss: {
+				self.removeExistingNotifications(for: self.contact)
+				self.createNewNotification(for: self.contact)
+			}) {
+				
 			// the fact that I have to manually pass in the MOC is dumb
 			// hopefully this is a SwiftUI v1 bug that's fixed at WWDC this year
 			// (https://stackoverflow.com/questions/58328201/saving-core-data-entity-in-popover-in-swiftui-throws-nilerror-without-passing-e)
@@ -156,6 +164,14 @@ struct DetailScreen: View {
 	func clearBadge() {
 		UIApplication.shared.applicationIconBadgeNumber = 0
 	}
+	
+	func removeExistingNotifications(for contact: SelectedContact) {
+		UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [contact.notification_identifier.uuidString, contact.birthday_notification_id.uuidString, contact.anniversary_notification_id.uuidString])
+		
+		print("removed general notifications with id \(contact.notification_identifier)")
+		print("removed birthday notification with id \(contact.birthday_notification_id)")
+		print("removed annivesary notification with id \(contact.anniversary_notification_id)")
+	}
     
     func createNewNotification(for contact: SelectedContact) {
         let notificationCenter = UNUserNotificationCenter.current()
@@ -163,7 +179,7 @@ struct DetailScreen: View {
         let addRequest = {
             
             let content = UNMutableNotificationContent()
-            content.title = "👋 CatchUp with \(contact.name)"
+            content.title = "🎗️ CatchUp with \(contact.name)"
             content.body = self.notificationService.generateRandomNotificationSubtitle()
             content.sound = UNNotificationSound.default
             content.badge = 1

@@ -72,6 +72,10 @@ struct Conversions {
 		let pm = "pm"
 		
 		switch contact.notification_preference_hour {
+		case 0:
+			hour = "12:"
+			suffix = am
+			break
 		case 1:
 			hour = "1:"
 			suffix = am

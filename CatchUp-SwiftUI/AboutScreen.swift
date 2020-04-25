@@ -39,11 +39,10 @@ struct AboutScreen: View {
 			Divider()
 				.frame(height: 1)
 				.background(Color.orange)
-			
 				.padding(.bottom)
 			
 			Text("Tip Jar")
-				.bold()
+				.font(.headline)
 			
 			Text("CatchUp is free with no ads. If you find it useful, please consider supporting development by leaving a tip.")
 				.multilineTextAlignment(.center)

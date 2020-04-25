@@ -46,6 +46,7 @@ struct HomeScreen : View {
 										.font(.headline)
 									Text(self.converter.convertNotificationPreferenceIntToString(preference: Int(contact.notification_preference), contact: contact))
 										.font(.caption)
+										.foregroundColor(.gray)
 								}
 							}
 						}
