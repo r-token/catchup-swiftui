@@ -179,8 +179,8 @@ struct DetailScreen: View {
         let addRequest = {
             
             let content = UNMutableNotificationContent()
-            content.title = "🎗️ CatchUp with \(contact.name)"
-            content.body = self.notificationService.generateRandomNotificationSubtitle()
+            content.title = "👋 CatchUp with \(contact.name)"
+            content.body = self.notificationService.generateRandomNotificationBody()
             content.sound = UNNotificationSound.default
             content.badge = 1
 

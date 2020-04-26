@@ -23,7 +23,7 @@ struct NotificationService {
 	  application.applicationIconBadgeNumber = badgeCount
 	}
 	
-	func generateRandomNotificationSubtitle() -> String {
+	func generateRandomNotificationBody() -> String {
 		let randomInt = Int.random(in: 0..<19)
 		
 		switch randomInt {
