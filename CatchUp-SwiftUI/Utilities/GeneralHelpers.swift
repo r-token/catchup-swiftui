@@ -24,4 +24,12 @@ struct GeneralHelpers {
         }
     }
     
+    func getCurrentAppVersion() -> String {
+        let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"]
+        let version = (appVersion as! String)
+
+        print(version)
+        return version
+    }
+    
 }

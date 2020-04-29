@@ -9,12 +9,15 @@
 import SwiftUI
 
 enum ActiveSheet {
-	case contactPicker, about
+	case contactPicker
+    case about
+    case updates
 }
 
 struct HomeScreen : View {
 	@State private var showSheet = false
 	@State private var activeSheet: ActiveSheet = .contactPicker
+    @State private var showUpdates: ActiveSheet = .updates
 	@Environment(\.managedObjectContext) var managedObjectContext
 	@FetchRequest(entity: SelectedContact.entity(),
 				  sortDescriptors: []) var selectedContacts: FetchedResults<SelectedContact>
@@ -85,18 +88,21 @@ struct HomeScreen : View {
 			.sheet(isPresented: $showSheet) {
 				if self.activeSheet == .contactPicker {
 					ContactPicker()
-				} else {
+                } else if self.activeSheet == .about {
 					AboutScreen()
-				}
+                } else {
+                    UpdatesScreen()
+                }
 			}
 		}
 		.accentColor(.orange)
-		.onAppear(perform: clearNotificationBadgeAndSaveMOC)
+		.onAppear(perform: clearNotificationBadgeAndCheckForUpdate)
     }
     
-    func clearNotificationBadgeAndSaveMOC() {
+    func clearNotificationBadgeAndCheckForUpdate() {
         helper.clearNotificationBadge()
         helper.saveMOC(moc: managedObjectContext)
+        checkForUpdate()
     }
     
     func removePendingNotificationsAndDeleteContact(at offsets: IndexSet) {
@@ -105,6 +111,21 @@ struct HomeScreen : View {
             
             notificationService.removeExistingNotifications(for: contact)
             managedObjectContext.delete(contact)
+        }
+    }
+    
+    func checkForUpdate() {
+        let version = helper.getCurrentAppVersion()
+        let savedVersion = UserDefaults.standard.string(forKey: "savedVersion")
+
+        if savedVersion == version {
+            print("App is up to date!")
+        } else {
+
+            // Toogle to show UpdatesView as a sheet
+            self.showSheet = true
+            self.activeSheet = .updates
+            UserDefaults.standard.set(version, forKey: "savedVersion")
         }
     }
 }

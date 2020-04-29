@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		14BE3AD324593556004F72DE /* GeneralHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14BE3AD224593556004F72DE /* GeneralHelpers.swift */; };
+		14BE3AD72459F610004F72DE /* UpdatesScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14BE3AD62459F610004F72DE /* UpdatesScreen.swift */; };
 		F416505A24440579001DB205 /* CatchUp-SwiftUI.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F416505824440579001DB205 /* CatchUp-SwiftUI.xcdatamodeld */; };
 		F4871DA1244FC43C00925392 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4871DA0244FC43C00925392 /* NotificationService.swift */; };
 		F48E37F222C455C3008B0B8B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F48E37F122C455C3008B0B8B /* AppDelegate.swift */; };
@@ -33,6 +34,7 @@
 
 /* Begin PBXFileReference section */
 		14BE3AD224593556004F72DE /* GeneralHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralHelpers.swift; sourceTree = "<group>"; };
+		14BE3AD62459F610004F72DE /* UpdatesScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdatesScreen.swift; sourceTree = "<group>"; };
 		F416505924440579001DB205 /* CatchUp_SwiftUI.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = CatchUp_SwiftUI.xcdatamodel; sourceTree = "<group>"; };
 		F4871DA0244FC43C00925392 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
 		F48E37EE22C455C3008B0B8B /* CatchUp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CatchUp.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -119,6 +121,10 @@
 			children = (
 				F4AD59AC244B7B6000296568 /* CatchUp-SwiftUI.entitlements */,
 				F48E37FA22C455CB008B0B8B /* Assets.xcassets */,
+				F48E37F122C455C3008B0B8B /* AppDelegate.swift */,
+				F48E37F322C455C3008B0B8B /* SceneDelegate.swift */,
+				F48E37FF22C455CB008B0B8B /* LaunchScreen.storyboard */,
+				F48E380222C455CB008B0B8B /* Info.plist */,
 				F4AD59B1244CC9C100296568 /* Extensions */,
 				F4A9B85024429E40001D8C55 /* Services */,
 				F4871DA2244FC44800925392 /* Utilities */,
@@ -129,10 +135,7 @@
 				F4A9B8512442A0F5001D8C55 /* DetailScreen.swift */,
 				F4A9B8582442AB81001D8C55 /* PreferenceScreen.swift */,
 				F4AD59AF244CA12C00296568 /* AboutScreen.swift */,
-				F48E37FF22C455CB008B0B8B /* LaunchScreen.storyboard */,
-				F48E37F122C455C3008B0B8B /* AppDelegate.swift */,
-				F48E37F322C455C3008B0B8B /* SceneDelegate.swift */,
-				F48E380222C455CB008B0B8B /* Info.plist */,
+				14BE3AD62459F610004F72DE /* UpdatesScreen.swift */,
 				F48E37FC22C455CB008B0B8B /* Preview Content */,
 			);
 			path = "CatchUp-SwiftUI";
@@ -253,6 +256,7 @@
 				F494F95824424A03003CE7B5 /* ContactService.swift in Sources */,
 				F494F95624422ACC003CE7B5 /* ContactPicker.swift in Sources */,
 				F416505A24440579001DB205 /* CatchUp-SwiftUI.xcdatamodeld in Sources */,
+				14BE3AD72459F610004F72DE /* UpdatesScreen.swift in Sources */,
 				F4AD59B0244CA12C00296568 /* AboutScreen.swift in Sources */,
 				F4A9B8592442AB81001D8C55 /* PreferenceScreen.swift in Sources */,
 				F4AD59AA244A960800296568 /* SelectedContact+CoreDataClass.swift in Sources */,

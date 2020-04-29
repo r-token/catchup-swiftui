@@ -13,18 +13,19 @@ import CoreData
 struct NotificationService {
     let notificationCenter = UNUserNotificationCenter.current()
     let helper = GeneralHelpers()
+    let contactService = ContactService()
     
     func createNewNotification(for contact: SelectedContact, moc: NSManagedObjectContext) {
         let addRequest = {
-            if self.preferenceIsNotSetToNever(for: contact) {
+            if self.contactService.preferenceIsNotSetToNever(for: contact) {
                 self.addGeneralNotification(for: contact, moc: moc)
             }
             
-            if self.contactHasBirthday(contact) {
+            if self.contactService.contactHasBirthday(contact) {
                 self.addBirthdayNotification(for: contact, moc: moc)
             }
             
-            if self.contactHasAnniversary(contact) {
+            if self.contactService.contactHasAnniversary(contact) {
                 self.addAnniversaryNotification(for: contact, moc: moc)
             }
         }
@@ -48,19 +49,6 @@ struct NotificationService {
             }
         }
     }
-    
-    func preferenceIsNotSetToNever(for contact: SelectedContact) -> Bool {
-        return contact.notification_preference != 0 ? true : false
-    }
-    
-    func contactHasBirthday(_ contact: SelectedContact) -> Bool {
-        return contact.birthday != "" ? true : false
-    }
-    
-    func contactHasAnniversary(_ contact: SelectedContact) -> Bool {
-        return contact.anniversary != "" ? true : false
-    }
-    
     
     func setNotificationDateComponents(for contact: SelectedContact) -> DateComponents {
         var dateComponents = DateComponents()
@@ -299,11 +287,11 @@ struct NotificationService {
     func removeExistingNotifications(for contact: SelectedContact) {
         removeGeneralNotification(for: contact)
         
-        if contactHasBirthday(contact) {
+        if contactService.contactHasBirthday(contact) {
             removeBirthdayNotification(for: contact)
         }
         
-        if contactHasAnniversary(contact) {
+        if contactService.contactHasAnniversary(contact) {
             removeAnniversaryNotification(for: contact)
         }
     }

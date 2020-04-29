@@ -11,7 +11,45 @@ import UIKit
 import Contacts
 import CoreData
 
-class ContactService {
+struct ContactService {
+    
+    // MARK: Functions for DetailScreen and NotificationService
+    
+    func contactHasPhone(_ contact: SelectedContact) -> Bool {
+        return contact.phone != "" ? true : false
+    }
+    
+    func contactHasSecondaryPhone(_ contact: SelectedContact) -> Bool {
+        return contact.secondary_phone != "" ? true : false
+    }
+    
+    func contactHasEmail(_ contact: SelectedContact) -> Bool {
+        return contact.email != "" ? true : false
+    }
+    
+    func contactHasSecondaryEmail(_ contact: SelectedContact) -> Bool {
+        return contact.secondary_email != "" ? true : false
+    }
+    
+    func contactHasAddress(_ contact: SelectedContact) -> Bool {
+        return contact.address != "" ? true : false
+    }
+    
+    func contactHasSecondaryAddress(_ contact: SelectedContact) -> Bool {
+        return contact.secondary_address != "" ? true : false
+    }
+    
+    func contactHasBirthday(_ contact: SelectedContact) -> Bool {
+        return contact.birthday != "" ? true : false
+    }
+    
+    func contactHasAnniversary(_ contact: SelectedContact) -> Bool {
+        return contact.anniversary != "" ? true : false
+    }
+    
+    func preferenceIsNotSetToNever(for contact: SelectedContact) -> Bool {
+        return contact.notification_preference != 0 ? true : false
+    }
     
     // MARK: Functions for ContactPickerViewController
     

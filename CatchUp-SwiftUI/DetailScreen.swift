@@ -15,6 +15,7 @@ struct DetailScreen: View {
     let notificationService = NotificationService()
 	let converter = Conversions()
     let helper = GeneralHelpers()
+    let contactService = ContactService()
     
 	let contact: SelectedContact
 	
@@ -48,7 +49,7 @@ struct DetailScreen: View {
 			}
 			
 			List {
-				if contact.phone != "" {
+                if contactService.contactHasPhone(contact) {
 					VStack(alignment: .leading, spacing: 3) {
 						Text("Phone")
 							.font(.caption)
@@ -59,7 +60,7 @@ struct DetailScreen: View {
 						.foregroundColor(.blue)
 					}
 				}
-				if contact.secondary_phone != "" {
+                if contactService.contactHasSecondaryPhone(contact) {
 					VStack(alignment: .leading, spacing: 3) {
 						Text("Secondary Phone")
 							.font(.caption)
@@ -70,7 +71,7 @@ struct DetailScreen: View {
 						.foregroundColor(.blue)
 					}
 				}
-				if contact.email != "" {
+                if contactService.contactHasEmail(contact) {
 					VStack(alignment: .leading, spacing: 3) {
 						Text("Email")
 							.font(.caption)
@@ -81,7 +82,7 @@ struct DetailScreen: View {
 						.foregroundColor(.blue)
 					}
 				}
-				if contact.secondary_email != "" {
+                if contactService.contactHasSecondaryEmail(contact) {
 					VStack(alignment: .leading, spacing: 3) {
 						Text("Secondary Email")
 							.font(.caption)
@@ -92,28 +93,28 @@ struct DetailScreen: View {
 						.foregroundColor(.blue)
 					}
 				}
-				if contact.address != "" {
+                if contactService.contactHasAddress(contact) {
 					VStack(alignment: .leading, spacing: 3) {
 						Text("Address")
 							.font(.caption)
 						Text(contact.address)
 					}
 				}
-				if contact.secondary_address != "" {
+                if contactService.contactHasSecondaryAddress(contact) {
 					VStack(alignment: .leading, spacing: 3) {
 						Text("Secondary Address")
 							.font(.caption)
 						Text(contact.secondary_address)
 					}
 				}
-				if contact.birthday != "" {
+                if contactService.contactHasBirthday(contact) {
 					VStack(alignment: .leading, spacing: 3) {
 						Text("Birthday")
 							.font(.caption)
 						Text(contact.birthday)
 					}
 				}
-				if contact.anniversary != "" {
+                if contactService.contactHasAnniversary(contact) {
 					VStack(alignment: .leading, spacing: 3) {
 						Text("Anniversary")
 							.font(.caption)

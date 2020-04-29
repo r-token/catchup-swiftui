@@ -23,8 +23,8 @@ struct PreferenceScreen: View {
     var notificationOptions = ["Never", "Daily", "Weekly", "Monthly", "Custom"]
 	var dayOptions = ["Sun", "Mon", "Tues", "Wed", "Thur", "Fri", "Sat"]
 	
-	// set default values equal to their Core Data values
-	// for new contacts who haven't been changed yet, many of these defaults are set in ContactPickerViewController.swift
+	// set default values equal to their Core Data values for new contacts who haven't been changed yet
+	// many of these defaults are set in ContactPickerViewController.swift
 	init(contact: SelectedContact) {
 		
 		let calendar = Calendar.current

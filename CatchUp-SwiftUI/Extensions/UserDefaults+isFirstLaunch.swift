@@ -10,20 +10,8 @@ import Foundation
 
 extension UserDefaults {
 	
-    // check for is first launch - only true on first invocation after app install, false on all further invocations
+    // check for is first launch on version 2.0 - only true on first invocation after app install, false on all further invocations
     // Note: this is used in AppDelegate.swift in didFinishLaunchingWithOptions
-    static func isFirstLaunch() -> Bool {
-        let hasBeenLaunchedBeforeFlag = "hasBeenLaunchedBeforeFlag"
-        let isFirstLaunch = !UserDefaults.standard.bool(forKey: hasBeenLaunchedBeforeFlag)
-        if (isFirstLaunch) {
-            UserDefaults.standard.set(true, forKey: hasBeenLaunchedBeforeFlag)
-            UserDefaults.standard.synchronize()
-        }
-		isFirstLaunch ? print("It is the first launch") : print("It is not the first launch")
-        return isFirstLaunch
-    }
-	
-	// check for first launch on version 2.0
 	static func isFirstVersion2Launch() -> Bool {
         let hasLaunchedVersion2BeforeFlag = "hasLaunchedVersion2BeforeFlag"
         let isFirstVersion2Launch = !UserDefaults.standard.bool(forKey: hasLaunchedVersion2BeforeFlag)
