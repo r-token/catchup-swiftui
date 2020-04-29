@@ -7,8 +7,6 @@
 //
 
 import SwiftUI
-import Contacts
-import UserNotifications
 
 enum ActiveSheet {
 	case contactPicker, about
@@ -21,6 +19,8 @@ struct HomeScreen : View {
 	@FetchRequest(entity: SelectedContact.entity(),
 				  sortDescriptors: []) var selectedContacts: FetchedResults<SelectedContact>
 	
+    let notificationService = NotificationService()
+    let helper = GeneralHelpers()
 	let converter = Conversions()
 	
 	init() {
@@ -35,7 +35,7 @@ struct HomeScreen : View {
 					ForEach(selectedContacts) { contact in
 						NavigationLink(destination: DetailScreen(contact: contact)) {
 							HStack {
-								self.getContactPicture(from: contact.picture)
+                                self.converter.getContactPicture(from: contact.picture)
 									.renderingMode(.original)
 									.resizable()
 									.frame(width: 45, height: 45, alignment: .leading)
@@ -50,7 +50,7 @@ struct HomeScreen : View {
 								}
 							}
 						}
-					}.onDelete(perform: deleteContact)
+					}.onDelete(perform: removePendingNotificationsAndDeleteContact)
 				}
                 
                 Button(action: {
@@ -91,47 +91,22 @@ struct HomeScreen : View {
 			}
 		}
 		.accentColor(.orange)
-		.onAppear(perform: clearBadgeAndSaveMOC)
+		.onAppear(perform: clearNotificationBadgeAndSaveMOC)
     }
-	
-	func printSelectedContacts() {
-		print("total saved contacts: \(selectedContacts.count)")
-		let paths = NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.documentDirectory, FileManager.SearchPathDomainMask.userDomainMask, true)
-		print("path to sqlite db: \(paths[0])")
-		
-		for contact in selectedContacts {
-			print (contact.name)
-		}
-	}
-	
-	func deleteContact(at offsets: IndexSet) {
-		for index in offsets {
-			let contact = selectedContacts[index]
-			
-			UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [contact.notification_identifier.uuidString, contact.birthday_notification_id.uuidString, contact.anniversary_notification_id.uuidString])
-			
-			managedObjectContext.delete(contact)
-			print("Deleted contact and removed all notifications associated with them")
-		}
-	}
-	
-	func getContactPicture(from string: String) -> Image {
-		let imageData = NSData(base64Encoded: string)
-		let uiImage = UIImage(data: imageData! as Data)!
-		let image = Image(uiImage: uiImage)
-		
-		return image
-	}
-
-	func clearBadgeAndSaveMOC() {
-		UIApplication.shared.applicationIconBadgeNumber = 0
-		
-		do {
-			try self.managedObjectContext.save()
-		} catch {
-			print("Couldn't save after deleting the contact")
-		}
-	}
+    
+    func clearNotificationBadgeAndSaveMOC() {
+        helper.clearNotificationBadge()
+        helper.saveMOC(moc: managedObjectContext)
+    }
+    
+    func removePendingNotificationsAndDeleteContact(at offsets: IndexSet) {
+        for index in offsets {
+            let contact = selectedContacts[index]
+            
+            notificationService.removeExistingNotifications(for: contact)
+            managedObjectContext.delete(contact)
+        }
+    }
 }
 
 #if DEBUG
@@ -144,4 +119,3 @@ struct HomeScreen_Previews : PreviewProvider {
     }
 }
 #endif
-

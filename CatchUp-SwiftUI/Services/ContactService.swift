@@ -6,11 +6,16 @@
 //  Copyright © 2020 Token Solutions. All rights reserved.
 //
 
+import SwiftUI
 import UIKit
 import Contacts
+import CoreData
 
 class ContactService {
-	func getContactPicture(for contact: CNContact) -> String {
+    
+    // MARK: Functions for ContactPickerViewController
+    
+	func encodeContactPicture(for contact: CNContact) -> String {
 		let picture: String
 		
 		if contact.imageDataAvailable == true {

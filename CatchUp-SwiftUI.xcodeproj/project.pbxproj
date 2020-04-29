@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		14BE3AD324593556004F72DE /* GeneralHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14BE3AD224593556004F72DE /* GeneralHelpers.swift */; };
 		F416505A24440579001DB205 /* CatchUp-SwiftUI.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F416505824440579001DB205 /* CatchUp-SwiftUI.xcdatamodeld */; };
 		F4871DA1244FC43C00925392 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4871DA0244FC43C00925392 /* NotificationService.swift */; };
 		F48E37F222C455C3008B0B8B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F48E37F122C455C3008B0B8B /* AppDelegate.swift */; };
@@ -31,6 +32,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		14BE3AD224593556004F72DE /* GeneralHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralHelpers.swift; sourceTree = "<group>"; };
 		F416505924440579001DB205 /* CatchUp_SwiftUI.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = CatchUp_SwiftUI.xcdatamodel; sourceTree = "<group>"; };
 		F4871DA0244FC43C00925392 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
 		F48E37EE22C455C3008B0B8B /* CatchUp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CatchUp.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -91,6 +93,7 @@
 			isa = PBXGroup;
 			children = (
 				F4A9B85A2443FFF3001D8C55 /* Conversions.swift */,
+				14BE3AD224593556004F72DE /* GeneralHelpers.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -245,6 +248,7 @@
 				F4A9B8552442A179001D8C55 /* ContactPhoto.swift in Sources */,
 				F4A9B8572442A1F7001D8C55 /* GradientView.swift in Sources */,
 				F4A9B85B2443FFF3001D8C55 /* Conversions.swift in Sources */,
+				14BE3AD324593556004F72DE /* GeneralHelpers.swift in Sources */,
 				F4871DA1244FC43C00925392 /* NotificationService.swift in Sources */,
 				F494F95824424A03003CE7B5 /* ContactService.swift in Sources */,
 				F494F95624422ACC003CE7B5 /* ContactPicker.swift in Sources */,

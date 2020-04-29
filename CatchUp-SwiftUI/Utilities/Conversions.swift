@@ -7,8 +7,38 @@
 //
 
 import Foundation
+import SwiftUI
 
 struct Conversions {
+    
+    // MARK: Only used in DetailScreen
+    
+    func getTappablePhoneNumber(from phoneNumber: String) -> URL {
+        let tel = "tel://"
+        let cleanNumber = phoneNumber.replacingOccurrences(of: "[^\\d+]", with: "", options: [.regularExpression])
+        let formattedString = tel + cleanNumber
+        let tappableNumber = URL(string: formattedString)!
+        
+        return tappableNumber
+    }
+    
+    func getTappableEmail(from emailAddress: String) -> URL {
+        let mailto = "mailto:"
+        let formattedString = mailto + emailAddress
+        let tappableEmail = URL(string: formattedString)!
+        
+        return tappableEmail
+    }
+    
+    // MARK: Used in HomeScreen and DetailScreen
+    
+    func getContactPicture(from string: String) -> Image {
+        let imageData = NSData(base64Encoded: string)
+        let uiImage = UIImage(data: imageData! as Data)!
+        let image = Image(uiImage: uiImage)
+        
+        return image
+    }
 	
 	func convertNotificationPreferenceIntToString(preference: Int, contact: SelectedContact) -> String {
 		let time = convertHourAndMinuteFromIntToString(for: contact)

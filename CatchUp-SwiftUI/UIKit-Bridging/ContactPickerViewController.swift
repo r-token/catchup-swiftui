@@ -61,7 +61,7 @@ class ContactPickerViewController: UIViewController, CNContactPickerDelegate {
 	func saveSelectedContact(for contact: CNContact) {
 		print("saving...")
 		
-		let service = ContactService()
+		let contactService = ContactService()
 		let currentMinute = Calendar.current.component(.minute, from: Date())
 		let currentHour = Calendar.current.component(.hour, from: Date())
 		let currentDay = Calendar.current.component(.day, from: Date())
@@ -69,13 +69,13 @@ class ContactPickerViewController: UIViewController, CNContactPickerDelegate {
 		let currentYear = Calendar.current.component(.year, from: Date())
 		
 		let id = UUID()
-		let address = service.getContactPrimaryAddress(for: contact)
-		let anniversary = service.getContactAnniversary(for: contact)
+		let address = contactService.getContactPrimaryAddress(for: contact)
+		let anniversary = contactService.getContactAnniversary(for: contact)
 		let anniversary_notification_ID = UUID()
-		let birthday = service.getContactBirthday(for: contact)
+		let birthday = contactService.getContactBirthday(for: contact)
 		let birthday_notification_ID = UUID()
-		let email = service.getContactPrimaryEmail(for: contact)
-		let name = service.getContactName(for: contact)
+		let email = contactService.getContactPrimaryEmail(for: contact)
+		let name = contactService.getContactName(for: contact)
 		let notification_identifier = UUID()
 		let notification_preference = 0
 		let notification_preference_hour = currentHour
@@ -84,11 +84,11 @@ class ContactPickerViewController: UIViewController, CNContactPickerDelegate {
 		let notification_preference_custom_year = currentYear
 		let notification_preference_custom_month = currentMonth
 		let notification_preference_custom_day = currentDay
-		let phone = service.getContactPrimaryPhone(for: contact)
-		let picture = service.getContactPicture(for: contact)
-		let secondary_email = service.getContactSecondaryEmail(for: contact)
-		let secondary_address = service.getContactSecondaryAddress(for: contact)
-		let secondary_phone = service.getContactSecondaryPhone(for: contact)
+		let phone = contactService.getContactPrimaryPhone(for: contact)
+		let picture = contactService.encodeContactPicture(for: contact)
+		let secondary_email = contactService.getContactSecondaryEmail(for: contact)
+		let secondary_address = contactService.getContactSecondaryAddress(for: contact)
+		let secondary_phone = contactService.getContactSecondaryPhone(for: contact)
 		
 		if !contactAlreadyAdded(name: name) {
 			guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
