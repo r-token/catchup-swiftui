@@ -17,7 +17,7 @@ struct UpdatesScreen: View {
                     
                     Spacer()
                     
-                    Text("New Update")
+                    Text("New Update (2.0)")
                         .font(.largeTitle)
                         .bold()
                         .foregroundColor(.orange)
