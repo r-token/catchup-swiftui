@@ -17,6 +17,7 @@ struct UpdatesScreen: View {
                 Group {
                     
                     Spacer()
+                    Spacer()
                     
                     Text("New Update (\(helper.getCurrentAppVersion()))")
                         .font(.largeTitle)

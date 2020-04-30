@@ -107,14 +107,14 @@ struct DetailScreen: View {
 						Text(contact.secondary_address)
 					}
 				}
-                if contactService.contactHasBirthday(contact) {
+                if notificationService.contactHasBirthday(contact) {
 					VStack(alignment: .leading, spacing: 3) {
 						Text("Birthday")
 							.font(.caption)
 						Text(contact.birthday)
 					}
 				}
-                if contactService.contactHasAnniversary(contact) {
+                if notificationService.contactHasAnniversary(contact) {
 					VStack(alignment: .leading, spacing: 3) {
 						Text("Anniversary")
 							.font(.caption)

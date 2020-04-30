@@ -13,7 +13,7 @@ import CoreData
 
 struct ContactService {
     
-    // MARK: Functions for DetailScreen and NotificationService
+    // MARK: Functions for DetailScreen
     
     func contactHasPhone(_ contact: SelectedContact) -> Bool {
         return contact.phone != "" ? true : false
@@ -37,18 +37,6 @@ struct ContactService {
     
     func contactHasSecondaryAddress(_ contact: SelectedContact) -> Bool {
         return contact.secondary_address != "" ? true : false
-    }
-    
-    func contactHasBirthday(_ contact: SelectedContact) -> Bool {
-        return contact.birthday != "" ? true : false
-    }
-    
-    func contactHasAnniversary(_ contact: SelectedContact) -> Bool {
-        return contact.anniversary != "" ? true : false
-    }
-    
-    func preferenceIsNotSetToNever(for contact: SelectedContact) -> Bool {
-        return contact.notification_preference != 0 ? true : false
     }
     
     // MARK: Functions for ContactPickerViewController

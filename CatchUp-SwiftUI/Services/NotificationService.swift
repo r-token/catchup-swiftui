@@ -17,20 +17,71 @@ struct NotificationService {
     
     func createNewNotification(for contact: SelectedContact, moc: NSManagedObjectContext) {
         let addRequest = {
-            if self.contactService.preferenceIsNotSetToNever(for: contact) {
+            if self.preferenceIsNotSetToNever(for: contact) {
                 self.addGeneralNotification(for: contact, moc: moc)
             }
             
-            if self.contactService.contactHasBirthday(contact) {
+            if self.contactHasBirthday(contact) {
                 self.addBirthdayNotification(for: contact, moc: moc)
             }
             
-            if self.contactService.contactHasAnniversary(contact) {
+            if self.contactHasAnniversary(contact) {
                 self.addAnniversaryNotification(for: contact, moc: moc)
             }
         }
 
         checkNotificationAuthorizationStatusAndAddRequest(action: addRequest)
+    }
+    
+    func preferenceIsNotSetToNever(for contact: SelectedContact) -> Bool {
+        return contact.notification_preference != 0 ? true : false
+    }
+    
+    func contactHasBirthday(_ contact: SelectedContact) -> Bool {
+        return contact.birthday != "" ? true : false
+    }
+    
+    func contactHasAnniversary(_ contact: SelectedContact) -> Bool {
+        return contact.anniversary != "" ? true : false
+    }
+    
+    func addGeneralNotification(for contact: SelectedContact, moc: NSManagedObjectContext) {
+        let notificationContent = UNMutableNotificationContent()
+        notificationContent.title = "👋 CatchUp with \(contact.name)"
+        notificationContent.body = self.generateRandomNotificationBody()
+        notificationContent.sound = UNNotificationSound.default
+        notificationContent.badge = 1
+
+        let identifier = UUID()
+        let dateComponents = self.setNotificationDateComponents(for: contact)
+        
+        self.scheduleNotification(for: contact, dateComponents: dateComponents, identifier: identifier, content: notificationContent, moc: moc)
+    }
+    
+    func addBirthdayNotification(for contact: SelectedContact, moc: NSManagedObjectContext) {
+        let birthdayNotificationContent = UNMutableNotificationContent()
+        birthdayNotificationContent.title = "🥳 Today is \(contact.name)'s birthday!"
+        birthdayNotificationContent.body = "Be sure to CatchUp and wish them a great one!"
+        birthdayNotificationContent.sound = UNNotificationSound.default
+        birthdayNotificationContent.badge = 1
+
+        let birthdayIdentifier = UUID()
+        let birthdayDateComponents = self.setBirthdayDateComponents(for: contact)
+        
+        self.scheduleNotification(for: contact, dateComponents: birthdayDateComponents, identifier: birthdayIdentifier, content: birthdayNotificationContent, moc: moc)
+    }
+    
+    func addAnniversaryNotification(for contact: SelectedContact, moc: NSManagedObjectContext) {
+        let anniversaryNotificationContent = UNMutableNotificationContent()
+        anniversaryNotificationContent.title = "😍 Tomorrow is \(contact.name)'s anniversary!"
+        anniversaryNotificationContent.body = "Be sure to CatchUp and wish them the best."
+        anniversaryNotificationContent.sound = UNNotificationSound.default
+        anniversaryNotificationContent.badge = 1
+
+        let anniversaryIdentifier = UUID()
+        let anniversaryDateComponents = self.setAnniversaryDateComponents(for: contact)
+        
+        self.scheduleNotification(for: contact, dateComponents: anniversaryDateComponents, identifier: anniversaryIdentifier, content: anniversaryNotificationContent, moc: moc)
     }
     
     func checkNotificationAuthorizationStatusAndAddRequest(action: @escaping() -> Void) {
@@ -119,45 +170,6 @@ struct NotificationService {
         anniversaryDateComponents.minute = 30
         
         return anniversaryDateComponents
-    }
-    
-    func addGeneralNotification(for contact: SelectedContact, moc: NSManagedObjectContext) {
-        let notificationContent = UNMutableNotificationContent()
-        notificationContent.title = "👋 CatchUp with \(contact.name)"
-        notificationContent.body = self.generateRandomNotificationBody()
-        notificationContent.sound = UNNotificationSound.default
-        notificationContent.badge = 1
-
-        let identifier = UUID()
-        let dateComponents = self.setNotificationDateComponents(for: contact)
-        
-        self.scheduleNotification(for: contact, dateComponents: dateComponents, identifier: identifier, content: notificationContent, moc: moc)
-    }
-    
-    func addBirthdayNotification(for contact: SelectedContact, moc: NSManagedObjectContext) {
-        let birthdayNotificationContent = UNMutableNotificationContent()
-        birthdayNotificationContent.title = "🥳 Today is \(contact.name)'s birthday!"
-        birthdayNotificationContent.body = "Be sure to CatchUp and wish them a great one!"
-        birthdayNotificationContent.sound = UNNotificationSound.default
-        birthdayNotificationContent.badge = 1
-
-        let birthdayIdentifier = UUID()
-        let birthdayDateComponents = self.setBirthdayDateComponents(for: contact)
-        
-        self.scheduleNotification(for: contact, dateComponents: birthdayDateComponents, identifier: birthdayIdentifier, content: birthdayNotificationContent, moc: moc)
-    }
-    
-    func addAnniversaryNotification(for contact: SelectedContact, moc: NSManagedObjectContext) {
-        let anniversaryNotificationContent = UNMutableNotificationContent()
-        anniversaryNotificationContent.title = "😍 Tomorrow is \(contact.name)'s anniversary!"
-        anniversaryNotificationContent.body = "Be sure to CatchUp and wish them the best."
-        anniversaryNotificationContent.sound = UNNotificationSound.default
-        anniversaryNotificationContent.badge = 1
-
-        let anniversaryIdentifier = UUID()
-        let anniversaryDateComponents = self.setAnniversaryDateComponents(for: contact)
-        
-        self.scheduleNotification(for: contact, dateComponents: anniversaryDateComponents, identifier: anniversaryIdentifier, content: anniversaryNotificationContent, moc: moc)
     }
     
     func scheduleNotification(for contact: SelectedContact, dateComponents: DateComponents, identifier: UUID, content: UNMutableNotificationContent, moc: NSManagedObjectContext) {
@@ -287,11 +299,11 @@ struct NotificationService {
     func removeExistingNotifications(for contact: SelectedContact) {
         removeGeneralNotification(for: contact)
         
-        if contactService.contactHasBirthday(contact) {
+        if contactHasBirthday(contact) {
             removeBirthdayNotification(for: contact)
         }
         
-        if contactService.contactHasAnniversary(contact) {
+        if contactHasAnniversary(contact) {
             removeAnniversaryNotification(for: contact)
         }
     }
