@@ -8,10 +8,24 @@
 
 import Foundation
 import SwiftUI
+import PhoneNumberKit
 
 struct Conversions {
     
     // MARK: Only used in DetailScreen
+    
+    func getFormattedPhoneNumber(from phoneNumber: String) -> String {
+        let phoneNumberKit = PhoneNumberKit()
+        do {
+            let parsedPhoneNumber = try phoneNumberKit.parse(phoneNumber)
+            let formattedPhoneNumber = phoneNumberKit.format(parsedPhoneNumber, toType: .national)
+            return formattedPhoneNumber
+        }
+        catch {
+            print("Generic parser error")
+            return phoneNumber
+        }
+    }
     
     func getTappablePhoneNumber(from phoneNumber: String) -> URL {
         let tel = "tel://"
@@ -193,7 +207,6 @@ struct Conversions {
 		if minute.count == 1 {
 			minute = "0" + minute
 		}
-		
 		let time = (hour+minute+suffix)
 		
 		return time

@@ -3,10 +3,12 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		144DBE22245C8282008FDBB6 /* PhoneNumberKit in Frameworks */ = {isa = PBXBuildFile; productRef = 144DBE21245C8282008FDBB6 /* PhoneNumberKit */; };
+		146F7C63245C88A9008FEF99 /* PhoneNumberMetadata.json in Resources */ = {isa = PBXBuildFile; fileRef = 146F7C62245C88A9008FEF99 /* PhoneNumberMetadata.json */; };
 		14BE3AD324593556004F72DE /* GeneralHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14BE3AD224593556004F72DE /* GeneralHelpers.swift */; };
 		14BE3AD72459F610004F72DE /* UpdatesScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14BE3AD62459F610004F72DE /* UpdatesScreen.swift */; };
 		F416505A24440579001DB205 /* CatchUp-SwiftUI.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F416505824440579001DB205 /* CatchUp-SwiftUI.xcdatamodeld */; };
@@ -33,6 +35,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		146F7C62245C88A9008FEF99 /* PhoneNumberMetadata.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = PhoneNumberMetadata.json; path = ../../../../../../Desktop/PhoneNumberMetadata.json; sourceTree = "<group>"; };
 		14BE3AD224593556004F72DE /* GeneralHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralHelpers.swift; sourceTree = "<group>"; };
 		14BE3AD62459F610004F72DE /* UpdatesScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdatesScreen.swift; sourceTree = "<group>"; };
 		F416505924440579001DB205 /* CatchUp_SwiftUI.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = CatchUp_SwiftUI.xcdatamodel; sourceTree = "<group>"; };
@@ -66,12 +69,21 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				144DBE22245C8282008FDBB6 /* PhoneNumberKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		144DBE23245C864F008FDBB6 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				146F7C62245C88A9008FEF99 /* PhoneNumberMetadata.json */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
 		F42440B22446842E001ABD14 /* UIKit-Bridging */ = {
 			isa = PBXGroup;
 			children = (
@@ -125,18 +137,19 @@
 				F48E37F322C455C3008B0B8B /* SceneDelegate.swift */,
 				F48E37FF22C455CB008B0B8B /* LaunchScreen.storyboard */,
 				F48E380222C455CB008B0B8B /* Info.plist */,
+				144DBE23245C864F008FDBB6 /* Resources */,
 				F4AD59B1244CC9C100296568 /* Extensions */,
 				F4A9B85024429E40001D8C55 /* Services */,
 				F4871DA2244FC44800925392 /* Utilities */,
 				F4A9B8532442A162001D8C55 /* Supporting Views */,
 				F42440B22446842E001ABD14 /* UIKit-Bridging */,
 				F42440B324468480001ABD14 /* CoreData */,
+				F48E37FC22C455CB008B0B8B /* Preview Content */,
 				F48E37F822C455C3008B0B8B /* HomeScreen.swift */,
 				F4A9B8512442A0F5001D8C55 /* DetailScreen.swift */,
 				F4A9B8582442AB81001D8C55 /* PreferenceScreen.swift */,
 				F4AD59AF244CA12C00296568 /* AboutScreen.swift */,
 				14BE3AD62459F610004F72DE /* UpdatesScreen.swift */,
-				F48E37FC22C455CB008B0B8B /* Preview Content */,
 			);
 			path = "CatchUp-SwiftUI";
 			sourceTree = "<group>";
@@ -192,6 +205,9 @@
 			dependencies = (
 			);
 			name = "CatchUp-SwiftUI";
+			packageProductDependencies = (
+				144DBE21245C8282008FDBB6 /* PhoneNumberKit */,
+			);
 			productName = "CatchUp-SwiftUI";
 			productReference = F48E37EE22C455C3008B0B8B /* CatchUp.app */;
 			productType = "com.apple.product-type.application";
@@ -220,6 +236,9 @@
 				Base,
 			);
 			mainGroup = F48E37E522C455C3008B0B8B;
+			packageReferences = (
+				144DBE20245C8282008FDBB6 /* XCRemoteSwiftPackageReference "PhoneNumberKit" */,
+			);
 			productRefGroup = F48E37EF22C455C3008B0B8B /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -234,6 +253,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				146F7C63245C88A9008FEF99 /* PhoneNumberMetadata.json in Resources */,
 				F48E380122C455CB008B0B8B /* LaunchScreen.storyboard in Resources */,
 				F48E37FE22C455CB008B0B8B /* Preview Assets.xcassets in Resources */,
 				F48E37FB22C455CB008B0B8B /* Assets.xcassets in Resources */,
@@ -408,7 +428,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "CatchUp-SwiftUI/CatchUp-SwiftUI.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_ASSET_PATHS = "CatchUp-SwiftUI/Preview\\ Content";
 				DEVELOPMENT_TEAM = DJAHJZFYK7;
 				ENABLE_PREVIEWS = YES;
@@ -432,7 +452,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "CatchUp-SwiftUI/CatchUp-SwiftUI.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_ASSET_PATHS = "CatchUp-SwiftUI/Preview\\ Content";
 				DEVELOPMENT_TEAM = DJAHJZFYK7;
 				ENABLE_PREVIEWS = YES;
@@ -472,6 +492,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		144DBE20245C8282008FDBB6 /* XCRemoteSwiftPackageReference "PhoneNumberKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/marmelroy/PhoneNumberKit.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.2.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		144DBE21245C8282008FDBB6 /* PhoneNumberKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 144DBE20245C8282008FDBB6 /* XCRemoteSwiftPackageReference "PhoneNumberKit" */;
+			productName = PhoneNumberKit;
+		};
+/* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
 		F416505824440579001DB205 /* CatchUp-SwiftUI.xcdatamodeld */ = {

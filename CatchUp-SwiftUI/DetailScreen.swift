@@ -54,7 +54,7 @@ struct DetailScreen: View {
 						Text("Phone")
 							.font(.caption)
 						
-						Button(contact.phone) {
+                        Button(converter.getFormattedPhoneNumber(from: contact.phone)) {
                             UIApplication.shared.open(self.converter.getTappablePhoneNumber(from: self.contact.phone))
 						}
 						.foregroundColor(.blue)
@@ -65,7 +65,7 @@ struct DetailScreen: View {
 						Text("Secondary Phone")
 							.font(.caption)
 						
-						Button(contact.secondary_phone) {
+                        Button(converter.getFormattedPhoneNumber(from: contact.secondary_phone)) {
                             UIApplication.shared.open(self.converter.getTappablePhoneNumber(from: self.contact.secondary_phone))
 						}
 						.foregroundColor(.blue)

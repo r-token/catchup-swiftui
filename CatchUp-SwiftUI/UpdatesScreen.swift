@@ -67,6 +67,10 @@ struct UpdatesScreen: View {
                     
                     Text("– Every screen in CatchUp has been updated and polished for a fresh new look that's still familiar.")
                     
+                    Spacer()
+                    
+                    Text("This update also includes major performance improvements and cleans up a lot of unnecessary code.")
+                    
                 }
                 
                 Spacer()

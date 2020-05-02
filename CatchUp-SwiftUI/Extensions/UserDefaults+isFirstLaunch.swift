@@ -9,7 +9,6 @@
 import Foundation
 
 extension UserDefaults {
-	
     // check for is first launch on version 2.0 - only true on first invocation after app install, false on all further invocations
     // Note: this is used in AppDelegate.swift in didFinishLaunchingWithOptions
 	static func isFirstVersion2Launch() -> Bool {
