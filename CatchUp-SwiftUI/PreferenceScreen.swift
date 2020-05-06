@@ -42,116 +42,110 @@ struct PreferenceScreen: View {
 	}
 
     var body: some View {
-		VStack(alignment: .leading, spacing: 10) {
-			
-			HStack {
-				Spacer()
-				Button("Save") {
-					self.presentationMode.wrappedValue.dismiss()
-				}
-				.foregroundColor(.blue)
-				.font(.headline)
-				.padding(.top)
-				.padding(.trailing)
-			}
-			
-			Text("Preference")
-				.font(.largeTitle)
-				.bold()
-				.foregroundColor(.orange)
-			
-			Text("How often should we notify you to CatchUp with \(contact.name)?")
-			
-			Picker(selection: $notificationPreference, label: Text("How often should we notify you to CatchUp with \(contact.name)?")) {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack {
+                Spacer()
+                Button("Save") {
+                    self.presentationMode.wrappedValue.dismiss()
+                }
+                .foregroundColor(.blue)
+                .font(.headline)
+                .padding(.top)
+                .padding(.trailing)
+            }
+            
+            Text("Preference")
+                .font(.largeTitle)
+                .bold()
+                .foregroundColor(.orange)
+            
+            Text("How often should we notify you to CatchUp with \(contact.name)?")
+            
+            Picker(selection: $notificationPreference, label: Text("How often should we notify you to CatchUp with \(contact.name)?")) {
                 ForEach(0..<notificationOptions.count) { index in
                     Text(self.notificationOptions[index]).tag(index)
                 }
             }.pickerStyle(SegmentedPickerStyle())
-				
-			.padding(.top)
-				
-				// This [self.notificationPreference].publisher.first() BS is not documented anywhere.
-				// Found it buried in comments on Stack Overflow. But it works.
-				// (https://stackoverflow.com/questions/58676483/is-there-a-way-to-call-a-function-when-a-swiftui-picker-selection-changes)
-			.onReceive([self.notificationPreference].publisher.first()) { (preference) in
+                
+            .padding(.top)
+                
+                // This [self.notificationPreference].publisher.first() BS is not documented anywhere.
+                // Found it buried in comments on Stack Overflow. But it works.
+                // (https://stackoverflow.com/questions/58676483/is-there-a-way-to-call-a-function-when-a-swiftui-picker-selection-changes)
+            .onReceive([self.notificationPreference].publisher.first()) { (preference) in
                 self.notificationService.updateNotificationPreference(for: self.contact, selection: preference, moc: self.managedObjectContext)
-			}
-			
-			VStack(alignment: .leading, spacing: 20) {
-				
-				if notificationPreference != 0 && notificationPreference != 4 { // Daily, Weekly, or Monthly
-					Text("What time?")
-						.padding(.top)
-					
-					// Show the Time Picker
-					HStack(alignment: .center) {
-						Spacer()
-						
-						DatePicker("What time?", selection: $notificationPreferenceTime, displayedComponents: .hourAndMinute)
-						.labelsHidden()
-							
-						Spacer()
-							
-						.onReceive([self.notificationPreferenceTime].publisher.first()) { (datetime) in
-							let calendar = Calendar.current
-							let components = calendar.dateComponents([.hour, .minute], from : datetime)
-                            self.notificationService.updateNotificationTime(for: self.contact, hour: components.hour!, minute: components.minute!, moc: self.managedObjectContext)
-						}
-					
-					}
-					
-					if notificationPreference == 2 { // Weekly
-						Text("What day?")
-					}
-					if notificationPreference == 3 { // Monthly
-						Text("What day? We'll pick a random week of the month.")
-					}
-					
-					if notificationPreference == 2 || notificationPreference == 3 {
-						
-						// Show Day of the Week Picker
-						Picker(selection: $notificationPreferenceWeekday, label: Text("What day?")) {
-							ForEach(0..<dayOptions.count) { index in
-								Text(self.dayOptions[index]).tag(index)
-							}
-						}.pickerStyle(SegmentedPickerStyle())
-						
-							.onReceive([self.notificationPreferenceWeekday].publisher.first()) { (weekday) in
+            }
+            
+            VStack(alignment: .leading, spacing: 20) {
+                
+                if notificationPreference != 0 && notificationPreference != 4 { // Daily, Weekly, or Monthly
+                    Text("What time?")
+                        .padding(.top)
+                    
+                    // Show the Time Picker
+                    HStack(alignment: .center) {
+                        Spacer()
+                        
+                        DatePicker("What time?", selection: $notificationPreferenceTime, displayedComponents: .hourAndMinute)
+                            .labelsHidden()
+                            .onReceive([self.notificationPreferenceTime].publisher.first()) { (datetime) in
+                                let calendar = Calendar.current
+                                let components = calendar.dateComponents([.hour, .minute], from : datetime)
+                                self.notificationService.updateNotificationTime(for: self.contact, hour: components.hour!, minute: components.minute!, moc: self.managedObjectContext)
+                            }
+                        Spacer()
+                    }
+                    
+                    if notificationPreference == 2 { // Weekly
+                        Text("What day?")
+                    }
+                    if notificationPreference == 3 { // Monthly
+                        Text("What day? We'll pick a random week of the month.")
+                            .lineLimit(nil)
+                    }
+                    
+                    if notificationPreference == 2 || notificationPreference == 3 {
+                        
+                        // Show Day of the Week Picker
+                        Picker(selection: $notificationPreferenceWeekday, label: Text("What day?")) {
+                            ForEach(0..<dayOptions.count) { index in
+                                Text(self.dayOptions[index]).tag(index)
+                            }
+                        }.pickerStyle(SegmentedPickerStyle())
+                        
+                            .onReceive([self.notificationPreferenceWeekday].publisher.first()) { (weekday) in
                                 self.notificationService.updateNotificationPreferenceWeekday(for: self.contact, weekday: weekday, moc: self.managedObjectContext)
-							}
-					}
-				}
-				
-				if notificationPreference == 4 { // Yearly
-					VStack(alignment: .leading, spacing: 20) {
-						Text("When would you like to be notified?")
-							.padding(.top)
-						
-						HStack {
-							Spacer()
-							
-							// Show Custom Date Picker
-							DatePicker("When would you like to be notified?", selection: $notificationPreferenceCustomDate, in: Date()..., displayedComponents: .date)
-								.labelsHidden()
-							
-								.onReceive([self.notificationPreferenceCustomDate].publisher.first()) { (date) in
-									let year = Calendar.current.component(.year, from: date)
-									let month = Calendar.current.component(.month, from: date)
-									let day = Calendar.current.component(.day, from: date)
-									print("Received custom change")
+                            }
+                    }
+                }
+                
+                if notificationPreference == 4 { // Yearly
+                    VStack(alignment: .leading, spacing: 20) {
+                        Text("When would you like to be notified?")
+                            .padding(.top)
+                        
+                        HStack {
+                            Spacer()
+                            
+                            // Show Custom Date Picker
+                            DatePicker("When would you like to be notified?", selection: $notificationPreferenceCustomDate, in: Date()..., displayedComponents: .date)
+                                .labelsHidden()
+                            
+                                .onReceive([self.notificationPreferenceCustomDate].publisher.first()) { (date) in
+                                    let year = Calendar.current.component(.year, from: date)
+                                    let month = Calendar.current.component(.month, from: date)
+                                    let day = Calendar.current.component(.day, from: date)
                                     self.notificationService.updateNotificationCustomDate(for: self.contact, month: month, day: day, year: year, moc: self.managedObjectContext)
-								}
-							
-							Spacer()
-						}
-					}
-				}
-			}
-			
-			Spacer()
+                                }
+                            
+                            Spacer()
+                        }
+                    }
+                }
+            }
+            Spacer()
         }
 		.padding(15)
-		
         .onAppear(perform: notificationService.requestAuthorizationForNotifications)
     }
 }

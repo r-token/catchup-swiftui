@@ -129,7 +129,6 @@ struct NotificationService {
             dateComponents.year = Int(contact.notification_preference_custom_year)
             dateComponents.hour = 12
             dateComponents.minute = 30
-            print(dateComponents)
             break
         default:
             print("It's impossible to get here")
@@ -180,13 +179,10 @@ struct NotificationService {
         moc.performAndWait {
             if content.title == "👋 CatchUp with \(contact.name)" {
                 contact.notification_identifier = identifier
-                print("updated general notification with ID \(identifier)")
             } else if content.title == "🥳 Today is \(contact.name)'s birthday!" {
                 contact.birthday_notification_id = identifier
-                print("updated birthday notification with ID \(identifier)")
             } else {
                 contact.anniversary_notification_id = identifier
-                print("updated anniversary notification with ID \(identifier)")
             }
         }
         self.helper.saveMOC(moc: moc)
@@ -268,7 +264,6 @@ struct NotificationService {
         moc.performAndWait {
             contact.notification_preference_weekday = Int16(newWeekday)
         }
-        print(contact.notification_preference_weekday)
         
         helper.saveMOC(moc: moc)
     }
@@ -310,16 +305,13 @@ struct NotificationService {
     
     func removeGeneralNotification(for contact: SelectedContact) {
         UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [contact.notification_identifier.uuidString])
-        print("removed general notifications with id \(contact.notification_identifier)")
     }
     
     func removeBirthdayNotification(for contact: SelectedContact) {
         UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [contact.birthday_notification_id.uuidString])
-        print("removed birthday notification with id \(contact.birthday_notification_id)")
     }
     
     func removeAnniversaryNotification(for contact: SelectedContact) {
         UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [contact.anniversary_notification_id.uuidString])
-        print("removed anniversary notification with id \(contact.anniversary_notification_id)")
     }
 }

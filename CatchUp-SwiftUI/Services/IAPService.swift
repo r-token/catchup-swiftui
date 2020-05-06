@@ -41,7 +41,7 @@ class IAPService: NSObject {
     
     func leaveATip(index: Int){
         if iapProducts.count == 0 {
-			print("No products to purchase")
+			print("No IAPs to purchase")
 			return
 		}
         
@@ -51,7 +51,7 @@ class IAPService: NSObject {
             SKPaymentQueue.default().add(self)
             SKPaymentQueue.default().add(payment)
             
-            print("PRODUCT TO PURCHASE: \(product.productIdentifier)")
+            print("IAP to purchase: \(product.productIdentifier)")
             productID = product.productIdentifier
         } else {
             purchaseStatusBlock?(.disabled)

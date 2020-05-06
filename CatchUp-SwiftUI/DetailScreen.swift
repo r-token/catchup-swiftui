@@ -111,14 +111,14 @@ struct DetailScreen: View {
 					VStack(alignment: .leading, spacing: 3) {
 						Text("Birthday")
 							.font(.caption)
-						Text(contact.birthday)
+                        Text(converter.getFormattedBirthdayOrAnniversary(from: contact.birthday))
 					}
 				}
                 if notificationService.contactHasAnniversary(contact) {
 					VStack(alignment: .leading, spacing: 3) {
 						Text("Anniversary")
 							.font(.caption)
-						Text(contact.anniversary)
+                        Text(converter.getFormattedBirthdayOrAnniversary(from: contact.anniversary))
 					}
 				}
 			}

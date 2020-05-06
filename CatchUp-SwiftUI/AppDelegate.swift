@@ -19,7 +19,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		
 		if UserDefaults.isFirstVersion2Launch() {
 			UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
-			print("Cleared any pending notifications due to first v2 launch")
 		}
 		
         return true

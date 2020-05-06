@@ -18,11 +18,19 @@ struct UpdatesScreen: View {
                     
                     Spacer()
                     Spacer()
+                    Spacer()
                     
-                    Text("New Update (\(helper.getCurrentAppVersion()))")
+                    Text("New Update")
                         .font(.largeTitle)
                         .bold()
                         .foregroundColor(.orange)
+                    
+                    HStack(spacing: 0) {
+                        Text("Version \(helper.getCurrentAppVersion())")
+                        .font(.headline)
+                        .foregroundColor(.blue)
+                    }
+                    
                     
                     Text("This is a big update. Here's what's new:")
                 }
@@ -72,9 +80,7 @@ struct UpdatesScreen: View {
                     Text("This update also includes major performance improvements and cleans up a lot of unnecessary code.")
                     
                 }
-                
                 Spacer()
-                
             }
         }
         .padding(15)

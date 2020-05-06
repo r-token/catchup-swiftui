@@ -121,7 +121,6 @@ struct HomeScreen : View {
         if savedVersion == version {
             print("App is up to date!")
         } else {
-
             // Toogle to show UpdatesView as a sheet
             self.showSheet = true
             self.activeSheet = .updates
