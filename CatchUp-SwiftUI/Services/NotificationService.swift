@@ -201,15 +201,15 @@ struct NotificationService {
             case 2:
                 return "It's time to check back in"
             case 3:
-                return "You're a good friend. Go you. Tell this person to get CatchUp too so it's not always you who's reaching out"
+                return "You're a good friend. Good for you. Tell this person to get CatchUp too so it's not always you who's reaching out"
             case 4:
                 return "Today is the perfect day to get back in touch"
             case 5:
                 return "Remember to keep in touch with the people that matter most"
             case 6:
-                return "You know what they say: 'A CatchUp message a day keeps the needy friends at bay'"
+                return "You know what they say: 'A CatchUp a day keeps the needy friends at bay'"
             case 7:
-                return "Have you written a physical letter in a while? Maybe give that a try this time? People like that"
+                return "Have you written a physical letter in a while? Maybe give that a try this time. People like that"
             case 8:
                 return "Here's that reminder you set to check in with someone important. Maybe you'll make their day"
             case 9:
@@ -223,11 +223,11 @@ struct NotificationService {
             case 13:
                 return "You know they'll really appreciate it"
             case 14:
-                return "I'm not guilting you into this or anything, but this person will probably be subconsciously sad if you don't say hello."
+                return "I'm not guilting you into this or anything, but this person will probably be sad if you don't say hello."
             case 15:
-                return "You have this app, so you're cool and nice. Now send a thoughtful message to this also cool and nice person"
+                return "You have this app, so you must be cool and nice. Now send a thoughtful message to this also cool and nice person"
             case 16:
-                return "Once upon a time, there was a nice person. The end. (Spoiler: you're the nice person - keep being nice and reach out to this person)"
+                return "Once upon a time, there was a nice person. The end. (Spoiler: you're the nice person - keep being nice and reach out to your friend)"
             case 17:
                 return "Another timely reminder to catch up. Just the way you wanted it"
             case 18:
