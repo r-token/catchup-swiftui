@@ -430,7 +430,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "CatchUp-SwiftUI/CatchUp-SwiftUI.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "CatchUp-SwiftUI/Preview\\ Content";
 				DEVELOPMENT_TEAM = DJAHJZFYK7;
 				ENABLE_PREVIEWS = YES;
@@ -439,7 +439,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.0;
+				MARKETING_VERSION = 2.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.tokensolutions.CatchUp;
 				PRODUCT_NAME = CatchUp;
 				SUPPORTS_MACCATALYST = YES;
@@ -454,7 +454,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "CatchUp-SwiftUI/CatchUp-SwiftUI.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "CatchUp-SwiftUI/Preview\\ Content";
 				DEVELOPMENT_TEAM = DJAHJZFYK7;
 				ENABLE_PREVIEWS = YES;
@@ -463,7 +463,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.0;
+				MARKETING_VERSION = 2.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.tokensolutions.CatchUp;
 				PRODUCT_NAME = CatchUp;
 				SUPPORTS_MACCATALYST = YES;

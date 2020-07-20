@@ -48,8 +48,6 @@ struct DetailScreen: View {
                 }
 			}
 			
-			Spacer()
-			
 			List {
                 if contactService.contactHasPhone(contact) {
 					VStack(alignment: .leading, spacing: 3) {
