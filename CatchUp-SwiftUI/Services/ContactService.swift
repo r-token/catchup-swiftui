@@ -176,14 +176,13 @@ struct ContactService {
 			
 			let formatter = DateFormatter()
 			formatter.dateFormat = "MM-dd"
+			formatter.locale = Locale(identifier: "en_US_POSIX")
+			formatter.timeZone = TimeZone(secondsFromGMT: 0)
 			
 			birthdayString = formatter.string(from: birthday!)
 			
-			// Contacts returns the day before the actual birthday for some reason
-			// I need to get the next day and return that
 			let birthdayDate = formatter.date(from: birthdayString)!
-			let nextDay = Calendar.current.date(byAdding: .day, value: 1, to: birthdayDate)
-			birthdayString = formatter.string(from: nextDay!)
+			birthdayString = formatter.string(from: birthdayDate)
 			
 		} else {
 			birthdayString = ""
@@ -210,14 +209,13 @@ struct ContactService {
 			
 			let formatter = DateFormatter()
 			formatter.dateFormat = "MM-dd"
+			formatter.locale = Locale(identifier: "en_US_POSIX")
+			formatter.timeZone = TimeZone(secondsFromGMT: 0)
 			
 			anniversaryString = formatter.string(from: (anniversary?.date!)!)
 			
-			// Contacts returns the day before the actual birthday for some reason
-			// I need to get the next day and return that
 			let anniversaryDate = formatter.date(from: anniversaryString)!
-			let nextDay = Calendar.current.date(byAdding: .day, value: 1, to: anniversaryDate)
-			anniversaryString = formatter.string(from: nextDay!)
+			anniversaryString = formatter.string(from: anniversaryDate)
 			
 		} else {
 			anniversaryString = ""

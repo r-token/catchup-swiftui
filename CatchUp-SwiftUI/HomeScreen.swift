@@ -121,12 +121,24 @@ struct HomeScreen : View {
         if savedVersion == version {
             print("App is up to date!")
         } else {
-            // Toogle to show UpdatesView as a sheet
-            self.showSheet = true
-            self.activeSheet = .updates
+			if updateIsMajor() {
+				// Toggle to show UpdatesScreen as a sheet
+				print("Major update detected, showing UpdatesScreen...")
+				self.showSheet = true
+				self.activeSheet = .updates
+			}
             UserDefaults.standard.set(version, forKey: "savedVersion")
         }
     }
+	
+	func updateIsMajor() -> Bool {
+		let version = helper.getCurrentAppVersion()
+		if version.suffix(2) == ".0" {
+			return true
+		} else {
+			return false
+		}
+	}
 }
 
 struct HomeScreen_Previews : PreviewProvider {
