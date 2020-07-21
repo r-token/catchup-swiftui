@@ -11,6 +11,7 @@
 		14ACAC86245E52A40091AE90 /* PhoneNumberMetadata.json in Resources */ = {isa = PBXBuildFile; fileRef = 14ACAC85245E52A40091AE90 /* PhoneNumberMetadata.json */; };
 		14BE3AD324593556004F72DE /* GeneralHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14BE3AD224593556004F72DE /* GeneralHelpers.swift */; };
 		14BE3AD72459F610004F72DE /* UpdatesScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14BE3AD62459F610004F72DE /* UpdatesScreen.swift */; };
+		F4095B6424C66F87007163E3 /* SKProduct+localizedPrice.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4095B6324C66F87007163E3 /* SKProduct+localizedPrice.swift */; };
 		F416505A24440579001DB205 /* CatchUp-SwiftUI.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F416505824440579001DB205 /* CatchUp-SwiftUI.xcdatamodeld */; };
 		F4871DA1244FC43C00925392 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4871DA0244FC43C00925392 /* NotificationService.swift */; };
 		F48E37F222C455C3008B0B8B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F48E37F122C455C3008B0B8B /* AppDelegate.swift */; };
@@ -38,6 +39,7 @@
 		14ACAC85245E52A40091AE90 /* PhoneNumberMetadata.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = PhoneNumberMetadata.json; sourceTree = "<group>"; };
 		14BE3AD224593556004F72DE /* GeneralHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralHelpers.swift; sourceTree = "<group>"; };
 		14BE3AD62459F610004F72DE /* UpdatesScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdatesScreen.swift; sourceTree = "<group>"; };
+		F4095B6324C66F87007163E3 /* SKProduct+localizedPrice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SKProduct+localizedPrice.swift"; sourceTree = "<group>"; };
 		F416505924440579001DB205 /* CatchUp_SwiftUI.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = CatchUp_SwiftUI.xcdatamodel; sourceTree = "<group>"; };
 		F4871DA0244FC43C00925392 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
 		F48E37EE22C455C3008B0B8B /* CatchUp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CatchUp.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -185,6 +187,7 @@
 			isa = PBXGroup;
 			children = (
 				F4AD59B2244CC9D600296568 /* UserDefaults+isFirstLaunch.swift */,
+				F4095B6324C66F87007163E3 /* SKProduct+localizedPrice.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -274,6 +277,7 @@
 				14BE3AD324593556004F72DE /* GeneralHelpers.swift in Sources */,
 				F4871DA1244FC43C00925392 /* NotificationService.swift in Sources */,
 				F494F95824424A03003CE7B5 /* ContactService.swift in Sources */,
+				F4095B6424C66F87007163E3 /* SKProduct+localizedPrice.swift in Sources */,
 				F494F95624422ACC003CE7B5 /* ContactPicker.swift in Sources */,
 				F416505A24440579001DB205 /* CatchUp-SwiftUI.xcdatamodeld in Sources */,
 				14BE3AD72459F610004F72DE /* UpdatesScreen.swift in Sources */,
@@ -439,7 +443,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.0.1;
+				MARKETING_VERSION = 2.0.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.tokensolutions.CatchUp;
 				PRODUCT_NAME = CatchUp;
 				SUPPORTS_MACCATALYST = YES;
@@ -463,7 +467,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.0.1;
+				MARKETING_VERSION = 2.0.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.tokensolutions.CatchUp;
 				PRODUCT_NAME = CatchUp;
 				SUPPORTS_MACCATALYST = YES;

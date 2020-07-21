@@ -35,8 +35,11 @@ struct UpdatesScreen: View {
 					Divider()
 					Spacer()
 					
-					Text("– Fixed a bug that caused some birthdays and anniversaries to be off by one day.")
+					Text("– Added proper localization to the Tip Jar amounts.")
 					
+					Spacer()
+					
+					Text("– Fixed a bug that caused some birthdays and anniversaries to be off by one day.")
 				}
 								
 				Spacer()

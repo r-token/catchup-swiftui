@@ -100,6 +100,7 @@ struct HomeScreen : View {
     }
     
     func clearNotificationBadgeAndCheckForUpdate() {
+		fetchAvailableIAPs()
         helper.clearNotificationBadge()
         helper.saveMOC(moc: managedObjectContext)
         checkForUpdate()
@@ -138,6 +139,11 @@ struct HomeScreen : View {
 		} else {
 			return false
 		}
+	}
+	
+	func fetchAvailableIAPs() {
+		print("fetching IAPs")
+		IAPService.shared.fetchAvailableProducts()
 	}
 }
 
