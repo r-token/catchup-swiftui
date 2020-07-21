@@ -2,6 +2,8 @@
 
 **[Featured on Brett Terpstra's *Systematic* Podcast](https://esn.fm/systematic/218)** (around the 46:00 mark)
 
+**[Featured in Germany on iPhone-Ticker.de](https://www.iphone-ticker.de/catchup-app-hilft-in-kontakt-zu-bleiben-160121/)**
+
 Free with no ads!
 
 Keep in touch with your friends, family, business associates, and anyone else in your iOS Contacts list with CatchUp. Set reminders for the contacts you choose, and get notified when it's time to CatchUp with them again.
