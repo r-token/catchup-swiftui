@@ -35,19 +35,33 @@ struct UpdatesScreen: View {
 					Divider()
 					Spacer()
 					
-					Text("– Fixed a bug that caused some birthdays and anniversaries to be off by one day.")
+				}
+				
+				Group {
 					
+					
+					Text("– iOS 14 compatibility.")
+					
+					Spacer()
+					
+					Text("– Added proper localization to the Tip Jar amounts.")
+					
+					Spacer()
+					
+					Text("– Fixed a bug that caused some birthdays and anniversaries to be off by one day.")
 				}
 								
-				Spacer()
-					.frame(height: 45)
-				
-				Spacer()
-				Text("Previously, on Version 2.0...")
-					.font(.headline)
-				Divider()
-				Spacer()
-				Text("Version 2.0 was a big update. Here's what happened:")
+				Group {
+					Spacer()
+						.frame(height: 45)
+					
+					Spacer()
+					Text("Previously, on Version 2.0...")
+						.font(.headline)
+					Divider()
+					Spacer()
+					Text("Version 2.0 was a big update. Here's what happened:")
+				}
 				
 				Group {
 					Spacer()

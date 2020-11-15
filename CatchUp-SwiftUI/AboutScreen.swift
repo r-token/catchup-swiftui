@@ -13,12 +13,14 @@ struct AboutScreen: View {
 	
 	let generator = UINotificationFeedbackGenerator()
 	
+	let smallTip = IAPService.shared.getSmallTipAmount()
+	let mediumTip = IAPService.shared.getMediumTipAmount()
+	let largeTip = IAPService.shared.getLargeTipAmount()
+	
     var body: some View {
 		VStack(alignment: .center, spacing: 15) {
-				
 			Spacer()
-            
-            Spacer()
+				.frame(height: 100)
             
             Group {
                 Image("CatchUp")
@@ -55,7 +57,7 @@ struct AboutScreen: View {
                     
                     Spacer()
                     
-                    Button("$0.99") {
+                    Button(smallTip) {
                         self.graciousTipPressed()
                     }
                         .font(.headline)
@@ -67,7 +69,7 @@ struct AboutScreen: View {
                     
                     Spacer()
                     
-                    Button("$1.99") {
+                    Button(mediumTip) {
                         self.generousTipPressed()
                     }
                         .font(.headline)
@@ -79,7 +81,7 @@ struct AboutScreen: View {
                     
                     Spacer()
                     
-                    Button("$4.99") {
+                    Button(largeTip) {
                         self.gratuitousTipPressed()
                     }
                         .font(.headline)
@@ -113,7 +115,6 @@ struct AboutScreen: View {
             }
 		}
 		.padding()
-		.onAppear(perform: fetchAvailableIAPs)
         
         .sheet(isPresented: $showingUpdateScreen) {
             UpdatesScreen()
@@ -134,10 +135,6 @@ struct AboutScreen: View {
 		generator.notificationOccurred(.success)
 		IAPService.shared.leaveATip(index: 2)
     }
-	
-	func fetchAvailableIAPs() {
-		IAPService.shared.fetchAvailableProducts()
-	}
 }
 
 struct AboutScreen_Previews: PreviewProvider {

@@ -57,6 +57,30 @@ class IAPService: NSObject {
             purchaseStatusBlock?(.disabled)
         }
     }
+	
+	func getSmallTipAmount() -> String {
+		if iapProducts.count > 0 {
+			return iapProducts[1].localizedPrice
+		} else {
+			return "$0.99"
+		}
+	}
+	
+	func getMediumTipAmount() -> String {
+		if iapProducts.count > 0 {
+			return iapProducts[0].localizedPrice
+		} else {
+			return "$1.99"
+		}
+	}
+	
+	func getLargeTipAmount() -> String {
+		if iapProducts.count > 0 {
+			return iapProducts[2].localizedPrice
+		} else {
+			return "$4.99"
+		}
+	}
     
 	// MARK: - RESTORE PURCHASE
     func restorePurchase(){
