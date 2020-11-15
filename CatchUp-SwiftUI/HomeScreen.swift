@@ -7,6 +7,8 @@
 //
 
 import SwiftUI
+import SwiftUIKit
+import ContactsUI
 
 enum ActiveSheet: Identifiable {
 	case contactPicker
@@ -20,6 +22,8 @@ enum ActiveSheet: Identifiable {
 
 struct HomeScreen : View {
 	@State private var showSheet = false
+	@State private var showContactPicker = false
+	@State private var contacts: [CNContact] = []
 	@State private var activeSheet: ActiveSheet?
     @State private var showUpdates: ActiveSheet = .updates
 	@Environment(\.managedObjectContext) var managedObjectContext
@@ -29,6 +33,7 @@ struct HomeScreen : View {
     let notificationService = NotificationService()
     let helper = GeneralHelpers()
 	let converter = Conversions()
+	let contactHelper = ContactHelper()
 	
 	init() {
         //Use this if NavigationBarTitle is with Large Font
@@ -42,7 +47,7 @@ struct HomeScreen : View {
 					ForEach(selectedContacts) { contact in
 						NavigationLink(destination: DetailScreen(contact: contact)) {
 							HStack {
-                                self.converter.getContactPicture(from: contact.picture)
+                                converter.getContactPicture(from: contact.picture)
 									.renderingMode(.original)
 									.resizable()
 									.frame(width: 45, height: 45, alignment: .leading)
@@ -51,7 +56,7 @@ struct HomeScreen : View {
 								VStack(alignment: .leading, spacing: 2) {
 									Text(contact.name)
 										.font(.headline)
-									Text(self.converter.convertNotificationPreferenceIntToString(preference: Int(contact.notification_preference), contact: contact))
+									Text(converter.convertNotificationPreferenceIntToString(preference: Int(contact.notification_preference), contact: contact))
 										.font(.caption)
 										.foregroundColor(.gray)
 								}
@@ -62,7 +67,8 @@ struct HomeScreen : View {
 				.listStyle(PlainListStyle())
                 
                 Button(action: {
-					self.activeSheet = .contactPicker
+					activeSheet = .contactPicker
+					showContactPicker.toggle()
                 }) {
 					HStack(alignment: .center, spacing: 6) {
 						Image(systemName: "person.crop.circle.fill.badge.plus")
@@ -79,7 +85,7 @@ struct HomeScreen : View {
 					
 				.navigationBarItems(trailing:
 					Button(action: {
-						self.activeSheet = .about
+						activeSheet = .about
 					}) {
 						Image(systemName: "ellipsis.circle")
 							.font(.title)
@@ -88,10 +94,16 @@ struct HomeScreen : View {
 				)
             }
 				
-			.sheet(item: $activeSheet) { item in
+			.sheet(item: $activeSheet, onDismiss: { activeSheet = nil }) { item in
 				switch item {
 				case .contactPicker:
-					ContactPicker()
+					ContactPicker(
+						showPicker: $showContactPicker,
+						onSelectContacts: { c in
+							contacts = c
+							contactHelper.saveSelectedContact(for: contacts)
+						}
+					)
 				case .about:
 					AboutScreen()
 				case .updates:
@@ -129,7 +141,7 @@ struct HomeScreen : View {
 			if updateIsMajor() {
 				// Toggle to show UpdatesScreen as a sheet
 				print("Major update detected, showing UpdatesScreen...")
-				self.activeSheet = .updates
+				activeSheet = .updates
 			}
             UserDefaults.standard.set(version, forKey: "savedVersion")
         }
