@@ -8,15 +8,19 @@
 
 import SwiftUI
 
-enum ActiveSheet {
+enum ActiveSheet: Identifiable {
 	case contactPicker
     case about
     case updates
+	
+	var id: UUID {
+		UUID()
+	}
 }
 
 struct HomeScreen : View {
 	@State private var showSheet = false
-	@State private var activeSheet: ActiveSheet = .contactPicker
+	@State private var activeSheet: ActiveSheet?
     @State private var showUpdates: ActiveSheet = .updates
 	@Environment(\.managedObjectContext) var managedObjectContext
 	@FetchRequest(entity: SelectedContact.entity(),
@@ -55,9 +59,9 @@ struct HomeScreen : View {
 						}
 					}.onDelete(perform: removePendingNotificationsAndDeleteContact)
 				}
+				.listStyle(PlainListStyle())
                 
                 Button(action: {
-					self.showSheet = true
 					self.activeSheet = .contactPicker
                 }) {
 					HStack(alignment: .center, spacing: 6) {
@@ -75,7 +79,6 @@ struct HomeScreen : View {
 					
 				.navigationBarItems(trailing:
 					Button(action: {
-						self.showSheet = true
 						self.activeSheet = .about
 					}) {
 						Image(systemName: "ellipsis.circle")
@@ -85,14 +88,15 @@ struct HomeScreen : View {
 				)
             }
 				
-			.sheet(isPresented: $showSheet) {
-				if self.activeSheet == .contactPicker {
+			.sheet(item: $activeSheet) { item in
+				switch item {
+				case .contactPicker:
 					ContactPicker()
-                } else if self.activeSheet == .about {
+				case .about:
 					AboutScreen()
-                } else {
-                    UpdatesScreen()
-                }
+				case .updates:
+					UpdatesScreen()
+				}
 			}
 		}
 		.accentColor(.orange)
@@ -125,7 +129,6 @@ struct HomeScreen : View {
 			if updateIsMajor() {
 				// Toggle to show UpdatesScreen as a sheet
 				print("Major update detected, showing UpdatesScreen...")
-				self.showSheet = true
 				self.activeSheet = .updates
 			}
             UserDefaults.standard.set(version, forKey: "savedVersion")

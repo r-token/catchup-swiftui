@@ -58,6 +58,7 @@ struct PreferenceScreen: View {
                 .font(.largeTitle)
                 .bold()
                 .foregroundColor(.orange)
+				.padding(.bottom)
             
             Text("How often should we notify you to CatchUp with \(contact.name)?")
             
