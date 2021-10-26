@@ -38,74 +38,13 @@ struct UpdatesScreen: View {
 				}
 				
 				Group {
-					
-					
-					Text("– iOS 14 compatibility.")
+					Text("– iOS 15 compatibility")
 					
 					Spacer()
 					
-					Text("– Added proper localization to the Tip Jar amounts.")
-					
-					Spacer()
-					
-					Text("– Fixed a bug that caused some birthdays and anniversaries to be off by one day.")
+					Text("– CatchUp now requires iOS 14 or newer")
 				}
-								
-				Group {
-					Spacer()
-						.frame(height: 45)
-					
-					Spacer()
-					Text("Previously, on Version 2.0...")
-						.font(.headline)
-					Divider()
-					Spacer()
-					Text("Version 2.0 was a big update. Here's what happened:")
-				}
-				
-				Group {
-					Spacer()
-					
-					Text("TL;DR")
-						.font(.headline)
-					
-					Text("– This update brings CatchUp into the modern era of iOS development, but you'll have to set up all of your contacts and reminders again.")
-					
-					Spacer()
-					
-					Text("Complete Rewrite")
-						.font(.headline)
-					
-					Text("– CatchUp has been rebuilt from scratch with Apple's latest technologies. To celebrate the rewrite, we've given it a new icon as well.")
-					
-					Spacer()
-					
-					Text("Dark Mode Support")
-						.font(.headline)
-					
-					Text("– CatchUp now fully supports both light and dark mode, and will change automatically based on your system setting.")
-					
-					Spacer()
-				}
-				
-				Group {
-					Text("All-New Back End")
-						.font(.headline)
-					
-					Text("– This is a significant upgrade to our back end, but unfortunately will force you to have to set your contacts and reminders again.")
-					
-					Spacer()
-					
-					Text("Redesigned Screens")
-						.font(.headline)
-					
-					Text("– Every screen in CatchUp has been updated and polished for a fresh new look that's still familiar.")
-					
-					Spacer()
-					
-					Text("This update also includes major performance improvements and cleans up a lot of unnecessary code.")
-					
-				}
+                
 				Spacer()
 			}
 		}

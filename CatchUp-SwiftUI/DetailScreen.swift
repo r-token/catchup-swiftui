@@ -49,81 +49,81 @@ struct DetailScreen: View {
 			}
 			
 			List {
-                if contactService.contactHasPhone(contact) {
-					VStack(alignment: .leading, spacing: 3) {
-						Text("Phone")
-							.font(.caption)
-						
-                        Button(converter.getFormattedPhoneNumber(from: contact.phone)) {
-                            UIApplication.shared.open(self.converter.getTappablePhoneNumber(from: self.contact.phone))
-						}
-						.foregroundColor(.blue)
-					}
-				}
-                if contactService.contactHasSecondaryPhone(contact) {
-					VStack(alignment: .leading, spacing: 3) {
-						Text("Secondary Phone")
-							.font(.caption)
-						
-                        Button(converter.getFormattedPhoneNumber(from: contact.secondary_phone)) {
-                            UIApplication.shared.open(self.converter.getTappablePhoneNumber(from: self.contact.secondary_phone))
-						}
-						.foregroundColor(.blue)
-					}
-				}
-                if contactService.contactHasEmail(contact) {
-					VStack(alignment: .leading, spacing: 3) {
-						Text("Email")
-							.font(.caption)
-						
-						Button(contact.email) {
-                            UIApplication.shared.open(self.converter.getTappableEmail(from: self.contact.email))
-						}
-						.foregroundColor(.blue)
-					}
-				}
-                if contactService.contactHasSecondaryEmail(contact) {
-					VStack(alignment: .leading, spacing: 3) {
-						Text("Secondary Email")
-							.font(.caption)
-						
-						Button(contact.secondary_email) {
-                            UIApplication.shared.open(self.converter.getTappableEmail(from: self.contact.secondary_email))
-						}
-						.foregroundColor(.blue)
-					}
-				}
-                if contactService.contactHasAddress(contact) {
-					VStack(alignment: .leading, spacing: 3) {
-						Text("Address")
-							.font(.caption)
-						Text(contact.address)
-					}
-				}
-                if contactService.contactHasSecondaryAddress(contact) {
-					VStack(alignment: .leading, spacing: 3) {
-						Text("Secondary Address")
-							.font(.caption)
-						Text(contact.secondary_address)
-					}
-				}
-                if notificationService.contactHasBirthday(contact) {
-					VStack(alignment: .leading, spacing: 3) {
-						Text("Birthday")
-							.font(.caption)
-                        Text(converter.getFormattedBirthdayOrAnniversary(from: contact.birthday))
-					}
-				}
-                if notificationService.contactHasAnniversary(contact) {
-					VStack(alignment: .leading, spacing: 3) {
-						Text("Anniversary")
-							.font(.caption)
-                        Text(converter.getFormattedBirthdayOrAnniversary(from: contact.anniversary))
-					}
-				}
+                Section(header: Text("Contact Information")) {
+                    if contactService.contactHasPhone(contact) {
+                        VStack(alignment: .leading, spacing: 3) {
+                            Text("Phone")
+                                .font(.caption)
+                            
+                            Button(converter.getFormattedPhoneNumber(from: contact.phone)) {
+                                UIApplication.shared.open(self.converter.getTappablePhoneNumber(from: self.contact.phone))
+                            }
+                            .foregroundColor(.blue)
+                        }
+                    }
+                    if contactService.contactHasSecondaryPhone(contact) {
+                        VStack(alignment: .leading, spacing: 3) {
+                            Text("Secondary Phone")
+                                .font(.caption)
+                            
+                            Button(converter.getFormattedPhoneNumber(from: contact.secondary_phone)) {
+                                UIApplication.shared.open(self.converter.getTappablePhoneNumber(from: self.contact.secondary_phone))
+                            }
+                            .foregroundColor(.blue)
+                        }
+                    }
+                    if contactService.contactHasEmail(contact) {
+                        VStack(alignment: .leading, spacing: 3) {
+                            Text("Email")
+                                .font(.caption)
+                            
+                            Button(contact.email) {
+                                UIApplication.shared.open(self.converter.getTappableEmail(from: self.contact.email))
+                            }
+                            .foregroundColor(.blue)
+                        }
+                    }
+                    if contactService.contactHasSecondaryEmail(contact) {
+                        VStack(alignment: .leading, spacing: 3) {
+                            Text("Secondary Email")
+                                .font(.caption)
+                            
+                            Button(contact.secondary_email) {
+                                UIApplication.shared.open(self.converter.getTappableEmail(from: self.contact.secondary_email))
+                            }
+                            .foregroundColor(.blue)
+                        }
+                    }
+                    if contactService.contactHasAddress(contact) {
+                        VStack(alignment: .leading, spacing: 3) {
+                            Text("Address")
+                                .font(.caption)
+                            Text(contact.address)
+                        }
+                    }
+                    if contactService.contactHasSecondaryAddress(contact) {
+                        VStack(alignment: .leading, spacing: 3) {
+                            Text("Secondary Address")
+                                .font(.caption)
+                            Text(contact.secondary_address)
+                        }
+                    }
+                    if notificationService.contactHasBirthday(contact) {
+                        VStack(alignment: .leading, spacing: 3) {
+                            Text("Birthday")
+                                .font(.caption)
+                            Text(converter.getFormattedBirthdayOrAnniversary(from: contact.birthday))
+                        }
+                    }
+                    if notificationService.contactHasAnniversary(contact) {
+                        VStack(alignment: .leading, spacing: 3) {
+                            Text("Anniversary")
+                                .font(.caption)
+                            Text(converter.getFormattedBirthdayOrAnniversary(from: contact.anniversary))
+                        }
+                    }
+                }
 			}
-			
-			Spacer()
 		}
         .sheet(
 			isPresented: $showingPreferenceScreen,

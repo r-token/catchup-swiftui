@@ -62,9 +62,9 @@ struct HomeScreen : View {
 								}
 							}
 						}
-					}.onDelete(perform: removePendingNotificationsAndDeleteContact)
+					}
+                    .onDelete(perform: removePendingNotificationsAndDeleteContact)
 				}
-				.listStyle(PlainListStyle())
                 
                 Button(action: {
 					activeSheet = .contactPicker
@@ -88,7 +88,7 @@ struct HomeScreen : View {
 						activeSheet = .about
 					}) {
 						Image(systemName: "ellipsis.circle")
-							.font(.title)
+							.font(.title2)
 							.foregroundColor(.blue)
 					}
 				)
