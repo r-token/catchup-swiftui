@@ -43,6 +43,10 @@ struct UpdatesScreen: View {
 					Spacer()
 					
 					Text("– CatchUp now requires iOS 14 or newer")
+                    
+                    Spacer()
+                    
+                    Text("– More to come soon!")
 				}
                 
 				Spacer()
