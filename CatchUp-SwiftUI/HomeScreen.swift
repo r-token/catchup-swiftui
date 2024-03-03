@@ -28,13 +28,14 @@ struct HomeScreen : View {
 	@State private var activeSheet: ActiveSheet?
     @State private var showUpdates: ActiveSheet = .updates
 
+    @Environment(\.scenePhase) var scenePhase
 	@Environment(\.modelContext) var modelContext
     @Query(sort: \SelectedContact.name) var selectedContacts: [SelectedContact]
 	
     let notificationService = NotificationService()
     let helper = GeneralHelpers()
 	let converter = Conversions()
-	
+
 	init() {
         //Use this if NavigationBarTitle is with Large Font
 		UINavigationBar.appearance().largeTitleTextAttributes = [.foregroundColor: UIColor.systemOrange]
@@ -113,11 +114,19 @@ struct HomeScreen : View {
 		}
 		.accentColor(.orange)
         .onAppear {
+            print("HomeScreen onAppear")
             clearNotificationBadgeAndCheckForUpdate()
+            notificationService.requestAuthorizationForNotifications()
+            resetNotifications()
 
             print(modelContext.sqliteCommand)
+        }
 
-            print("contacts: \(selectedContacts)")
+        .onChange(of: scenePhase) { oldPhase, newPhase in
+            if newPhase == .active {
+                print("HomeScreen scenePhase Active")
+                resetNotifications()
+            }
         }
     }
     
@@ -152,7 +161,16 @@ struct HomeScreen : View {
             UserDefaults.standard.set(version, forKey: "savedVersion")
         }
     }
-	
+
+    func resetNotifications() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+            for contact in selectedContacts {
+                notificationService.removeExistingNotifications(for: contact)
+                notificationService.createNewNotification(for: contact, modelContext: modelContext)
+            }
+        }
+    }
+
 	func updateIsMajor() -> Bool {
 		let version = helper.getCurrentAppVersion()
 		if version.suffix(2) == ".0" {

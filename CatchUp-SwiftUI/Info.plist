@@ -14,6 +14,10 @@
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>NSContactsUsageDescription</key>
 	<string>CatchUp needs access to your Contacts in order to remind you to catch up with the people you choose. CatchUp does not store or save anything.</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>remote-notification</string>
+	</array>
 	<key>UILaunchScreen</key>
 	<dict>
 		<key>UIColorName</key>

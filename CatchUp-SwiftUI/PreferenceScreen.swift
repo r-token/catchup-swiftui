@@ -109,7 +109,6 @@ struct PreferenceScreen: View {
 		.padding(15)
 
         .onAppear {
-            notificationService.requestAuthorizationForNotifications()
             setInitialNotificateDateTime()
 
             print("contact notification preference: \(contact.notification_preference)")

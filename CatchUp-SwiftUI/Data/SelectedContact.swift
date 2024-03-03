@@ -12,15 +12,15 @@ import SwiftData
 
 @Model
 class SelectedContact {
-    var address: String
-    var anniversary: String
-    var anniversary_notification_id: UUID
-    var birthday: String
-    var birthday_notification_id: UUID
-    var email: String
-    var id: UUID
-    var name: String
-    var notification_identifier: UUID
+    var address: String = ""
+    var anniversary: String = ""
+    var anniversary_notification_id: UUID = UUID()
+    var birthday: String = ""
+    var birthday_notification_id: UUID = UUID()
+    var email: String = ""
+    var id: UUID = UUID()
+    var name: String = ""
+    var notification_identifier: UUID = UUID()
     var notification_preference: Int = 0
     var notification_preference_custom_day: Int = 0
     var notification_preference_custom_month: Int = 0
@@ -28,11 +28,11 @@ class SelectedContact {
     var notification_preference_hour: Int = 0
     var notification_preference_minute: Int = 0
     var notification_preference_weekday: Int = 0
-    var phone: String
-    var picture: String
-    var secondary_address: String
-    var secondary_email: String
-    var secondary_phone: String
+    var phone: String = ""
+    var picture: String = ""
+    var secondary_address: String = ""
+    var secondary_email: String = ""
+    var secondary_phone: String = ""
 
     init(
         address: String,

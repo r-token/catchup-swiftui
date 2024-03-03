@@ -152,8 +152,8 @@ struct DetailScreen: View {
         .sheet(
 			isPresented: $showingPreferenceScreen,
 			onDismiss: {
-                self.notificationService.removeExistingNotifications(for: contact)
-                self.notificationService.createNewNotification(for: contact, modelContext: modelContext)
+                notificationService.removeExistingNotifications(for: contact)
+                notificationService.createNewNotification(for: contact, modelContext: modelContext)
 			}) {
 			PreferenceScreen(contact: contact)
 		}
