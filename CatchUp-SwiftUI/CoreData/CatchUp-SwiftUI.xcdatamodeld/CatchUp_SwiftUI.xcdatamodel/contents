@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="16119" systemVersion="19E287" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="22522" systemVersion="23D60" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithSwiftData="YES" userDefinedModelVersionIdentifier="">
     <entity name="SelectedContact" representedClassName="SelectedContact" syncable="YES">
         <attribute name="address" optional="YES" attributeType="String"/>
         <attribute name="anniversary" optional="YES" attributeType="String"/>
@@ -23,7 +23,4 @@
         <attribute name="secondary_email" optional="YES" attributeType="String"/>
         <attribute name="secondary_phone" optional="YES" attributeType="String"/>
     </entity>
-    <elements>
-        <element name="SelectedContact" positionX="-63" positionY="-18" width="128" height="28"/>
-    </elements>
 </model>

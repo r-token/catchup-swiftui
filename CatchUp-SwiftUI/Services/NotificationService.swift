@@ -6,6 +6,7 @@
 //  Copyright © 2020 Token Solutions. All rights reserved.
 //
 
+import SwiftData
 import SwiftUI
 import UserNotifications
 import CoreData
@@ -15,18 +16,18 @@ struct NotificationService {
     let helper = GeneralHelpers()
     let contactService = ContactService()
     
-    func createNewNotification(for contact: SelectedContact, moc: NSManagedObjectContext) {
+    func createNewNotification(for contact: SelectedContact, modelContext: ModelContext) {
         let addRequest = {
             if self.preferenceIsNotSetToNever(for: contact) {
-                self.addGeneralNotification(for: contact, moc: moc)
+                self.addGeneralNotification(for: contact, modelContext: modelContext)
             }
             
             if self.contactHasBirthday(contact) {
-                self.addBirthdayNotification(for: contact, moc: moc)
+                self.addBirthdayNotification(for: contact, modelContext: modelContext)
             }
             
             if self.contactHasAnniversary(contact) {
-                self.addAnniversaryNotification(for: contact, moc: moc)
+                self.addAnniversaryNotification(for: contact, modelContext: modelContext)
             }
         }
 
@@ -45,7 +46,7 @@ struct NotificationService {
         return contact.anniversary != "" ? true : false
     }
     
-    func addGeneralNotification(for contact: SelectedContact, moc: NSManagedObjectContext) {
+    func addGeneralNotification(for contact: SelectedContact, modelContext: ModelContext) {
         let notificationContent = UNMutableNotificationContent()
         notificationContent.title = "👋 CatchUp with \(contact.name)"
         notificationContent.body = self.generateRandomNotificationBody()
@@ -55,10 +56,10 @@ struct NotificationService {
         let identifier = UUID()
         let dateComponents = self.setNotificationDateComponents(for: contact)
         
-        self.scheduleNotification(for: contact, dateComponents: dateComponents, identifier: identifier, content: notificationContent, moc: moc)
+        self.scheduleNotification(for: contact, dateComponents: dateComponents, identifier: identifier, content: notificationContent, modelContext: modelContext)
     }
     
-    func addBirthdayNotification(for contact: SelectedContact, moc: NSManagedObjectContext) {
+    func addBirthdayNotification(for contact: SelectedContact, modelContext: ModelContext) {
         let birthdayNotificationContent = UNMutableNotificationContent()
         birthdayNotificationContent.title = "🥳 Today is \(contact.name)'s birthday!"
         birthdayNotificationContent.body = "Be sure to CatchUp and wish them a great one!"
@@ -68,10 +69,10 @@ struct NotificationService {
         let birthdayIdentifier = UUID()
         let birthdayDateComponents = self.setBirthdayDateComponents(for: contact)
         
-        self.scheduleNotification(for: contact, dateComponents: birthdayDateComponents, identifier: birthdayIdentifier, content: birthdayNotificationContent, moc: moc)
+        self.scheduleNotification(for: contact, dateComponents: birthdayDateComponents, identifier: birthdayIdentifier, content: birthdayNotificationContent, modelContext: modelContext)
     }
     
-    func addAnniversaryNotification(for contact: SelectedContact, moc: NSManagedObjectContext) {
+    func addAnniversaryNotification(for contact: SelectedContact, modelContext: ModelContext) {
         let anniversaryNotificationContent = UNMutableNotificationContent()
         anniversaryNotificationContent.title = "😍 Tomorrow is \(contact.name)'s anniversary!"
         anniversaryNotificationContent.body = "Be sure to CatchUp and wish them the best."
@@ -81,7 +82,7 @@ struct NotificationService {
         let anniversaryIdentifier = UUID()
         let anniversaryDateComponents = self.setAnniversaryDateComponents(for: contact)
         
-        self.scheduleNotification(for: contact, dateComponents: anniversaryDateComponents, identifier: anniversaryIdentifier, content: anniversaryNotificationContent, moc: moc)
+        self.scheduleNotification(for: contact, dateComponents: anniversaryDateComponents, identifier: anniversaryIdentifier, content: anniversaryNotificationContent, modelContext: modelContext)
     }
     
     func checkNotificationAuthorizationStatusAndAddRequest(action: @escaping() -> Void) {
@@ -171,22 +172,21 @@ struct NotificationService {
         return anniversaryDateComponents
     }
     
-    func scheduleNotification(for contact: SelectedContact, dateComponents: DateComponents, identifier: UUID, content: UNMutableNotificationContent, moc: NSManagedObjectContext) {
-        
+    func scheduleNotification(for contact: SelectedContact, dateComponents: DateComponents, identifier: UUID, content: UNMutableNotificationContent, modelContext: ModelContext) {
+
         let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
         let request = UNNotificationRequest(identifier: identifier.uuidString, content: content, trigger: trigger)
         
-        moc.performAndWait {
-            if content.title == "👋 CatchUp with \(contact.name)" {
-                contact.notification_identifier = identifier
-            } else if content.title == "🥳 Today is \(contact.name)'s birthday!" {
-                contact.birthday_notification_id = identifier
-            } else {
-                contact.anniversary_notification_id = identifier
-            }
+        if content.title == "👋 CatchUp with \(contact.name)" {
+            contact.notification_identifier = identifier
+        } else if content.title == "🥳 Today is \(contact.name)'s birthday!" {
+            contact.birthday_notification_id = identifier
+        } else {
+            contact.anniversary_notification_id = identifier
         }
-        self.helper.saveMOC(moc: moc)
-        
+
+        try? modelContext.save()
+
         notificationCenter.add(request)
     }
     
@@ -239,46 +239,38 @@ struct NotificationService {
         }
     }
     
-    func updateNotificationPreference(for contact: SelectedContact, selection: Int, moc: NSManagedObjectContext) {
+    func updateNotificationPreference(for contact: SelectedContact, selection: Int, modelContext: ModelContext) {
         let newPreference = selection
-        moc.performAndWait {
-            contact.notification_preference = Int16(newPreference)
-        }
-        
-        helper.saveMOC(moc: moc)
+        contact.notification_preference = Int16(newPreference)
+
+        try? modelContext.save()
     }
     
-    func updateNotificationTime(for contact: SelectedContact, hour: Int, minute: Int, moc: NSManagedObjectContext) {
+    func updateNotificationTime(for contact: SelectedContact, hour: Int, minute: Int, modelContext: ModelContext) {
         let newHour = hour
         let newMinute = minute
-        moc.performAndWait {
-            contact.notification_preference_hour = Int16(newHour)
-            contact.notification_preference_minute = Int16(newMinute)
-        }
-        
-        helper.saveMOC(moc: moc)
+        contact.notification_preference_hour = Int16(newHour)
+        contact.notification_preference_minute = Int16(newMinute)
+
+        try? modelContext.save()
     }
     
-    func updateNotificationPreferenceWeekday(for contact: SelectedContact, weekday: Int, moc: NSManagedObjectContext) {
+    func updateNotificationPreferenceWeekday(for contact: SelectedContact, weekday: Int, modelContext: ModelContext) {
         let newWeekday = weekday
-        moc.performAndWait {
-            contact.notification_preference_weekday = Int16(newWeekday)
-        }
-        
-        helper.saveMOC(moc: moc)
+        contact.notification_preference_weekday = Int16(newWeekday)
+
+        try? modelContext.save()
     }
     
-    func updateNotificationCustomDate(for contact: SelectedContact, month: Int, day: Int, year: Int, moc: NSManagedObjectContext) {
+    func updateNotificationCustomDate(for contact: SelectedContact, month: Int, day: Int, year: Int, modelContext: ModelContext) {
         let customMonth = month
         let customDay = day
         let customYear = year
-        moc.performAndWait {
-            contact.notification_preference_custom_month = Int16(customMonth)
-            contact.notification_preference_custom_day = Int16(customDay)
-            contact.notification_preference_custom_year = Int16(customYear)
-        }
-        
-        helper.saveMOC(moc: moc)
+        contact.notification_preference_custom_month = Int16(customMonth)
+        contact.notification_preference_custom_day = Int16(customDay)
+        contact.notification_preference_custom_year = Int16(customYear)
+
+        try? modelContext.save()
     }
     
     func requestAuthorizationForNotifications() {

@@ -16,14 +16,6 @@ struct GeneralHelpers {
         UIApplication.shared.applicationIconBadgeNumber = 0
     }
     
-    func saveMOC(moc: NSManagedObjectContext) {
-        do {
-            try moc.save()
-        } catch let error as NSError {
-            print("Could not update the MOC. \(error), \(error.userInfo)")
-        }
-    }
-    
     func getCurrentAppVersion() -> String {
         let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"]
         let version = (appVersion as! String)

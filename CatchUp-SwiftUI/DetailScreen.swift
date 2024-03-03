@@ -10,8 +10,8 @@ import SwiftUI
 
 struct DetailScreen: View {
 	@State private var showingPreferenceScreen = false
-	@Environment(\.managedObjectContext) var managedObjectContext
-    
+	@Environment(\.modelContext) var modelContext
+
     let notificationService = NotificationService()
 	let converter = Conversions()
     let helper = GeneralHelpers()
@@ -129,13 +129,13 @@ struct DetailScreen: View {
 			isPresented: $showingPreferenceScreen,
 			onDismiss: {
                 self.notificationService.removeExistingNotifications(for: self.contact)
-                self.notificationService.createNewNotification(for: self.contact, moc: self.managedObjectContext)
+                self.notificationService.createNewNotification(for: self.contact, modelContext: modelContext)
 			}) {
 				
 			// the fact that I have to manually pass in the MOC is dumb
 			// hopefully this is a SwiftUI v1 bug that's fixed at WWDC this year
 			// (https://stackoverflow.com/questions/58328201/saving-core-data-entity-in-popover-in-swiftui-throws-nilerror-without-passing-e)
-			PreferenceScreen(contact: self.contact).environment(\.managedObjectContext, self.managedObjectContext)
+			PreferenceScreen(contact: self.contact)
 		}
         .onAppear(perform: helper.clearNotificationBadge)
     }

@@ -13,9 +13,10 @@ struct PreferenceScreen: View {
 	@State private var notificationPreferenceTime: Date
 	@State private var notificationPreferenceWeekday: Int
 	@State private var notificationPreferenceCustomDate: Date
+
 	@Environment(\.presentationMode) var presentationMode
-	@Environment(\.managedObjectContext) var managedObjectContext
-	
+	@Environment(\.modelContext) var modelContext
+
     let notificationService = NotificationService()
 	let now = Date()
     
@@ -74,7 +75,7 @@ struct PreferenceScreen: View {
                 // Found it buried in comments on Stack Overflow. But it works.
                 // (https://stackoverflow.com/questions/58676483/is-there-a-way-to-call-a-function-when-a-swiftui-picker-selection-changes)
             .onReceive([self.notificationPreference].publisher.first()) { (preference) in
-                self.notificationService.updateNotificationPreference(for: self.contact, selection: preference, moc: self.managedObjectContext)
+                self.notificationService.updateNotificationPreference(for: self.contact, selection: preference, modelContext: modelContext)
             }
             
             VStack(alignment: .leading, spacing: 20) {
@@ -92,7 +93,7 @@ struct PreferenceScreen: View {
                             .onReceive([self.notificationPreferenceTime].publisher.first()) { (datetime) in
                                 let calendar = Calendar.current
                                 let components = calendar.dateComponents([.hour, .minute], from : datetime)
-                                self.notificationService.updateNotificationTime(for: self.contact, hour: components.hour!, minute: components.minute!, moc: self.managedObjectContext)
+                                self.notificationService.updateNotificationTime(for: self.contact, hour: components.hour!, minute: components.minute!, modelContext: modelContext)
                             }
                         Spacer()
                     }
@@ -115,7 +116,7 @@ struct PreferenceScreen: View {
                         }.pickerStyle(SegmentedPickerStyle())
                         
                             .onReceive([self.notificationPreferenceWeekday].publisher.first()) { (weekday) in
-                                self.notificationService.updateNotificationPreferenceWeekday(for: self.contact, weekday: weekday, moc: self.managedObjectContext)
+                                self.notificationService.updateNotificationPreferenceWeekday(for: self.contact, weekday: weekday, modelContext: modelContext)
                             }
                     }
                 }
@@ -136,7 +137,7 @@ struct PreferenceScreen: View {
                                     let year = Calendar.current.component(.year, from: date)
                                     let month = Calendar.current.component(.month, from: date)
                                     let day = Calendar.current.component(.day, from: date)
-                                    self.notificationService.updateNotificationCustomDate(for: self.contact, month: month, day: day, year: year, moc: self.managedObjectContext)
+                                    self.notificationService.updateNotificationCustomDate(for: self.contact, month: month, day: day, year: year, modelContext: modelContext)
                                 }
                             
                             Spacer()
