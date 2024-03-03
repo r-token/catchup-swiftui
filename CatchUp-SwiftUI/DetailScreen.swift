@@ -17,8 +17,32 @@ struct DetailScreen: View {
     let helper = GeneralHelpers()
     let contactService = ContactService()
     
-	let contact: SelectedContact
-	
+    @Bindable var contact: SelectedContact
+
+    var formattedPrimaryPhoneNumber: String {
+        converter.getFormattedPhoneNumber(from: contact.phone)
+    }
+
+    var formattedSecondaryPhoneNumber: String {
+        converter.getFormattedPhoneNumber(from: contact.secondary_phone)
+    }
+
+    var tappablePrimaryPhoneNumber: URL {
+        converter.getTappablePhoneNumber(from: contact.phone)
+    }
+
+    var tappableSecondaryPhoneNumber: URL {
+        converter.getTappablePhoneNumber(from: contact.secondary_phone)
+    }
+
+    var tappablePrimaryEmail: URL {
+        converter.getTappablePhoneNumber(from: contact.email)
+    }
+
+    var tappableSecondaryEmail: URL {
+        converter.getTappablePhoneNumber(from: contact.secondary_email)
+    }
+
     var body: some View {
 		VStack {
 			GradientView()
@@ -55,8 +79,8 @@ struct DetailScreen: View {
                             Text("Phone")
                                 .font(.caption)
                             
-                            Button(converter.getFormattedPhoneNumber(from: contact.phone)) {
-                                UIApplication.shared.open(self.converter.getTappablePhoneNumber(from: self.contact.phone))
+                            Button(formattedPrimaryPhoneNumber) {
+                                UIApplication.shared.open(tappablePrimaryPhoneNumber)
                             }
                             .foregroundColor(.blue)
                         }
@@ -66,8 +90,8 @@ struct DetailScreen: View {
                             Text("Secondary Phone")
                                 .font(.caption)
                             
-                            Button(converter.getFormattedPhoneNumber(from: contact.secondary_phone)) {
-                                UIApplication.shared.open(self.converter.getTappablePhoneNumber(from: self.contact.secondary_phone))
+                            Button(formattedSecondaryPhoneNumber) {
+                                UIApplication.shared.open(tappableSecondaryPhoneNumber)
                             }
                             .foregroundColor(.blue)
                         }
@@ -78,7 +102,7 @@ struct DetailScreen: View {
                                 .font(.caption)
                             
                             Button(contact.email) {
-                                UIApplication.shared.open(self.converter.getTappableEmail(from: self.contact.email))
+                                UIApplication.shared.open(tappablePrimaryEmail)
                             }
                             .foregroundColor(.blue)
                         }
@@ -89,7 +113,7 @@ struct DetailScreen: View {
                                 .font(.caption)
                             
                             Button(contact.secondary_email) {
-                                UIApplication.shared.open(self.converter.getTappableEmail(from: self.contact.secondary_email))
+                                UIApplication.shared.open(tappableSecondaryEmail)
                             }
                             .foregroundColor(.blue)
                         }
@@ -128,14 +152,10 @@ struct DetailScreen: View {
         .sheet(
 			isPresented: $showingPreferenceScreen,
 			onDismiss: {
-                self.notificationService.removeExistingNotifications(for: self.contact)
-                self.notificationService.createNewNotification(for: self.contact, modelContext: modelContext)
+                self.notificationService.removeExistingNotifications(for: contact)
+                self.notificationService.createNewNotification(for: contact, modelContext: modelContext)
 			}) {
-				
-			// the fact that I have to manually pass in the MOC is dumb
-			// hopefully this is a SwiftUI v1 bug that's fixed at WWDC this year
-			// (https://stackoverflow.com/questions/58328201/saving-core-data-entity-in-popover-in-swiftui-throws-nilerror-without-passing-e)
-			PreferenceScreen(contact: self.contact)
+			PreferenceScreen(contact: contact)
 		}
         .onAppear(perform: helper.clearNotificationBadge)
     }

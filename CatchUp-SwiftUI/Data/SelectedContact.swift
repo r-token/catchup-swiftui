@@ -21,13 +21,13 @@ class SelectedContact {
     var id: UUID
     var name: String
     var notification_identifier: UUID
-    var notification_preference: Int16 = 0
-    var notification_preference_custom_day: Int16 = 0
-    var notification_preference_custom_month: Int16 = 0
-    var notification_preference_custom_year: Int16 = 0
-    var notification_preference_hour: Int16 = 0
-    var notification_preference_minute: Int16 = 0
-    var notification_preference_weekday: Int16 = 0
+    var notification_preference: Int = 0
+    var notification_preference_custom_day: Int = 0
+    var notification_preference_custom_month: Int = 0
+    var notification_preference_custom_year: Int = 0
+    var notification_preference_hour: Int = 0
+    var notification_preference_minute: Int = 0
+    var notification_preference_weekday: Int = 0
     var phone: String
     var picture: String
     var secondary_address: String
@@ -44,13 +44,13 @@ class SelectedContact {
         id: UUID,
         name: String,
         notification_identifier: UUID,
-        notification_preference: Int16,
-        notification_preference_custom_day: Int16,
-        notification_preference_custom_month: Int16,
-        notification_preference_custom_year: Int16,
-        notification_preference_hour: Int16,
-        notification_preference_minute: Int16,
-        notification_preference_weekday: Int16,
+        notification_preference: Int,
+        notification_preference_custom_day: Int,
+        notification_preference_custom_month: Int,
+        notification_preference_custom_year: Int,
+        notification_preference_hour: Int,
+        notification_preference_minute: Int,
+        notification_preference_weekday: Int,
         phone: String,
         picture: String,
         secondary_address: String,

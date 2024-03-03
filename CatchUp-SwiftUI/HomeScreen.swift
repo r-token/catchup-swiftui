@@ -115,6 +115,8 @@ struct HomeScreen : View {
         .onAppear {
             clearNotificationBadgeAndCheckForUpdate()
 
+            print(modelContext.sqliteCommand)
+
             print("contacts: \(selectedContacts)")
         }
     }
@@ -210,13 +212,13 @@ struct HomeScreen : View {
                     id: id,
                     name: name,
                     notification_identifier: notification_identifier,
-                    notification_preference: Int16(notification_preference),
-                    notification_preference_custom_day: Int16(notification_preference_custom_day),
-                    notification_preference_custom_month: Int16(notification_preference_custom_month),
-                    notification_preference_custom_year: Int16(notification_preference_custom_year),
-                    notification_preference_hour: Int16(notification_preference_hour),
-                    notification_preference_minute: Int16(notification_preference_minute),
-                    notification_preference_weekday: Int16(notification_preference_weekday),
+                    notification_preference: notification_preference,
+                    notification_preference_custom_day: notification_preference_custom_day,
+                    notification_preference_custom_month: notification_preference_custom_month,
+                    notification_preference_custom_year: notification_preference_custom_year,
+                    notification_preference_hour: notification_preference_hour,
+                    notification_preference_minute: notification_preference_minute,
+                    notification_preference_weekday: notification_preference_weekday,
                     phone: phone,
                     picture: picture,
                     secondary_address: secondary_address,

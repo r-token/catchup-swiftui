@@ -30,6 +30,7 @@
 		F4AD59B3244CC9D600296568 /* UserDefaults+isFirstLaunch.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AD59B2244CC9D600296568 /* UserDefaults+isFirstLaunch.swift */; };
 		F4BAD42D2B94E45D0009CD50 /* SelectedContact.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4BAD42C2B94E45D0009CD50 /* SelectedContact.swift */; };
 		F4BAD42F2B94E8740009CD50 /* CatchUpApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4BAD42E2B94E8740009CD50 /* CatchUpApp.swift */; };
+		F4BAD4312B94F5680009CD50 /* ModelContext+sqliteCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4BAD4302B94F5680009CD50 /* ModelContext+sqliteCommand.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -57,6 +58,7 @@
 		F4AD59B2244CC9D600296568 /* UserDefaults+isFirstLaunch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults+isFirstLaunch.swift"; sourceTree = "<group>"; };
 		F4BAD42C2B94E45D0009CD50 /* SelectedContact.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedContact.swift; sourceTree = "<group>"; };
 		F4BAD42E2B94E8740009CD50 /* CatchUpApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatchUpApp.swift; sourceTree = "<group>"; };
+		F4BAD4302B94F5680009CD50 /* ModelContext+sqliteCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ModelContext+sqliteCommand.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -162,6 +164,7 @@
 			children = (
 				F4AD59B2244CC9D600296568 /* UserDefaults+isFirstLaunch.swift */,
 				F4095B6324C66F87007163E3 /* SKProduct+localizedPrice.swift */,
+				F4BAD4302B94F5680009CD50 /* ModelContext+sqliteCommand.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -269,6 +272,7 @@
 				F4AD59B3244CC9D600296568 /* UserDefaults+isFirstLaunch.swift in Sources */,
 				F48E37F922C455C3008B0B8B /* HomeScreen.swift in Sources */,
 				F4AD59AE244C9FF600296568 /* IAPService.swift in Sources */,
+				F4BAD4312B94F5680009CD50 /* ModelContext+sqliteCommand.swift in Sources */,
 				F4A9B8522442A0F5001D8C55 /* DetailScreen.swift in Sources */,
 				F40293A725618C4C004E0418 /* ContactHelper.swift in Sources */,
 			);

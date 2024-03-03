@@ -11,23 +11,27 @@ import SwiftUI
 import PhoneNumberKit
 
 struct Conversions {
-    
     // MARK: Only used in DetailScreen
     
     func getFormattedPhoneNumber(from phoneNumber: String) -> String {
         let phoneNumberKit = PhoneNumberKit()
+
+        print("formatting phone number: \(phoneNumber)")
+
         do {
-            let parsedPhoneNumber = try phoneNumberKit.parse(phoneNumber)
+            let parsedPhoneNumber = try phoneNumberKit.parse(phoneNumber.trimmingCharacters(in: .whitespacesAndNewlines))
             let formattedPhoneNumber = phoneNumberKit.format(parsedPhoneNumber, toType: .national)
             return formattedPhoneNumber
         }
         catch {
-            print("PhoneNumberKit Parse Error")
+            print("PhoneNumberKit Parse Error: \(error)")
             return phoneNumber
         }
     }
     
     func getTappablePhoneNumber(from phoneNumber: String) -> URL {
+        print("getting tappable phone number: \(phoneNumber)")
+
         let tel = "tel://"
         let cleanNumber = phoneNumber.replacingOccurrences(of: "[^\\d+]", with: "", options: [.regularExpression])
         let formattedString = tel + cleanNumber

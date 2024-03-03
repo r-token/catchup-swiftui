@@ -241,7 +241,7 @@ struct NotificationService {
     
     func updateNotificationPreference(for contact: SelectedContact, selection: Int, modelContext: ModelContext) {
         let newPreference = selection
-        contact.notification_preference = Int16(newPreference)
+        contact.notification_preference = newPreference
 
         try? modelContext.save()
     }
@@ -249,15 +249,15 @@ struct NotificationService {
     func updateNotificationTime(for contact: SelectedContact, hour: Int, minute: Int, modelContext: ModelContext) {
         let newHour = hour
         let newMinute = minute
-        contact.notification_preference_hour = Int16(newHour)
-        contact.notification_preference_minute = Int16(newMinute)
+        contact.notification_preference_hour = newHour
+        contact.notification_preference_minute = newMinute
 
         try? modelContext.save()
     }
     
     func updateNotificationPreferenceWeekday(for contact: SelectedContact, weekday: Int, modelContext: ModelContext) {
         let newWeekday = weekday
-        contact.notification_preference_weekday = Int16(newWeekday)
+        contact.notification_preference_weekday = newWeekday
 
         try? modelContext.save()
     }
@@ -266,9 +266,9 @@ struct NotificationService {
         let customMonth = month
         let customDay = day
         let customYear = year
-        contact.notification_preference_custom_month = Int16(customMonth)
-        contact.notification_preference_custom_day = Int16(customDay)
-        contact.notification_preference_custom_year = Int16(customYear)
+        contact.notification_preference_custom_month = customMonth
+        contact.notification_preference_custom_day = customDay
+        contact.notification_preference_custom_year = customYear
 
         try? modelContext.save()
     }
