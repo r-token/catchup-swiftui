@@ -9,11 +9,11 @@
 import SwiftUI
 import Foundation
 import CoreData
+import UserNotifications
 
 struct GeneralHelpers {
-    
     func clearNotificationBadge() {
-        UIApplication.shared.applicationIconBadgeNumber = 0
+        UNUserNotificationCenter.current().setBadgeCount(0)
     }
     
     func getCurrentAppVersion() -> String {

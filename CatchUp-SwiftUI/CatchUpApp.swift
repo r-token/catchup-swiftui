@@ -6,6 +6,7 @@
 //  Copyright © 2024 Token Solutions. All rights reserved.
 //
 
+import SwiftData
 import SwiftUI
 
 @main

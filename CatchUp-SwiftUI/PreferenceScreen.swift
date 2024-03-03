@@ -64,7 +64,7 @@ struct PreferenceScreen: View {
             Text("How often should we notify you to CatchUp with \(contact.name)?")
             
             Picker(selection: $notificationPreference, label: Text("How often should we notify you to CatchUp with \(contact.name)?")) {
-                ForEach(0..<notificationOptions.count) { index in
+                ForEach(0..<notificationOptions.count, id: \.self) { index in
                     Text(self.notificationOptions[index]).tag(index)
                 }
             }.pickerStyle(SegmentedPickerStyle())
@@ -110,7 +110,7 @@ struct PreferenceScreen: View {
                         
                         // Show Day of the Week Picker
                         Picker(selection: $notificationPreferenceWeekday, label: Text("What day?")) {
-                            ForEach(0..<dayOptions.count) { index in
+                            ForEach(0..<dayOptions.count, id: \.self) { index in
                                 Text(self.dayOptions[index]).tag(index)
                             }
                         }.pickerStyle(SegmentedPickerStyle())

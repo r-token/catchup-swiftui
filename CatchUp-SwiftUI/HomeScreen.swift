@@ -112,7 +112,11 @@ struct HomeScreen : View {
 			}
 		}
 		.accentColor(.orange)
-		.onAppear(perform: clearNotificationBadgeAndCheckForUpdate)
+        .onAppear {
+            clearNotificationBadgeAndCheckForUpdate()
+
+            print("contacts: \(selectedContacts)")
+        }
     }
     
     func clearNotificationBadgeAndCheckForUpdate() {
@@ -196,10 +200,6 @@ struct HomeScreen : View {
             let secondary_phone = contactService.getContactSecondaryPhone(for: contact)
 
             if !contactAlreadyAdded(name: name) {
-                guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
-                    return
-                }
-
                 let selectedContact = SelectedContact(
                     address: address,
                     anniversary: anniversary,
