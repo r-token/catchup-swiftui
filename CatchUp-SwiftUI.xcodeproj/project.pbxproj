@@ -15,7 +15,6 @@
 		F40293A725618C4C004E0418 /* ContactHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = F40293A625618C4C004E0418 /* ContactHelper.swift */; };
 		F4095B6424C66F87007163E3 /* SKProduct+localizedPrice.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4095B6324C66F87007163E3 /* SKProduct+localizedPrice.swift */; };
 		F4871DA1244FC43C00925392 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4871DA0244FC43C00925392 /* NotificationService.swift */; };
-		F48E37F222C455C3008B0B8B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F48E37F122C455C3008B0B8B /* AppDelegate.swift */; };
 		F48E37F922C455C3008B0B8B /* HomeScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = F48E37F822C455C3008B0B8B /* HomeScreen.swift */; };
 		F48E37FB22C455CB008B0B8B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F48E37FA22C455CB008B0B8B /* Assets.xcassets */; };
 		F48E37FE22C455CB008B0B8B /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F48E37FD22C455CB008B0B8B /* Preview Assets.xcassets */; };
@@ -27,7 +26,6 @@
 		F4A9B85B2443FFF3001D8C55 /* Conversions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A9B85A2443FFF3001D8C55 /* Conversions.swift */; };
 		F4AD59AE244C9FF600296568 /* IAPService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AD59AD244C9FF600296568 /* IAPService.swift */; };
 		F4AD59B0244CA12C00296568 /* AboutScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AD59AF244CA12C00296568 /* AboutScreen.swift */; };
-		F4AD59B3244CC9D600296568 /* UserDefaults+isFirstLaunch.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AD59B2244CC9D600296568 /* UserDefaults+isFirstLaunch.swift */; };
 		F4BAD42D2B94E45D0009CD50 /* SelectedContact.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4BAD42C2B94E45D0009CD50 /* SelectedContact.swift */; };
 		F4BAD42F2B94E8740009CD50 /* CatchUpApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4BAD42E2B94E8740009CD50 /* CatchUpApp.swift */; };
 		F4BAD4312B94F5680009CD50 /* ModelContext+sqliteCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4BAD4302B94F5680009CD50 /* ModelContext+sqliteCommand.swift */; };
@@ -41,7 +39,6 @@
 		F4095B6324C66F87007163E3 /* SKProduct+localizedPrice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SKProduct+localizedPrice.swift"; sourceTree = "<group>"; };
 		F4871DA0244FC43C00925392 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
 		F48E37EE22C455C3008B0B8B /* CatchUp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CatchUp.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		F48E37F122C455C3008B0B8B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F48E37F822C455C3008B0B8B /* HomeScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeScreen.swift; sourceTree = "<group>"; };
 		F48E37FA22C455CB008B0B8B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F48E37FD22C455CB008B0B8B /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
@@ -55,7 +52,6 @@
 		F4AD59AC244B7B6000296568 /* CatchUp-SwiftUI.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "CatchUp-SwiftUI.entitlements"; sourceTree = "<group>"; };
 		F4AD59AD244C9FF600296568 /* IAPService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IAPService.swift; sourceTree = "<group>"; };
 		F4AD59AF244CA12C00296568 /* AboutScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutScreen.swift; sourceTree = "<group>"; };
-		F4AD59B2244CC9D600296568 /* UserDefaults+isFirstLaunch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults+isFirstLaunch.swift"; sourceTree = "<group>"; };
 		F4BAD42C2B94E45D0009CD50 /* SelectedContact.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedContact.swift; sourceTree = "<group>"; };
 		F4BAD42E2B94E8740009CD50 /* CatchUpApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatchUpApp.swift; sourceTree = "<group>"; };
 		F4BAD4302B94F5680009CD50 /* ModelContext+sqliteCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ModelContext+sqliteCommand.swift"; sourceTree = "<group>"; };
@@ -114,7 +110,6 @@
 				F4BAD42E2B94E8740009CD50 /* CatchUpApp.swift */,
 				F4AD59AC244B7B6000296568 /* CatchUp-SwiftUI.entitlements */,
 				F48E37FA22C455CB008B0B8B /* Assets.xcassets */,
-				F48E37F122C455C3008B0B8B /* AppDelegate.swift */,
 				F48E380222C455CB008B0B8B /* Info.plist */,
 				144DBE23245C864F008FDBB6 /* Resources */,
 				F4AD59B1244CC9C100296568 /* Extensions */,
@@ -162,7 +157,6 @@
 		F4AD59B1244CC9C100296568 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				F4AD59B2244CC9D600296568 /* UserDefaults+isFirstLaunch.swift */,
 				F4095B6324C66F87007163E3 /* SKProduct+localizedPrice.swift */,
 				F4BAD4302B94F5680009CD50 /* ModelContext+sqliteCommand.swift */,
 			);
@@ -256,7 +250,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F48E37F222C455C3008B0B8B /* AppDelegate.swift in Sources */,
 				F4A9B8552442A179001D8C55 /* ContactPhoto.swift in Sources */,
 				F4A9B8572442A1F7001D8C55 /* GradientView.swift in Sources */,
 				F4A9B85B2443FFF3001D8C55 /* Conversions.swift in Sources */,
@@ -269,7 +262,6 @@
 				F4AD59B0244CA12C00296568 /* AboutScreen.swift in Sources */,
 				F4A9B8592442AB81001D8C55 /* PreferenceScreen.swift in Sources */,
 				F4BAD42D2B94E45D0009CD50 /* SelectedContact.swift in Sources */,
-				F4AD59B3244CC9D600296568 /* UserDefaults+isFirstLaunch.swift in Sources */,
 				F48E37F922C455C3008B0B8B /* HomeScreen.swift in Sources */,
 				F4AD59AE244C9FF600296568 /* IAPService.swift in Sources */,
 				F4BAD4312B94F5680009CD50 /* ModelContext+sqliteCommand.swift in Sources */,

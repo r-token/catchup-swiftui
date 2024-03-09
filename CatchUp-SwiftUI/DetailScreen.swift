@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct DetailScreen: View {
-	@State private var showingPreferenceScreen = false
+	@State private var isShowingPreferenceScreen = false
 	@Environment(\.modelContext) var modelContext
 
     let notificationService = NotificationService()
@@ -64,7 +64,7 @@ struct DetailScreen: View {
 						.foregroundColor(.gray)
 				}
 				Button(action: {
-					showingPreferenceScreen = true
+                    isShowingPreferenceScreen = true
                 }) {
                     Text("Change Notification Preference")
                         .font(.headline)
@@ -150,7 +150,7 @@ struct DetailScreen: View {
 			}
 		}
         .sheet(
-			isPresented: $showingPreferenceScreen,
+			isPresented: $isShowingPreferenceScreen,
 			onDismiss: {
                 notificationService.removeExistingNotifications(for: contact)
                 notificationService.createNewNotification(for: contact, modelContext: modelContext)

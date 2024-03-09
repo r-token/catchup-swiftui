@@ -11,26 +11,16 @@ import SwiftUI
 import SwiftUIKit
 import ContactsUI
 
-enum ActiveSheet: Identifiable {
-	case contactPicker
-    case about
-    case updates
-	
-	var id: UUID {
-		UUID()
-	}
-}
-
 struct HomeScreen : View {
-	@State private var showSheet = false
-	@State private var showContactPicker = false
-	@State private var contacts: [CNContact] = []
-	@State private var activeSheet: ActiveSheet?
-    @State private var showUpdates: ActiveSheet = .updates
-
-    @Environment(\.scenePhase) var scenePhase
-	@Environment(\.modelContext) var modelContext
+    @Environment(\.modelContext) var modelContext
     @Query(sort: \SelectedContact.name) var selectedContacts: [SelectedContact]
+
+    @AppStorage("initialVersion") var initialVersion = "2.0"
+
+    @State private var isColdLaunch = true
+    @State private var isShowingContactPicker = false
+	@State private var isShowingUpdatesSheet = false
+    @State private var isShowingAboutSheet = false
 	
     let notificationService = NotificationService()
     let helper = GeneralHelpers()
@@ -68,8 +58,7 @@ struct HomeScreen : View {
 				}
                 
                 Button(action: {
-					activeSheet = .contactPicker
-					showContactPicker.toggle()
+					isShowingContactPicker = true
                 }) {
 					HStack(alignment: .center, spacing: 6) {
 						Image(systemName: "person.crop.circle.fill.badge.plus")
@@ -81,43 +70,42 @@ struct HomeScreen : View {
 					.padding(.top)
 					.padding(.bottom)
                 }
-					
+                .sheet(isPresented: $isShowingContactPicker) {
+                    ContactPicker(
+                        showPicker: $isShowingContactPicker,
+                        onSelectContacts: { selectedContacts in
+                            saveSelectedContact(for: selectedContacts)
+                        }
+                    )
+                }
+
 				.navigationBarTitle(Text("CatchUp"))
 					
 				.navigationBarItems(trailing:
-					Button(action: {
-						activeSheet = .about
-					}) {
+					Button {
+						isShowingAboutSheet = true
+                    } label: {
 						Image(systemName: "ellipsis.circle")
 							.font(.title2)
 							.foregroundColor(.blue)
 					}
+                    .sheet(isPresented: $isShowingAboutSheet) {
+                        AboutScreen()
+                    }
 				)
             }
-				
-			.sheet(item: $activeSheet, onDismiss: { activeSheet = nil }) { item in
-				switch item {
-				case .contactPicker:
-					ContactPicker(
-						showPicker: $showContactPicker,
-						onSelectContacts: { c in
-							contacts = c
-							saveSelectedContact(for: contacts)
-						}
-					)
-				case .about:
-					AboutScreen()
-				case .updates:
-					UpdatesScreen()
-				}
-			}
 		}
 		.accentColor(.orange)
+
         .onAppear {
             print("HomeScreen onAppear")
             clearNotificationBadgeAndCheckForUpdate()
             notificationService.requestAuthorizationForNotifications()
-            resetNotifications()
+
+            if isColdLaunch {
+                resetNotifications()
+                isColdLaunch = false
+            }
 
             print(modelContext.sqliteCommand)
         }
@@ -141,17 +129,17 @@ struct HomeScreen : View {
     
     func checkForUpdate() {
         let version = helper.getCurrentAppVersion()
-        let savedVersion = UserDefaults.standard.string(forKey: "savedVersion")
+        print("latest version: \(version)")
 
-        if savedVersion == version {
+        if initialVersion == version {
             print("App is up to date!")
         } else {
 			if updateIsMajor() {
 				// Toggle to show UpdatesScreen as a sheet
 				print("Major update detected, showing UpdatesScreen...")
-				activeSheet = .updates
+				isShowingUpdatesSheet = true
 			}
-            UserDefaults.standard.set(version, forKey: "savedVersion")
+            initialVersion = version
         }
     }
 
@@ -240,7 +228,6 @@ struct HomeScreen : View {
                 print("Do nothing. Contact was already added to the database")
             }
         }
-
     }
 
     func contactAlreadyAdded(name: String) -> Bool {
@@ -254,8 +241,6 @@ struct HomeScreen : View {
     }
 }
 
-struct HomeScreen_Previews : PreviewProvider {
-    static var previews: some View {
-        return HomeScreen()
-    }
+#Preview {
+    HomeScreen()
 }

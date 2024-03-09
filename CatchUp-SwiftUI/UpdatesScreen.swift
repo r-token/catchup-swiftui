@@ -56,10 +56,6 @@ struct UpdatesScreen: View {
     }
 }
 
-struct UpdatesScreen_Previews: PreviewProvider {
-    @Environment(\.presentationMode) var presentationMode
-    
-    static var previews: some View {
-        UpdatesScreen()
-    }
+#Preview {
+    UpdatesScreen()
 }

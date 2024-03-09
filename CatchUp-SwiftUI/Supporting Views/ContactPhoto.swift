@@ -21,8 +21,6 @@ struct ContactPhoto: View {
     }
 }
 
-struct ContactPhoto_Previews: PreviewProvider {
-    static var previews: some View {
-		ContactPhoto(image: Image("DefaultPhoto"))
-    }
+#Preview {
+    ContactPhoto(image: Image("DefaultPhoto"))
 }

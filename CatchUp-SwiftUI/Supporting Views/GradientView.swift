@@ -29,15 +29,11 @@ struct GradientView: View {
 	}
 }
 
-struct Gradient_Previews: PreviewProvider {
-	@Environment(\.colorScheme) var colorScheme
-	
-    static var previews: some View {
-		VStack {
-			GradientView()
-				.edgesIgnoringSafeArea(.top)
-				.frame(height: 150)
-			Spacer()
-		}
+#Preview {
+    VStack {
+        GradientView()
+            .edgesIgnoringSafeArea(.top)
+            .frame(height: 150)
+        Spacer()
     }
 }

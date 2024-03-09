@@ -137,8 +137,6 @@ struct AboutScreen: View {
     }
 }
 
-struct AboutScreen_Previews: PreviewProvider {
-	static var previews: some View {
-        AboutScreen()
-    }
+#Preview {
+    AboutScreen()
 }
