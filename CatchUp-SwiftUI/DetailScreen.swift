@@ -49,7 +49,7 @@ struct DetailScreen: View {
 				.edgesIgnoringSafeArea(.top)
 				.frame(height: 75)
 			
-            ContactPhoto(image: self.converter.getContactPicture(from: contact.picture))
+            ContactPhoto(image: converter.getContactPicture(from: contact.picture))
 				.offset(x: 0, y: -130)
 				.padding(.bottom, -130)
 			
@@ -64,7 +64,7 @@ struct DetailScreen: View {
 						.foregroundColor(.gray)
 				}
 				Button(action: {
-					self.showingPreferenceScreen = true
+					showingPreferenceScreen = true
                 }) {
                     Text("Change Notification Preference")
                         .font(.headline)

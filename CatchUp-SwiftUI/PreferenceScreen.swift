@@ -80,7 +80,7 @@ struct PreferenceScreen: View {
                         // Show Day of the Week Picker
                         Picker(selection: $contact.notification_preference_weekday, label: Text("What day?")) {
                             ForEach(0..<dayOptions.count, id: \.self) { index in
-                                Text(self.dayOptions[index]).tag(index)
+                                Text(dayOptions[index]).tag(index)
                             }
                         }
                         .pickerStyle(SegmentedPickerStyle())

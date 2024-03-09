@@ -121,13 +121,6 @@ struct HomeScreen : View {
 
             print(modelContext.sqliteCommand)
         }
-
-        .onChange(of: scenePhase) { oldPhase, newPhase in
-            if newPhase == .active {
-                print("HomeScreen scenePhase Active")
-                resetNotifications()
-            }
-        }
     }
     
     func clearNotificationBadgeAndCheckForUpdate() {
@@ -163,11 +156,9 @@ struct HomeScreen : View {
     }
 
     func resetNotifications() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
-            for contact in selectedContacts {
-                notificationService.removeExistingNotifications(for: contact)
-                notificationService.createNewNotification(for: contact, modelContext: modelContext)
-            }
+        for contact in selectedContacts {
+            notificationService.removeExistingNotifications(for: contact)
+            notificationService.createNewNotification(for: contact, modelContext: modelContext)
         }
     }
 

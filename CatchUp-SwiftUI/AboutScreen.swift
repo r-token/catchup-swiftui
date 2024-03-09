@@ -58,7 +58,7 @@ struct AboutScreen: View {
                     Spacer()
                     
                     Button(smallTip) {
-                        self.graciousTipPressed()
+                        graciousTipPressed()
                     }
                         .font(.headline)
                         .foregroundColor(.white)
@@ -70,7 +70,7 @@ struct AboutScreen: View {
                     Spacer()
                     
                     Button(mediumTip) {
-                        self.generousTipPressed()
+                        generousTipPressed()
                     }
                         .font(.headline)
                         .foregroundColor(.white)
@@ -82,7 +82,7 @@ struct AboutScreen: View {
                     Spacer()
                     
                     Button(largeTip) {
-                        self.gratuitousTipPressed()
+                        gratuitousTipPressed()
                     }
                         .font(.headline)
                         .foregroundColor(.white)
@@ -106,7 +106,7 @@ struct AboutScreen: View {
             
             Group {
                 Button(action: {
-                    self.showingUpdateScreen = true
+                    showingUpdateScreen = true
                 }) {
                     Text("Show Latest Update Details")
                         .font(.headline)

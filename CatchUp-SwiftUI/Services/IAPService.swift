@@ -45,7 +45,7 @@ class IAPService: NSObject {
 			return
 		}
         
-        if self.canMakePurchases() {
+        if canMakePurchases() {
             let product = iapProducts[index]
             let payment = SKPayment(product: product)
             SKPaymentQueue.default().add(self)

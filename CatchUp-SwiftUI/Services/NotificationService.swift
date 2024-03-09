@@ -18,16 +18,16 @@ struct NotificationService {
     
     func createNewNotification(for contact: SelectedContact, modelContext: ModelContext) {
         let addRequest = {
-            if self.preferenceIsNotSetToNever(for: contact) {
-                self.addGeneralNotification(for: contact, modelContext: modelContext)
+            if preferenceIsNotSetToNever(for: contact) {
+                addGeneralNotification(for: contact, modelContext: modelContext)
             }
             
-            if self.contactHasBirthday(contact) {
-                self.addBirthdayNotification(for: contact, modelContext: modelContext)
+            if contactHasBirthday(contact) {
+                addBirthdayNotification(for: contact, modelContext: modelContext)
             }
             
-            if self.contactHasAnniversary(contact) {
-                self.addAnniversaryNotification(for: contact, modelContext: modelContext)
+            if contactHasAnniversary(contact) {
+                addAnniversaryNotification(for: contact, modelContext: modelContext)
             }
         }
 
@@ -49,14 +49,14 @@ struct NotificationService {
     func addGeneralNotification(for contact: SelectedContact, modelContext: ModelContext) {
         let notificationContent = UNMutableNotificationContent()
         notificationContent.title = "👋 CatchUp with \(contact.name)"
-        notificationContent.body = self.generateRandomNotificationBody()
+        notificationContent.body = generateRandomNotificationBody()
         notificationContent.sound = UNNotificationSound.default
         notificationContent.badge = 1
 
         let identifier = UUID()
-        let dateComponents = self.setNotificationDateComponents(for: contact)
+        let dateComponents = setNotificationDateComponents(for: contact)
         
-        self.scheduleNotification(for: contact, dateComponents: dateComponents, identifier: identifier, content: notificationContent, modelContext: modelContext)
+        scheduleNotification(for: contact, dateComponents: dateComponents, identifier: identifier, content: notificationContent, modelContext: modelContext)
     }
     
     func addBirthdayNotification(for contact: SelectedContact, modelContext: ModelContext) {
@@ -67,9 +67,9 @@ struct NotificationService {
         birthdayNotificationContent.badge = 1
 
         let birthdayIdentifier = UUID()
-        let birthdayDateComponents = self.setBirthdayDateComponents(for: contact)
+        let birthdayDateComponents = setBirthdayDateComponents(for: contact)
         
-        self.scheduleNotification(for: contact, dateComponents: birthdayDateComponents, identifier: birthdayIdentifier, content: birthdayNotificationContent, modelContext: modelContext)
+        scheduleNotification(for: contact, dateComponents: birthdayDateComponents, identifier: birthdayIdentifier, content: birthdayNotificationContent, modelContext: modelContext)
     }
     
     func addAnniversaryNotification(for contact: SelectedContact, modelContext: ModelContext) {
@@ -80,9 +80,9 @@ struct NotificationService {
         anniversaryNotificationContent.badge = 1
 
         let anniversaryIdentifier = UUID()
-        let anniversaryDateComponents = self.setAnniversaryDateComponents(for: contact)
+        let anniversaryDateComponents = setAnniversaryDateComponents(for: contact)
         
-        self.scheduleNotification(for: contact, dateComponents: anniversaryDateComponents, identifier: anniversaryIdentifier, content: anniversaryNotificationContent, modelContext: modelContext)
+        scheduleNotification(for: contact, dateComponents: anniversaryDateComponents, identifier: anniversaryIdentifier, content: anniversaryNotificationContent, modelContext: modelContext)
     }
     
     func checkNotificationAuthorizationStatusAndAddRequest(action: @escaping() -> Void) {
@@ -91,7 +91,7 @@ struct NotificationService {
                 action()
                 print("Scheduled new notification(s)")
             } else {
-                self.notificationCenter.requestAuthorization(options: [.alert, .badge, .sound]) { success, error in
+                notificationCenter.requestAuthorization(options: [.alert, .badge, .sound]) { success, error in
                     if success {
                         action()
                     } else {
