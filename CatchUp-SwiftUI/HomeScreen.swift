@@ -15,7 +15,7 @@ struct HomeScreen : View {
     @Environment(\.modelContext) var modelContext
     @Query(sort: \SelectedContact.name) var selectedContacts: [SelectedContact]
 
-    @AppStorage("initialVersion") var initialVersion = "2.0"
+    @AppStorage("savedVersion") var savedVersion = "2.0.0"
 
     @State private var isColdLaunch = true
     @State private var isShowingContactPicker = false
@@ -131,7 +131,7 @@ struct HomeScreen : View {
         let version = helper.getCurrentAppVersion()
         print("latest version: \(version)")
 
-        if initialVersion == version {
+        if savedVersion == version {
             print("App is up to date!")
         } else {
 			if updateIsMajor() {
@@ -139,7 +139,7 @@ struct HomeScreen : View {
 				print("Major update detected, showing UpdatesScreen...")
 				isShowingUpdatesSheet = true
 			}
-            initialVersion = version
+            savedVersion = version
         }
     }
 
