@@ -11,9 +11,9 @@
 		14ACAC86245E52A40091AE90 /* PhoneNumberMetadata.json in Resources */ = {isa = PBXBuildFile; fileRef = 14ACAC85245E52A40091AE90 /* PhoneNumberMetadata.json */; };
 		14BE3AD324593556004F72DE /* GeneralHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14BE3AD224593556004F72DE /* GeneralHelpers.swift */; };
 		14BE3AD72459F610004F72DE /* UpdatesScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14BE3AD62459F610004F72DE /* UpdatesScreen.swift */; };
-		F40293A1256186C2004E0418 /* SwiftUIKit in Frameworks */ = {isa = PBXBuildFile; productRef = F40293A0256186C2004E0418 /* SwiftUIKit */; };
 		F40293A725618C4C004E0418 /* ContactHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = F40293A625618C4C004E0418 /* ContactHelper.swift */; };
 		F4095B6424C66F87007163E3 /* SKProduct+localizedPrice.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4095B6324C66F87007163E3 /* SKProduct+localizedPrice.swift */; };
+		F4118B452B9E68AE001BC8C7 /* ContactPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4118B442B9E68AE001BC8C7 /* ContactPicker.swift */; };
 		F4871DA1244FC43C00925392 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4871DA0244FC43C00925392 /* NotificationService.swift */; };
 		F48E37F922C455C3008B0B8B /* HomeScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = F48E37F822C455C3008B0B8B /* HomeScreen.swift */; };
 		F48E37FB22C455CB008B0B8B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F48E37FA22C455CB008B0B8B /* Assets.xcassets */; };
@@ -37,6 +37,7 @@
 		14BE3AD62459F610004F72DE /* UpdatesScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdatesScreen.swift; sourceTree = "<group>"; };
 		F40293A625618C4C004E0418 /* ContactHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactHelper.swift; sourceTree = "<group>"; };
 		F4095B6324C66F87007163E3 /* SKProduct+localizedPrice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SKProduct+localizedPrice.swift"; sourceTree = "<group>"; };
+		F4118B442B9E68AE001BC8C7 /* ContactPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactPicker.swift; sourceTree = "<group>"; };
 		F4871DA0244FC43C00925392 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
 		F48E37EE22C455C3008B0B8B /* CatchUp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CatchUp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F48E37F822C455C3008B0B8B /* HomeScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeScreen.swift; sourceTree = "<group>"; };
@@ -63,7 +64,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				144DBE22245C8282008FDBB6 /* PhoneNumberKit in Frameworks */,
-				F40293A1256186C2004E0418 /* SwiftUIKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -150,6 +150,7 @@
 			children = (
 				F4A9B8542442A179001D8C55 /* ContactPhoto.swift */,
 				F4A9B8562442A1F7001D8C55 /* GradientView.swift */,
+				F4118B442B9E68AE001BC8C7 /* ContactPicker.swift */,
 			);
 			path = "Supporting Views";
 			sourceTree = "<group>";
@@ -189,7 +190,6 @@
 			name = "CatchUp-SwiftUI";
 			packageProductDependencies = (
 				144DBE21245C8282008FDBB6 /* PhoneNumberKit */,
-				F40293A0256186C2004E0418 /* SwiftUIKit */,
 			);
 			productName = "CatchUp-SwiftUI";
 			productReference = F48E37EE22C455C3008B0B8B /* CatchUp.app */;
@@ -222,7 +222,6 @@
 			mainGroup = F48E37E522C455C3008B0B8B;
 			packageReferences = (
 				144DBE20245C8282008FDBB6 /* XCRemoteSwiftPackageReference "PhoneNumberKit" */,
-				F402939F256186C2004E0418 /* XCRemoteSwiftPackageReference "SwiftUIKit" */,
 			);
 			productRefGroup = F48E37EF22C455C3008B0B8B /* Products */;
 			projectDirPath = "";
@@ -267,6 +266,7 @@
 				F4AD59AE244C9FF600296568 /* IAPService.swift in Sources */,
 				F4BAD4312B94F5680009CD50 /* ModelContext+sqliteCommand.swift in Sources */,
 				F4A9B8522442A0F5001D8C55 /* DetailScreen.swift in Sources */,
+				F4118B452B9E68AE001BC8C7 /* ContactPicker.swift in Sources */,
 				F40293A725618C4C004E0418 /* ContactHelper.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -484,14 +484,6 @@
 				minimumVersion = 3.2.0;
 			};
 		};
-		F402939F256186C2004E0418 /* XCRemoteSwiftPackageReference "SwiftUIKit" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/youjinp/SwiftUIKit.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.0.11;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -499,11 +491,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 144DBE20245C8282008FDBB6 /* XCRemoteSwiftPackageReference "PhoneNumberKit" */;
 			productName = PhoneNumberKit;
-		};
-		F40293A0256186C2004E0418 /* SwiftUIKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = F402939F256186C2004E0418 /* XCRemoteSwiftPackageReference "SwiftUIKit" */;
-			productName = SwiftUIKit;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

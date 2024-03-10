@@ -1,4 +1,5 @@
 {
+  "originHash" : "d01b822f6446cef501cebe37b5b78101e0a82173bb523ee64501d3331d40b50c",
   "pins" : [
     {
       "identity" : "phonenumberkit",
@@ -8,16 +9,7 @@
         "revision" : "a8d72d9c90f8336aff6fd6002976d7e36f4fbe8c",
         "version" : "3.7.9"
       }
-    },
-    {
-      "identity" : "swiftuikit",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/youjinp/SwiftUIKit.git",
-      "state" : {
-        "revision" : "a83aedd996bcb59ca846346bb507f090a7350e34",
-        "version" : "0.0.17"
-      }
     }
   ],
-  "version" : 2
+  "version" : 3
 }

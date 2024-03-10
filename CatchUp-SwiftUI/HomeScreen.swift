@@ -21,7 +21,9 @@ struct HomeScreen : View {
     @State private var isShowingContactPicker = false
 	@State private var isShowingUpdatesSheet = false
     @State private var isShowingAboutSheet = false
-	
+
+    @State private var contactPicker = ContactPicker()
+
     let notificationService = NotificationService()
     let helper = GeneralHelpers()
 	let converter = Conversions()
@@ -56,9 +58,15 @@ struct HomeScreen : View {
 					}
                     .onDelete(perform: removePendingNotificationsAndDeleteContact)
 				}
-                
+                .onChange(of: contactPicker.chosenContacts) { initialContacts, contacts in
+                    if !contacts.isEmpty {
+                        saveSelectedContact(for: contacts)
+                    }
+                    contactPicker.chosenContacts = []
+                }
+
                 Button(action: {
-					isShowingContactPicker = true
+                    openContactPicker()
                 }) {
 					HStack(alignment: .center, spacing: 6) {
 						Image(systemName: "person.crop.circle.fill.badge.plus")
@@ -70,14 +78,14 @@ struct HomeScreen : View {
 					.padding(.top)
 					.padding(.bottom)
                 }
-                .sheet(isPresented: $isShowingContactPicker) {
-                    ContactPicker(
-                        showPicker: $isShowingContactPicker,
-                        onSelectContacts: { selectedContacts in
-                            saveSelectedContact(for: selectedContacts)
-                        }
-                    )
-                }
+//                .sheet(isPresented: $isShowingContactPicker) {
+//                    ContactPicker(
+//                        showPicker: $isShowingContactPicker,
+//                        onSelectContacts: { selectedContacts in
+//                            saveSelectedContact(for: selectedContacts)
+//                        }
+//                    )
+//                }
 
 				.navigationBarTitle(Text("CatchUp"))
 					
@@ -141,6 +149,15 @@ struct HomeScreen : View {
 			}
             savedVersion = version
         }
+    }
+
+    func openContactPicker() {
+        let contactPicker = CNContactPickerViewController()
+        contactPicker.delegate = self.contactPicker
+        let scenes = UIApplication.shared.connectedScenes
+        let windowScenes = scenes.first as? UIWindowScene
+        let window = windowScenes?.windows.first
+        window?.rootViewController?.present(contactPicker, animated: true, completion: nil)
     }
 
     func resetNotifications() {
@@ -229,6 +246,7 @@ struct HomeScreen : View {
             }
         }
     }
+
 
     func contactAlreadyAdded(name: String) -> Bool {
         for contact in selectedContacts {
