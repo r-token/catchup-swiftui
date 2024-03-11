@@ -20,7 +20,7 @@ struct HomeScreen : View {
     @State private var isColdLaunch = true
 	@State private var isShowingUpdatesSheet = false
     @State private var isShowingAboutSheet = false
-    @State private var contactPicker = ContactPicker()
+    @State private var contactPicker = ContactPickerDelegate()
 
 	init() {
         //Use this if NavigationBarTitle is with Large Font

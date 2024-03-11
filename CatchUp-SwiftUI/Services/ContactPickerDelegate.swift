@@ -1,5 +1,5 @@
 //
-//  ContactPicker.swift
+//  ContactPickerDelegate.swift
 //  CatchUp-SwiftUI
 //
 //  Created by Ryan Token on 3/10/24.
@@ -10,7 +10,7 @@ import ContactsUI
 import SwiftUI
 
 @Observable
-class ContactPicker: NSObject, CNContactPickerDelegate {
+class ContactPickerDelegate: NSObject, CNContactPickerDelegate {
     var chosenContacts = [CNContact]()
 
     func contactPicker(_ picker: CNContactPickerViewController, didSelect contacts: [CNContact]) {
