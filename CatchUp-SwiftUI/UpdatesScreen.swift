@@ -9,8 +9,6 @@
 import SwiftUI
 
 struct UpdatesScreen: View {
-    let helper = GeneralHelpers()
-    
     var body: some View {
 		ScrollView {
 			VStack(alignment: .leading, spacing: 10) {
@@ -24,7 +22,7 @@ struct UpdatesScreen: View {
 						.bold()
 						.foregroundColor(.orange)
 					
-					Text("Version \(helper.getCurrentAppVersion())")
+					Text("Version \(Utils.getCurrentAppVersion())")
 						.font(.headline)
 						.foregroundColor(.blue)
 

@@ -11,36 +11,31 @@ import SwiftUI
 struct DetailScreen: View {
 	@State private var isShowingPreferenceScreen = false
 	@Environment(\.modelContext) var modelContext
-
-    let notificationService = NotificationService()
-	let converter = Conversions()
-    let helper = GeneralHelpers()
-    let contactService = ContactService()
     
     @Bindable var contact: SelectedContact
 
     var formattedPrimaryPhoneNumber: String {
-        converter.getFormattedPhoneNumber(from: contact.phone)
+        Converter.getFormattedPhoneNumber(from: contact.phone)
     }
 
     var formattedSecondaryPhoneNumber: String {
-        converter.getFormattedPhoneNumber(from: contact.secondary_phone)
+        Converter.getFormattedPhoneNumber(from: contact.secondary_phone)
     }
 
     var tappablePrimaryPhoneNumber: URL {
-        converter.getTappablePhoneNumber(from: contact.phone)
+        Converter.getTappablePhoneNumber(from: contact.phone)
     }
 
     var tappableSecondaryPhoneNumber: URL {
-        converter.getTappablePhoneNumber(from: contact.secondary_phone)
+        Converter.getTappablePhoneNumber(from: contact.secondary_phone)
     }
 
     var tappablePrimaryEmail: URL {
-        converter.getTappablePhoneNumber(from: contact.email)
+        Converter.getTappablePhoneNumber(from: contact.email)
     }
 
     var tappableSecondaryEmail: URL {
-        converter.getTappablePhoneNumber(from: contact.secondary_email)
+        Converter.getTappablePhoneNumber(from: contact.secondary_email)
     }
 
     var body: some View {
@@ -49,7 +44,7 @@ struct DetailScreen: View {
 				.edgesIgnoringSafeArea(.top)
 				.frame(height: 75)
 			
-            ContactPhoto(image: converter.getContactPicture(from: contact.picture))
+            ContactPhoto(image: Converter.getContactPicture(from: contact.picture))
 				.offset(x: 0, y: -130)
 				.padding(.bottom, -130)
 			
@@ -60,12 +55,12 @@ struct DetailScreen: View {
 				HStack(spacing: 0) {
 					Text("Preference: ")
 						.foregroundColor(.gray)
-					Text(converter.convertNotificationPreferenceIntToString(preference: Int(contact.notification_preference), contact: contact))
+					Text(Converter.convertNotificationPreferenceIntToString(preference: Int(contact.notification_preference), contact: contact))
 						.foregroundColor(.gray)
 				}
-				Button(action: {
+				Button {
                     isShowingPreferenceScreen = true
-                }) {
+                } label: {
                     Text("Change Notification Preference")
                         .font(.headline)
 						.foregroundColor(.orange)
@@ -74,7 +69,7 @@ struct DetailScreen: View {
 			
 			List {
                 Section(header: Text("Contact Information")) {
-                    if contactService.contactHasPhone(contact) {
+                    if ContactHelper.contactHasPhone(contact) {
                         VStack(alignment: .leading, spacing: 3) {
                             Text("Phone")
                                 .font(.caption)
@@ -85,7 +80,7 @@ struct DetailScreen: View {
                             .foregroundColor(.blue)
                         }
                     }
-                    if contactService.contactHasSecondaryPhone(contact) {
+                    if ContactHelper.contactHasSecondaryPhone(contact) {
                         VStack(alignment: .leading, spacing: 3) {
                             Text("Secondary Phone")
                                 .font(.caption)
@@ -96,7 +91,7 @@ struct DetailScreen: View {
                             .foregroundColor(.blue)
                         }
                     }
-                    if contactService.contactHasEmail(contact) {
+                    if ContactHelper.contactHasEmail(contact) {
                         VStack(alignment: .leading, spacing: 3) {
                             Text("Email")
                                 .font(.caption)
@@ -107,7 +102,7 @@ struct DetailScreen: View {
                             .foregroundColor(.blue)
                         }
                     }
-                    if contactService.contactHasSecondaryEmail(contact) {
+                    if ContactHelper.contactHasSecondaryEmail(contact) {
                         VStack(alignment: .leading, spacing: 3) {
                             Text("Secondary Email")
                                 .font(.caption)
@@ -118,32 +113,32 @@ struct DetailScreen: View {
                             .foregroundColor(.blue)
                         }
                     }
-                    if contactService.contactHasAddress(contact) {
+                    if ContactHelper.contactHasAddress(contact) {
                         VStack(alignment: .leading, spacing: 3) {
                             Text("Address")
                                 .font(.caption)
                             Text(contact.address)
                         }
                     }
-                    if contactService.contactHasSecondaryAddress(contact) {
+                    if ContactHelper.contactHasSecondaryAddress(contact) {
                         VStack(alignment: .leading, spacing: 3) {
                             Text("Secondary Address")
                                 .font(.caption)
                             Text(contact.secondary_address)
                         }
                     }
-                    if notificationService.contactHasBirthday(contact) {
+                    if NotificationHelper.contactHasBirthday(contact) {
                         VStack(alignment: .leading, spacing: 3) {
                             Text("Birthday")
                                 .font(.caption)
-                            Text(converter.getFormattedBirthdayOrAnniversary(from: contact.birthday))
+                            Text(Converter.getFormattedBirthdayOrAnniversary(from: contact.birthday))
                         }
                     }
-                    if notificationService.contactHasAnniversary(contact) {
+                    if NotificationHelper.contactHasAnniversary(contact) {
                         VStack(alignment: .leading, spacing: 3) {
                             Text("Anniversary")
                                 .font(.caption)
-                            Text(converter.getFormattedBirthdayOrAnniversary(from: contact.anniversary))
+                            Text(Converter.getFormattedBirthdayOrAnniversary(from: contact.anniversary))
                         }
                     }
                 }
@@ -152,11 +147,11 @@ struct DetailScreen: View {
         .sheet(
 			isPresented: $isShowingPreferenceScreen,
 			onDismiss: {
-                notificationService.removeExistingNotifications(for: contact)
-                notificationService.createNewNotification(for: contact, modelContext: modelContext)
+                NotificationHelper.removeExistingNotifications(for: contact)
+                NotificationHelper.createNewNotification(for: contact, modelContext: modelContext)
 			}) {
 			PreferenceScreen(contact: contact)
 		}
-        .onAppear(perform: helper.clearNotificationBadge)
+        .onAppear(perform: Utils.clearNotificationBadge)
     }
 }

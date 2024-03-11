@@ -17,9 +17,7 @@ struct PreferenceScreen: View {
 
     @Bindable var contact: SelectedContact
 
-    let notificationService = NotificationService()
 	let now = Date()
-
     var notificationOptions = ["Never", "Daily", "Weekly", "Monthly", "Custom"]
 	var dayOptions = ["Sun", "Mon", "Tues", "Wed", "Thur", "Fri", "Sat"]
 
@@ -117,14 +115,14 @@ struct PreferenceScreen: View {
         .onChange(of: notificationPreferenceTime) { initialTime, newTime in
             let calendar = Calendar.current
             let components = calendar.dateComponents([.hour, .minute], from : newTime)
-            notificationService.updateNotificationTime(for: contact, hour: components.hour!, minute: components.minute!, modelContext: modelContext)
+            NotificationHelper.updateNotificationTime(for: contact, hour: components.hour!, minute: components.minute!, modelContext: modelContext)
         }
 
         .onChange(of: notificationPreferenceCustomDate) { initialDate, newDate in
             let year = Calendar.current.component(.year, from: newDate)
             let month = Calendar.current.component(.month, from: newDate)
             let day = Calendar.current.component(.day, from: newDate)
-            notificationService.updateNotificationCustomDate(for: contact, month: month, day: day, year: year, modelContext: modelContext)
+            NotificationHelper.updateNotificationCustomDate(for: contact, month: month, day: day, year: year, modelContext: modelContext)
         }
     }
 

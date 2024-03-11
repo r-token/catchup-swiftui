@@ -1,5 +1,5 @@
 //
-//  NotificationService.swift
+//  NotificationHelper.swift
 //  CatchUp-SwiftUI
 //
 //  Created by Ryan Token on 4/21/20.
@@ -11,12 +11,8 @@ import SwiftUI
 import UserNotifications
 import CoreData
 
-struct NotificationService {
-    let notificationCenter = UNUserNotificationCenter.current()
-    let helper = GeneralHelpers()
-    let contactService = ContactService()
-    
-    func createNewNotification(for contact: SelectedContact, modelContext: ModelContext) {
+class NotificationHelper {
+    static func createNewNotification(for contact: SelectedContact, modelContext: ModelContext) {
         let addRequest = {
             if preferenceIsNotSetToNever(for: contact) {
                 addGeneralNotification(for: contact, modelContext: modelContext)
@@ -34,19 +30,19 @@ struct NotificationService {
         checkNotificationAuthorizationStatusAndAddRequest(action: addRequest)
     }
     
-    func preferenceIsNotSetToNever(for contact: SelectedContact) -> Bool {
+    static func preferenceIsNotSetToNever(for contact: SelectedContact) -> Bool {
         return contact.notification_preference != 0 ? true : false
     }
     
-    func contactHasBirthday(_ contact: SelectedContact) -> Bool {
+    static func contactHasBirthday(_ contact: SelectedContact) -> Bool {
         return contact.birthday != "" ? true : false
     }
     
-    func contactHasAnniversary(_ contact: SelectedContact) -> Bool {
+    static func contactHasAnniversary(_ contact: SelectedContact) -> Bool {
         return contact.anniversary != "" ? true : false
     }
     
-    func addGeneralNotification(for contact: SelectedContact, modelContext: ModelContext) {
+    static func addGeneralNotification(for contact: SelectedContact, modelContext: ModelContext) {
         let notificationContent = UNMutableNotificationContent()
         notificationContent.title = "👋 CatchUp with \(contact.name)"
         notificationContent.body = generateRandomNotificationBody()
@@ -59,7 +55,7 @@ struct NotificationService {
         scheduleNotification(for: contact, dateComponents: dateComponents, identifier: identifier, content: notificationContent, modelContext: modelContext)
     }
     
-    func addBirthdayNotification(for contact: SelectedContact, modelContext: ModelContext) {
+    static func addBirthdayNotification(for contact: SelectedContact, modelContext: ModelContext) {
         let birthdayNotificationContent = UNMutableNotificationContent()
         birthdayNotificationContent.title = "🥳 Today is \(contact.name)'s birthday!"
         birthdayNotificationContent.body = "Be sure to CatchUp and wish them a great one!"
@@ -72,7 +68,7 @@ struct NotificationService {
         scheduleNotification(for: contact, dateComponents: birthdayDateComponents, identifier: birthdayIdentifier, content: birthdayNotificationContent, modelContext: modelContext)
     }
     
-    func addAnniversaryNotification(for contact: SelectedContact, modelContext: ModelContext) {
+    static func addAnniversaryNotification(for contact: SelectedContact, modelContext: ModelContext) {
         let anniversaryNotificationContent = UNMutableNotificationContent()
         anniversaryNotificationContent.title = "😍 Tomorrow is \(contact.name)'s anniversary!"
         anniversaryNotificationContent.body = "Be sure to CatchUp and wish them the best."
@@ -85,14 +81,14 @@ struct NotificationService {
         scheduleNotification(for: contact, dateComponents: anniversaryDateComponents, identifier: anniversaryIdentifier, content: anniversaryNotificationContent, modelContext: modelContext)
     }
     
-    func checkNotificationAuthorizationStatusAndAddRequest(action: @escaping() -> Void) {
-        notificationCenter.getNotificationSettings { settings in
+    static func checkNotificationAuthorizationStatusAndAddRequest(action: @escaping() -> Void) {
+        UNUserNotificationCenter.current().getNotificationSettings { settings in
             if settings.authorizationStatus == .authorized {
                 action()
-                print("Scheduled new notification(s)")
             } else {
-                notificationCenter.requestAuthorization(options: [.alert, .badge, .sound]) { success, error in
+                UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { success, error in
                     if success {
+                        print("Scheduled new notification(s)")
                         action()
                     } else {
                         print("User isn't allowing notifications :(")
@@ -102,7 +98,7 @@ struct NotificationService {
         }
     }
     
-    func setNotificationDateComponents(for contact: SelectedContact) -> DateComponents {
+    static func setNotificationDateComponents(for contact: SelectedContact) -> DateComponents {
         var dateComponents = DateComponents()
         
         switch contact.notification_preference {
@@ -138,7 +134,7 @@ struct NotificationService {
         return dateComponents
     }
     
-    func setBirthdayDateComponents(for contact: SelectedContact) -> DateComponents {
+    static func setBirthdayDateComponents(for contact: SelectedContact) -> DateComponents {
         var birthdayDateComponents = DateComponents()
         
         let month = (contact.birthday).prefix(2)
@@ -152,7 +148,7 @@ struct NotificationService {
         return birthdayDateComponents
     }
     
-    func setAnniversaryDateComponents(for contact: SelectedContact) -> DateComponents {
+    static func setAnniversaryDateComponents(for contact: SelectedContact) -> DateComponents {
         var anniversaryDateComponents = DateComponents()
         let formatter = DateFormatter()
         
@@ -172,7 +168,7 @@ struct NotificationService {
         return anniversaryDateComponents
     }
     
-    func scheduleNotification(for contact: SelectedContact, dateComponents: DateComponents, identifier: UUID, content: UNMutableNotificationContent, modelContext: ModelContext) {
+    static func scheduleNotification(for contact: SelectedContact, dateComponents: DateComponents, identifier: UUID, content: UNMutableNotificationContent, modelContext: ModelContext) {
 
         let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
         let request = UNNotificationRequest(identifier: identifier.uuidString, content: content, trigger: trigger)
@@ -185,12 +181,13 @@ struct NotificationService {
             contact.anniversary_notification_id = identifier
         }
 
+        print("scheduling notification for contact: \(contact.name)")
         try? modelContext.save()
 
-        notificationCenter.add(request)
+        UNUserNotificationCenter.current().add(request)
     }
     
-    func generateRandomNotificationBody() -> String {
+    static func generateRandomNotificationBody() -> String {
         let randomInt = Int.random(in: 0..<20)
         
         switch randomInt {
@@ -239,14 +236,14 @@ struct NotificationService {
         }
     }
     
-    func updateNotificationPreference(for contact: SelectedContact, selection: Int, modelContext: ModelContext) {
+    static func updateNotificationPreference(for contact: SelectedContact, selection: Int, modelContext: ModelContext) {
         let newPreference = selection
         contact.notification_preference = newPreference
 
         try? modelContext.save()
     }
     
-    func updateNotificationTime(for contact: SelectedContact, hour: Int, minute: Int, modelContext: ModelContext) {
+    static func updateNotificationTime(for contact: SelectedContact, hour: Int, minute: Int, modelContext: ModelContext) {
         let newHour = hour
         let newMinute = minute
         contact.notification_preference_hour = newHour
@@ -255,14 +252,14 @@ struct NotificationService {
         try? modelContext.save()
     }
     
-    func updateNotificationPreferenceWeekday(for contact: SelectedContact, weekday: Int, modelContext: ModelContext) {
+    static func updateNotificationPreferenceWeekday(for contact: SelectedContact, weekday: Int, modelContext: ModelContext) {
         let newWeekday = weekday
         contact.notification_preference_weekday = newWeekday
 
         try? modelContext.save()
     }
     
-    func updateNotificationCustomDate(for contact: SelectedContact, month: Int, day: Int, year: Int, modelContext: ModelContext) {
+    static func updateNotificationCustomDate(for contact: SelectedContact, month: Int, day: Int, year: Int, modelContext: ModelContext) {
         let customMonth = month
         let customDay = day
         let customYear = year
@@ -273,7 +270,7 @@ struct NotificationService {
         try? modelContext.save()
     }
     
-    func requestAuthorizationForNotifications() {
+    static func requestAuthorizationForNotifications() {
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { success, error in
             if success {
                 print("User authorized CatchUp to send notifications")
@@ -283,7 +280,7 @@ struct NotificationService {
         }
     }
     
-    func removeExistingNotifications(for contact: SelectedContact) {
+    static func removeExistingNotifications(for contact: SelectedContact) {
         removeGeneralNotification(for: contact)
         
         if contactHasBirthday(contact) {
@@ -295,15 +292,29 @@ struct NotificationService {
         }
     }
     
-    func removeGeneralNotification(for contact: SelectedContact) {
+    static func removeGeneralNotification(for contact: SelectedContact) {
         UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [contact.notification_identifier.uuidString])
+
+        UNUserNotificationCenter.current().getPendingNotificationRequests { requests in
+            print("Pending requests after removing existing request: \(requests.count)")
+        }
     }
     
-    func removeBirthdayNotification(for contact: SelectedContact) {
+    static func removeBirthdayNotification(for contact: SelectedContact) {
         UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [contact.birthday_notification_id.uuidString])
     }
     
-    func removeAnniversaryNotification(for contact: SelectedContact) {
+    static func removeAnniversaryNotification(for contact: SelectedContact) {
         UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [contact.anniversary_notification_id.uuidString])
+    }
+
+    static func resetNotifications(for selectedContacts: [SelectedContact], modelContext: ModelContext) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+            UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
+
+            for contact in selectedContacts {
+                NotificationHelper.createNewNotification(for: contact, modelContext: modelContext)
+            }
+        }
     }
 }

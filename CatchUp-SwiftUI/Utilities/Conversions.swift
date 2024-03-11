@@ -10,10 +10,9 @@ import Foundation
 import SwiftUI
 import PhoneNumberKit
 
-struct Conversions {
+class Converter {
     // MARK: Only used in DetailScreen
-    
-    func getFormattedPhoneNumber(from phoneNumber: String) -> String {
+    static func getFormattedPhoneNumber(from phoneNumber: String) -> String {
         let phoneNumberKit = PhoneNumberKit()
 
         print("formatting phone number: \(phoneNumber)")
@@ -29,7 +28,7 @@ struct Conversions {
         }
     }
     
-    func getTappablePhoneNumber(from phoneNumber: String) -> URL {
+    static func getTappablePhoneNumber(from phoneNumber: String) -> URL {
         print("getting tappable phone number: \(phoneNumber)")
 
         let tel = "tel://"
@@ -40,7 +39,7 @@ struct Conversions {
         return tappableNumber
     }
     
-    func getTappableEmail(from emailAddress: String) -> URL {
+    static func getTappableEmail(from emailAddress: String) -> URL {
         let mailto = "mailto:"
         let formattedString = mailto + emailAddress
         let tappableEmail = URL(string: formattedString)!
@@ -48,7 +47,7 @@ struct Conversions {
         return tappableEmail
     }
     
-    func getFormattedBirthdayOrAnniversary(from storedDate: String) -> String {
+    static func getFormattedBirthdayOrAnniversary(from storedDate: String) -> String {
         var month = storedDate.prefix(2)
         let day = storedDate.suffix(2)
         
@@ -100,7 +99,7 @@ struct Conversions {
     
     // MARK: Used in HomeScreen and DetailScreen
     
-    func getContactPicture(from string: String) -> Image {
+    static func getContactPicture(from string: String) -> Image {
         let imageData = NSData(base64Encoded: string)
         let uiImage = UIImage(data: imageData! as Data)!
         let image = Image(uiImage: uiImage)
@@ -108,7 +107,7 @@ struct Conversions {
         return image
     }
 	
-	func convertNotificationPreferenceIntToString(preference: Int, contact: SelectedContact) -> String {
+    static func convertNotificationPreferenceIntToString(preference: Int, contact: SelectedContact) -> String {
 		let time = convertHourAndMinuteFromIntToString(for: contact)
 		let weekday = convertWeekdayFromIntToString(for: contact)
 		let customDate = convertCustomDateFromIntToString(for: contact)
@@ -129,7 +128,7 @@ struct Conversions {
 		}
 	}
 	
-	func convertWeekdayFromIntToString(for contact: SelectedContact) -> String {
+    static func convertWeekdayFromIntToString(for contact: SelectedContact) -> String {
 		let weekday: String
 		
 		switch contact.notification_preference_weekday {
@@ -162,7 +161,7 @@ struct Conversions {
 		return weekday
 	}
 	
-	func convertHourAndMinuteFromIntToString(for contact: SelectedContact) -> String {
+    static func convertHourAndMinuteFromIntToString(for contact: SelectedContact) -> String {
 		var hour: String
 		var suffix: String
 		
@@ -266,7 +265,7 @@ struct Conversions {
 		return time
 	}
 	
-	func convertCustomDateFromIntToString(for contact: SelectedContact) -> String {
+    static func convertCustomDateFromIntToString(for contact: SelectedContact) -> String {
 		var month: String
 		var day: String
 		var year: String

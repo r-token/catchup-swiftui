@@ -105,9 +105,9 @@ struct AboutScreen: View {
             }
             
             Group {
-                Button(action: {
+                Button {
                     showingUpdateScreen = true
-                }) {
+                } label: {
                     Text("Show Latest Update Details")
                         .font(.headline)
                         .foregroundColor(.blue)

@@ -9,16 +9,15 @@
 /* Begin PBXBuildFile section */
 		144DBE22245C8282008FDBB6 /* PhoneNumberKit in Frameworks */ = {isa = PBXBuildFile; productRef = 144DBE21245C8282008FDBB6 /* PhoneNumberKit */; };
 		14ACAC86245E52A40091AE90 /* PhoneNumberMetadata.json in Resources */ = {isa = PBXBuildFile; fileRef = 14ACAC85245E52A40091AE90 /* PhoneNumberMetadata.json */; };
-		14BE3AD324593556004F72DE /* GeneralHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14BE3AD224593556004F72DE /* GeneralHelpers.swift */; };
+		14BE3AD324593556004F72DE /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14BE3AD224593556004F72DE /* Utils.swift */; };
 		14BE3AD72459F610004F72DE /* UpdatesScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14BE3AD62459F610004F72DE /* UpdatesScreen.swift */; };
-		F40293A725618C4C004E0418 /* ContactHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = F40293A625618C4C004E0418 /* ContactHelper.swift */; };
 		F4095B6424C66F87007163E3 /* SKProduct+localizedPrice.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4095B6324C66F87007163E3 /* SKProduct+localizedPrice.swift */; };
 		F4118B452B9E68AE001BC8C7 /* ContactPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4118B442B9E68AE001BC8C7 /* ContactPicker.swift */; };
-		F4871DA1244FC43C00925392 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4871DA0244FC43C00925392 /* NotificationService.swift */; };
+		F4871DA1244FC43C00925392 /* NotificationHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4871DA0244FC43C00925392 /* NotificationHelper.swift */; };
 		F48E37F922C455C3008B0B8B /* HomeScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = F48E37F822C455C3008B0B8B /* HomeScreen.swift */; };
 		F48E37FB22C455CB008B0B8B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F48E37FA22C455CB008B0B8B /* Assets.xcassets */; };
 		F48E37FE22C455CB008B0B8B /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F48E37FD22C455CB008B0B8B /* Preview Assets.xcassets */; };
-		F494F95824424A03003CE7B5 /* ContactService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F494F95724424A03003CE7B5 /* ContactService.swift */; };
+		F494F95824424A03003CE7B5 /* ContactHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = F494F95724424A03003CE7B5 /* ContactHelper.swift */; };
 		F4A9B8522442A0F5001D8C55 /* DetailScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A9B8512442A0F5001D8C55 /* DetailScreen.swift */; };
 		F4A9B8552442A179001D8C55 /* ContactPhoto.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A9B8542442A179001D8C55 /* ContactPhoto.swift */; };
 		F4A9B8572442A1F7001D8C55 /* GradientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A9B8562442A1F7001D8C55 /* GradientView.swift */; };
@@ -33,18 +32,17 @@
 
 /* Begin PBXFileReference section */
 		14ACAC85245E52A40091AE90 /* PhoneNumberMetadata.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = PhoneNumberMetadata.json; sourceTree = "<group>"; };
-		14BE3AD224593556004F72DE /* GeneralHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralHelpers.swift; sourceTree = "<group>"; };
+		14BE3AD224593556004F72DE /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 		14BE3AD62459F610004F72DE /* UpdatesScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdatesScreen.swift; sourceTree = "<group>"; };
-		F40293A625618C4C004E0418 /* ContactHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactHelper.swift; sourceTree = "<group>"; };
 		F4095B6324C66F87007163E3 /* SKProduct+localizedPrice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SKProduct+localizedPrice.swift"; sourceTree = "<group>"; };
 		F4118B442B9E68AE001BC8C7 /* ContactPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactPicker.swift; sourceTree = "<group>"; };
-		F4871DA0244FC43C00925392 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
+		F4871DA0244FC43C00925392 /* NotificationHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationHelper.swift; sourceTree = "<group>"; };
 		F48E37EE22C455C3008B0B8B /* CatchUp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CatchUp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F48E37F822C455C3008B0B8B /* HomeScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeScreen.swift; sourceTree = "<group>"; };
 		F48E37FA22C455CB008B0B8B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F48E37FD22C455CB008B0B8B /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		F48E380222C455CB008B0B8B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		F494F95724424A03003CE7B5 /* ContactService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactService.swift; sourceTree = "<group>"; };
+		F494F95724424A03003CE7B5 /* ContactHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactHelper.swift; sourceTree = "<group>"; };
 		F4A9B8512442A0F5001D8C55 /* DetailScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailScreen.swift; sourceTree = "<group>"; };
 		F4A9B8542442A179001D8C55 /* ContactPhoto.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactPhoto.swift; sourceTree = "<group>"; };
 		F4A9B8562442A1F7001D8C55 /* GradientView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientView.swift; sourceTree = "<group>"; };
@@ -82,8 +80,9 @@
 			isa = PBXGroup;
 			children = (
 				F4A9B85A2443FFF3001D8C55 /* Conversions.swift */,
-				14BE3AD224593556004F72DE /* GeneralHelpers.swift */,
-				F40293A625618C4C004E0418 /* ContactHelper.swift */,
+				14BE3AD224593556004F72DE /* Utils.swift */,
+				F494F95724424A03003CE7B5 /* ContactHelper.swift */,
+				F4871DA0244FC43C00925392 /* NotificationHelper.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -138,9 +137,7 @@
 		F4A9B85024429E40001D8C55 /* Services */ = {
 			isa = PBXGroup;
 			children = (
-				F494F95724424A03003CE7B5 /* ContactService.swift */,
 				F4AD59AD244C9FF600296568 /* IAPService.swift */,
-				F4871DA0244FC43C00925392 /* NotificationService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -253,9 +250,9 @@
 				F4A9B8552442A179001D8C55 /* ContactPhoto.swift in Sources */,
 				F4A9B8572442A1F7001D8C55 /* GradientView.swift in Sources */,
 				F4A9B85B2443FFF3001D8C55 /* Conversions.swift in Sources */,
-				14BE3AD324593556004F72DE /* GeneralHelpers.swift in Sources */,
-				F4871DA1244FC43C00925392 /* NotificationService.swift in Sources */,
-				F494F95824424A03003CE7B5 /* ContactService.swift in Sources */,
+				14BE3AD324593556004F72DE /* Utils.swift in Sources */,
+				F4871DA1244FC43C00925392 /* NotificationHelper.swift in Sources */,
+				F494F95824424A03003CE7B5 /* ContactHelper.swift in Sources */,
 				F4095B6424C66F87007163E3 /* SKProduct+localizedPrice.swift in Sources */,
 				F4BAD42F2B94E8740009CD50 /* CatchUpApp.swift in Sources */,
 				14BE3AD72459F610004F72DE /* UpdatesScreen.swift in Sources */,
@@ -267,7 +264,6 @@
 				F4BAD4312B94F5680009CD50 /* ModelContext+sqliteCommand.swift in Sources */,
 				F4A9B8522442A0F5001D8C55 /* DetailScreen.swift in Sources */,
 				F4118B452B9E68AE001BC8C7 /* ContactPicker.swift in Sources */,
-				F40293A725618C4C004E0418 /* ContactHelper.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

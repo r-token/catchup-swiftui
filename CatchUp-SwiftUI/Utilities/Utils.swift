@@ -1,5 +1,5 @@
 //
-//  GeneralHelpers.swift
+//  Utils.swift
 //  CatchUp-SwiftUI
 //
 //  Created by Ryan Token on 4/28/20.
@@ -11,12 +11,12 @@ import Foundation
 import CoreData
 import UserNotifications
 
-struct GeneralHelpers {
-    func clearNotificationBadge() {
+class Utils {
+    static func clearNotificationBadge() {
         UNUserNotificationCenter.current().setBadgeCount(0)
     }
     
-    func getCurrentAppVersion() -> String {
+    static func getCurrentAppVersion() -> String {
         let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"]
         let version = (appVersion as! String)
 
@@ -24,4 +24,17 @@ struct GeneralHelpers {
         return version
     }
     
+    static func updateIsMajor() -> Bool {
+        let version = getCurrentAppVersion()
+        if version.suffix(2) == ".0" {
+            return true
+        } else {
+            return false
+        }
+    }
+
+    static func fetchAvailableIAPs() {
+        print("fetching IAPs")
+        IAPService.shared.fetchAvailableProducts()
+    }
 }
