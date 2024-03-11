@@ -313,7 +313,9 @@ class NotificationHelper {
             UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
 
             for contact in selectedContacts {
-                NotificationHelper.createNewNotification(for: contact, modelContext: modelContext)
+                if contact.notification_preference != 0 {
+                    NotificationHelper.createNewNotification(for: contact, modelContext: modelContext)
+                }
             }
         }
     }
