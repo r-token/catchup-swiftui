@@ -80,4 +80,27 @@ class SelectedContact {
         self.secondary_phone = secondary_phone
     }
 
+    static let sampleData = SelectedContact(
+        address: "2190 E 11th Ave",
+        anniversary: "06/20/2020",
+        anniversary_notification_id: UUID(),
+        birthday: "05/16/1994",
+        birthday_notification_id: UUID(),
+        email: "ryantoken13@gmail.com",
+        id: UUID(),
+        name: "Ryan Token",
+        notification_identifier: UUID(),
+        notification_preference: 0,
+        notification_preference_custom_day: 3,
+        notification_preference_custom_month: 0,
+        notification_preference_custom_year: 0,
+        notification_preference_hour: 12,
+        notification_preference_minute: 0,
+        notification_preference_weekday: 3,
+        phone: "6363687771",
+        picture: "photo-as-data-string",
+        secondary_address: "",
+        secondary_email: "",
+        secondary_phone: ""
+    )
 }

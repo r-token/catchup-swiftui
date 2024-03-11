@@ -279,4 +279,79 @@ struct ContactHelper {
 
         return selectedContact
     }
+
+    static func updateSelectedContacts(_ selectedContacts: [SelectedContact]) {
+        for contact in selectedContacts {
+            updateSelectedContact(contact)
+        }
+    }
+
+    static func updateSelectedContact(_ selectedContact: SelectedContact?) {
+        guard let selectedContact else { return }
+
+        getCNContactByName(selectedContact.name) { contact in
+            if let contact {
+                selectedContact.name = getContactName(for: contact)
+                selectedContact.phone = getContactPrimaryPhone(for: contact)
+                selectedContact.secondary_phone = getContactSecondaryPhone(for: contact)
+                selectedContact.email = getContactPrimaryEmail(for: contact)
+                selectedContact.secondary_email = getContactSecondaryEmail(for: contact)
+                selectedContact.address = getContactPrimaryAddress(for: contact)
+                selectedContact.secondary_address = getContactSecondaryAddress(for: contact)
+                selectedContact.picture = encodeContactPicture(for: contact)
+                selectedContact.birthday = getContactBirthday(for: contact)
+                selectedContact.anniversary = getContactAnniversary(for: contact)
+            } else {
+                print("No contact with name \(selectedContact.name) found")
+            }
+        }
+    }
+
+    static func getCNContactByName(_ name: String, completion: @escaping (CNContact?) -> Void) {
+        print("searching contact book for \(name)")
+        
+        let contactStore = CNContactStore()
+        let keysToFetch: [CNKeyDescriptor] = [
+            CNContactFormatter.descriptorForRequiredKeys(for: .fullName),
+            CNContactGivenNameKey as CNKeyDescriptor,
+            CNContactFamilyNameKey as CNKeyDescriptor,
+            CNContactPhoneNumbersKey as CNKeyDescriptor,
+            CNContactEmailAddressesKey as CNKeyDescriptor,
+            CNContactPostalAddressesKey as CNKeyDescriptor,
+            CNContactImageDataAvailableKey as CNKeyDescriptor,
+            CNContactImageDataKey as CNKeyDescriptor,
+            CNContactThumbnailImageDataKey as CNKeyDescriptor,
+            CNContactBirthdayKey as CNKeyDescriptor,
+            CNContactDatesKey as CNKeyDescriptor
+        ]
+
+        DispatchQueue.global().async {
+            var allContacts: [CNContact] = []
+
+            do {
+                try contactStore.enumerateContacts(with: CNContactFetchRequest(keysToFetch: keysToFetch)) { (contact, stop) in
+                    allContacts.append(contact)
+                }
+            } catch {
+                print("Unable to fetch contacts")
+                DispatchQueue.main.async {
+                    completion(nil)
+                }
+                return
+            }
+
+            let nameFormatter = CNContactFormatter()
+            nameFormatter.style = .fullName
+
+            let filteredContacts = allContacts.filter { contact in
+                return nameFormatter.string(from: contact) == name
+            }
+
+            print("Found matching contacts: \(filteredContacts)")
+
+            DispatchQueue.main.async {
+                completion(filteredContacts.first)
+            }
+        }
+    }
 }

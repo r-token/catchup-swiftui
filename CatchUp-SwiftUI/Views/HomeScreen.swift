@@ -33,25 +33,15 @@ struct HomeScreen : View {
                 List {
 					ForEach(selectedContacts) { contact in
 						NavigationLink(destination: DetailScreen(contact: contact)) {
-							HStack {
-                                Converter.getContactPicture(from: contact.picture)
-									.renderingMode(.original)
-									.resizable()
-									.frame(width: 45, height: 45, alignment: .leading)
-									.clipShape(Circle())
-								
-								VStack(alignment: .leading, spacing: 2) {
-									Text(contact.name)
-										.font(.headline)
-									Text(Converter.convertNotificationPreferenceIntToString(preference: Int(contact.notification_preference), contact: contact))
-										.font(.caption)
-										.foregroundColor(.gray)
-								}
-							}
+							ContactRowView(contact: contact)
 						}
 					}
                     .onDelete(perform: removePendingNotificationsAndDeleteContact)
 				}
+                .refreshable {
+                    ContactHelper.updateSelectedContacts(selectedContacts)
+                }
+
                 .onChange(of: contactPicker.chosenContacts) { initialContacts, contacts in
                     if !contacts.isEmpty {
                         saveSelectedContact(for: contacts)
@@ -62,31 +52,28 @@ struct HomeScreen : View {
                 Button {
                     openContactPicker()
                 } label: {
-					HStack(alignment: .center, spacing: 6) {
-						Image(systemName: "person.crop.circle.fill.badge.plus")
-						
-						Text("Add Contacts")
-					}
-					.font(.headline)
-					.foregroundColor(.blue)
-					.padding(.top)
-					.padding(.bottom)
+					OpenContactPickerButtonView()
                 }
 
-				.navigationBarTitle(Text("CatchUp"))
-					
-				.navigationBarItems(trailing:
-					Button {
-						isShowingAboutSheet = true
-                    } label: {
-						Image(systemName: "ellipsis.circle")
-							.font(.title2)
-							.foregroundColor(.blue)
-					}
-                    .sheet(isPresented: $isShowingAboutSheet) {
-                        AboutScreen()
+				.navigationBarTitle("CatchUp")
+                .toolbar {
+                    ToolbarItem(placement: .topBarLeading) {
+                        EditButton()
+                            .foregroundStyle(.blue)
                     }
-				)
+
+                    ToolbarItem(placement: .topBarTrailing) {
+                        Button {
+                            isShowingAboutSheet = true
+                        } label: {
+                            Image(systemName: "person.crop.square")
+                                .foregroundColor(.blue)
+                        }
+                        .sheet(isPresented: $isShowingAboutSheet) {
+                            AboutScreen()
+                        }
+                    }
+                }
             }
 		}
 		.accentColor(.orange)

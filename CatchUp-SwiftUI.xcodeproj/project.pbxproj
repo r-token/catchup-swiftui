@@ -12,6 +12,8 @@
 		14BE3AD72459F610004F72DE /* UpdatesScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14BE3AD62459F610004F72DE /* UpdatesScreen.swift */; };
 		F4095B6424C66F87007163E3 /* SKProduct+localizedPrice.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4095B6324C66F87007163E3 /* SKProduct+localizedPrice.swift */; };
 		F4118B452B9E68AE001BC8C7 /* ContactPickerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4118B442B9E68AE001BC8C7 /* ContactPickerDelegate.swift */; };
+		F4118B492B9E8FC7001BC8C7 /* ContactRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4118B482B9E8FC7001BC8C7 /* ContactRowView.swift */; };
+		F4118B4B2B9E912E001BC8C7 /* OpenContactPickerButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4118B4A2B9E912E001BC8C7 /* OpenContactPickerButtonView.swift */; };
 		F4871DA1244FC43C00925392 /* NotificationHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4871DA0244FC43C00925392 /* NotificationHelper.swift */; };
 		F48E37F922C455C3008B0B8B /* HomeScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = F48E37F822C455C3008B0B8B /* HomeScreen.swift */; };
 		F48E37FB22C455CB008B0B8B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F48E37FA22C455CB008B0B8B /* Assets.xcassets */; };
@@ -34,6 +36,8 @@
 		14BE3AD62459F610004F72DE /* UpdatesScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdatesScreen.swift; sourceTree = "<group>"; };
 		F4095B6324C66F87007163E3 /* SKProduct+localizedPrice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SKProduct+localizedPrice.swift"; sourceTree = "<group>"; };
 		F4118B442B9E68AE001BC8C7 /* ContactPickerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactPickerDelegate.swift; sourceTree = "<group>"; };
+		F4118B482B9E8FC7001BC8C7 /* ContactRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactRowView.swift; sourceTree = "<group>"; };
+		F4118B4A2B9E912E001BC8C7 /* OpenContactPickerButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenContactPickerButtonView.swift; sourceTree = "<group>"; };
 		F4871DA0244FC43C00925392 /* NotificationHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationHelper.swift; sourceTree = "<group>"; };
 		F48E37EE22C455C3008B0B8B /* CatchUp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CatchUp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F48E37F822C455C3008B0B8B /* HomeScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeScreen.swift; sourceTree = "<group>"; };
@@ -145,6 +149,8 @@
 			children = (
 				F4A9B8542442A179001D8C55 /* ContactPhoto.swift */,
 				F4A9B8562442A1F7001D8C55 /* GradientView.swift */,
+				F4118B482B9E8FC7001BC8C7 /* ContactRowView.swift */,
+				F4118B4A2B9E912E001BC8C7 /* OpenContactPickerButtonView.swift */,
 			);
 			path = "Supporting Views";
 			sourceTree = "<group>";
@@ -244,6 +250,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F4A9B8552442A179001D8C55 /* ContactPhoto.swift in Sources */,
+				F4118B4B2B9E912E001BC8C7 /* OpenContactPickerButtonView.swift in Sources */,
 				F4A9B8572442A1F7001D8C55 /* GradientView.swift in Sources */,
 				F4A9B85B2443FFF3001D8C55 /* Conversions.swift in Sources */,
 				14BE3AD324593556004F72DE /* Utils.swift in Sources */,
@@ -259,6 +266,7 @@
 				F4AD59AE244C9FF600296568 /* IAPService.swift in Sources */,
 				F4BAD4312B94F5680009CD50 /* ModelContext+sqliteCommand.swift in Sources */,
 				F4A9B8522442A0F5001D8C55 /* DetailScreen.swift in Sources */,
+				F4118B492B9E8FC7001BC8C7 /* ContactRowView.swift in Sources */,
 				F4118B452B9E68AE001BC8C7 /* ContactPickerDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
