@@ -23,6 +23,10 @@ struct HomeScreen : View {
     @State private var isShowingAboutSheet = false
     @State private var contactPicker = ContactPickerDelegate()
 
+    var filteredNextCatchups: [SelectedContact] {
+        return Array(nextCatchups.filter({ $0.next_notification_date_time != "" }).prefix(4))
+    }
+
 	init() {
         //Use this if NavigationBarTitle is with Large Font
 		UINavigationBar.appearance().largeTitleTextAttributes = [.foregroundColor: UIColor.systemOrange]
@@ -32,7 +36,7 @@ struct HomeScreen : View {
         NavigationView {
             VStack {
                 // Grid of upcoming CatchUps
-                ForEach(nextCatchups.prefix(4)) { contact in
+                ForEach(filteredNextCatchups) { contact in
                     Text(contact.name)
                 }
 
