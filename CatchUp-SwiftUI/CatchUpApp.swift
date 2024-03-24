@@ -11,8 +11,6 @@ import SwiftUI
 
 @main
 struct CatchUpApp: App {
-    @Environment(\.scenePhase) var scenePhase
-
     // use the SQLite file created by Core Data originally, instead of SwiftData's default.store file
     let url = URL.applicationSupportDirectory.appending(path: "CatchUp-SwiftUI.sqlite")
     let modelContainer: ModelContainer
