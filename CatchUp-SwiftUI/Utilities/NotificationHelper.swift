@@ -25,6 +25,8 @@ class NotificationHelper {
             if contactHasAnniversary(contact) {
                 addAnniversaryNotification(for: contact, modelContext: modelContext)
             }
+
+            updateNextNotificationDateTimeFor(contact: contact)
         }
 
         checkNotificationAuthorizationStatusAndAddRequest(action: addRequest)
@@ -50,8 +52,12 @@ class NotificationHelper {
         notificationContent.badge = 1
 
         let identifier = UUID()
-        let dateComponents = setNotificationDateComponents(for: contact)
-        
+        let dateComponents = getNotificationDateComponents(for: contact)
+        if let weekOfMonth = dateComponents.weekOfMonth {
+            contact.notification_preference_week_of_month = weekOfMonth
+            try? modelContext.save()
+        }
+
         scheduleNotification(for: contact, dateComponents: dateComponents, identifier: identifier, content: notificationContent, modelContext: modelContext)
     }
     
@@ -63,8 +69,8 @@ class NotificationHelper {
         birthdayNotificationContent.badge = 1
 
         let birthdayIdentifier = UUID()
-        let birthdayDateComponents = setBirthdayDateComponents(for: contact)
-        
+        let birthdayDateComponents = getBirthdayDateComponents(for: contact)
+
         scheduleNotification(for: contact, dateComponents: birthdayDateComponents, identifier: birthdayIdentifier, content: birthdayNotificationContent, modelContext: modelContext)
     }
     
@@ -76,8 +82,8 @@ class NotificationHelper {
         anniversaryNotificationContent.badge = 1
 
         let anniversaryIdentifier = UUID()
-        let anniversaryDateComponents = setAnniversaryDateComponents(for: contact)
-        
+        let anniversaryDateComponents = getAnniversaryDateComponents(for: contact)
+
         scheduleNotification(for: contact, dateComponents: anniversaryDateComponents, identifier: anniversaryIdentifier, content: anniversaryNotificationContent, modelContext: modelContext)
     }
     
@@ -98,9 +104,9 @@ class NotificationHelper {
         }
     }
     
-    static func setNotificationDateComponents(for contact: SelectedContact) -> DateComponents {
+    static func getNotificationDateComponents(for contact: SelectedContact) -> DateComponents {
         var dateComponents = DateComponents()
-        
+
         switch contact.notification_preference {
         case 0: // Never
             break
@@ -130,11 +136,11 @@ class NotificationHelper {
         default:
             print("It's impossible to get here")
         }
-        
+
         return dateComponents
     }
     
-    static func setBirthdayDateComponents(for contact: SelectedContact) -> DateComponents {
+    static func getBirthdayDateComponents(for contact: SelectedContact) -> DateComponents {
         var birthdayDateComponents = DateComponents()
         
         let month = (contact.birthday).prefix(2)
@@ -148,7 +154,7 @@ class NotificationHelper {
         return birthdayDateComponents
     }
     
-    static func setAnniversaryDateComponents(for contact: SelectedContact) -> DateComponents {
+    static func getAnniversaryDateComponents(for contact: SelectedContact) -> DateComponents {
         var anniversaryDateComponents = DateComponents()
         let formatter = DateFormatter()
         
@@ -306,6 +312,81 @@ class NotificationHelper {
     
     static func removeAnniversaryNotification(for contact: SelectedContact) {
         UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [contact.anniversary_notification_id.uuidString])
+    }
+
+    static func updateNextNotificationDateTimeFor(contact: SelectedContact) {
+        let nextNotificationDateTime = getNextNotificationDateFor(contact: contact)
+        contact.next_notification_date_time = nextNotificationDateTime
+    }
+
+    static func getNextNotificationDateFor(contact: SelectedContact) -> String {
+        var soonestUpcomingNotificationDateString = "Unknown"
+
+        // Get next notification date for the general notification
+        var components = DateComponents()
+        switch contact.notification_preference {
+        case 1: // daily
+            components.hour = contact.notification_preference_hour
+            components.minute = contact.notification_preference_minute
+        case 2, 3: // weekly, monthly
+            components.hour = contact.notification_preference_hour
+            components.minute = contact.notification_preference_minute
+            components.weekday = contact.notification_preference_weekday + 1
+            if contact.notification_preference_week_of_month != 0 {
+                components.weekOfMonth = contact.notification_preference_week_of_month
+            }
+        case 4: // custom date
+            components.hour = contact.notification_preference_hour
+            components.minute = contact.notification_preference_minute
+            components.month = contact.notification_preference_custom_month
+            components.day = contact.notification_preference_custom_day
+            components.year = contact.notification_preference_custom_year
+        default:
+            print("do nothing")
+        }
+
+        print("dateComponents for \(contact.name): \(components)")
+
+        soonestUpcomingNotificationDateString = calculateDateFromComponents(components)
+        print("soonestUpcomingNotification for \(contact.name) is now \(soonestUpcomingNotificationDateString)")
+
+        if contactHasBirthday(contact) {
+            let birthdayDateString = calculateDateFromComponents(getBirthdayDateComponents(for: contact))
+            if birthdayDateString < soonestUpcomingNotificationDateString {
+                soonestUpcomingNotificationDateString = birthdayDateString
+                print("soonestUpcomingNotification for \(contact.name) is now \(soonestUpcomingNotificationDateString) because their birthday is \(birthdayDateString)")
+            }
+        }
+
+        if contactHasAnniversary(contact) {
+            let anniversaryDateString = calculateDateFromComponents(getAnniversaryDateComponents(for: contact))
+            if anniversaryDateString < soonestUpcomingNotificationDateString {
+                soonestUpcomingNotificationDateString = anniversaryDateString
+                print("soonestUpcomingNotification for \(contact.name) is now \(soonestUpcomingNotificationDateString) because their anniversary is \(anniversaryDateString)")
+            }
+        }
+
+        print("soonestUpcomingNotification for \(contact.name): \(soonestUpcomingNotificationDateString)")
+        return soonestUpcomingNotificationDateString
+    }
+
+    static func calculateDateFromComponents(_ dateComponents: DateComponents) -> String {
+        let calendar = Calendar.current
+        let currentDate = Date()
+
+        // Calculate the date based on the provided components and current date
+        if let calculatedDate = calendar.nextDate(after: currentDate, matching: dateComponents, matchingPolicy: .nextTime) {
+            // Create a DateFormatter instance
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss" // Define the desired date format
+
+            // Convert the calculated date to a human-readable date string
+            let formattedDate = dateFormatter.string(from: calculatedDate)
+            return formattedDate
+        }
+
+        print("returning Unknown for soonestUpcomingNotification")
+        return "Unknown"
     }
 
     static func resetNotifications(for selectedContacts: [SelectedContact], modelContext: ModelContext) {

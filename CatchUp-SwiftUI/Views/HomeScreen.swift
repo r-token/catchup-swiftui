@@ -8,12 +8,13 @@
 
 import SwiftData
 import SwiftUI
-import SwiftUIKit
 import ContactsUI
 
 struct HomeScreen : View {
     @Environment(\.modelContext) var modelContext
+
     @Query(sort: \SelectedContact.name) var selectedContacts: [SelectedContact]
+    @Query(sort: \SelectedContact.next_notification_date_time) var nextCatchups: [SelectedContact]
 
     @AppStorage("savedVersion") var savedVersion = "2.0.0"
 
@@ -30,13 +31,20 @@ struct HomeScreen : View {
     var body: some View {
         NavigationView {
             VStack {
+                // Grid of upcoming CatchUps
+                ForEach(nextCatchups.prefix(4)) { contact in
+                    Text(contact.name)
+                }
+
                 List {
-					ForEach(selectedContacts) { contact in
-						NavigationLink(destination: DetailScreen(contact: contact)) {
-							ContactRowView(contact: contact)
-						}
-					}
-                    .onDelete(perform: removePendingNotificationsAndDeleteContact)
+                    Section("All CatchUps") {
+                        ForEach(selectedContacts) { contact in
+                            NavigationLink(destination: DetailScreen(contact: contact)) {
+                                ContactRowView(contact: contact)
+                            }
+                        }
+                        .onDelete(perform: removePendingNotificationsAndDeleteContact)
+                    }
 				}
                 .refreshable {
                     ContactHelper.updateSelectedContacts(selectedContacts)

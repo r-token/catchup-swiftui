@@ -230,6 +230,7 @@ struct ContactHelper {
         let currentDay = Calendar.current.component(.day, from: Date())
         let currentMonth = Calendar.current.component(.month, from: Date())
         let currentYear = Calendar.current.component(.year, from: Date())
+        let currentWeekOfMonth = Calendar.current.component(.weekOfYear, from: Date())
 
         let id = UUID()
         let address = ContactHelper.getContactPrimaryAddress(for: contact)
@@ -262,6 +263,7 @@ struct ContactHelper {
             email: email,
             id: id,
             name: name,
+            next_notification_date_time: "",
             notification_identifier: notification_identifier,
             notification_preference: notification_preference,
             notification_preference_custom_day: notification_preference_custom_day,
@@ -270,6 +272,7 @@ struct ContactHelper {
             notification_preference_hour: notification_preference_hour,
             notification_preference_minute: notification_preference_minute,
             notification_preference_weekday: notification_preference_weekday,
+            notification_preference_week_of_month: currentWeekOfMonth,
             phone: phone,
             picture: picture,
             secondary_address: secondary_address,
@@ -291,6 +294,8 @@ struct ContactHelper {
 
         getCNContactByName(selectedContact.name) { contact in
             if let contact {
+                let nextNotificationDateTime = NotificationHelper.getNextNotificationDateFor(contact: selectedContact)
+
                 selectedContact.name = getContactName(for: contact)
                 selectedContact.phone = getContactPrimaryPhone(for: contact)
                 selectedContact.secondary_phone = getContactSecondaryPhone(for: contact)
@@ -301,6 +306,7 @@ struct ContactHelper {
                 selectedContact.picture = encodeContactPicture(for: contact)
                 selectedContact.birthday = getContactBirthday(for: contact)
                 selectedContact.anniversary = getContactAnniversary(for: contact)
+                selectedContact.next_notification_date_time = nextNotificationDateTime
             } else {
                 print("No contact with name \(selectedContact.name) found")
             }
