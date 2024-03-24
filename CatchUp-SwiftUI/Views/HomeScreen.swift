@@ -21,6 +21,8 @@ struct HomeScreen : View {
     @State private var isColdLaunch = true
 	@State private var isShowingUpdatesSheet = false
     @State private var isShowingAboutSheet = false
+    @State private var shouldNavigateViaGrid = false
+    @State private var tappedGridContact: SelectedContact = SelectedContact.sampleData
     @State private var contactPicker = ContactPickerDelegate()
 
     var filteredNextCatchups: [SelectedContact] {
@@ -33,14 +35,13 @@ struct HomeScreen : View {
     }
 	
     var body: some View {
-        NavigationView {
+        NavigationStack {
             VStack {
-                // Grid of upcoming CatchUps
-                ForEach(filteredNextCatchups) { contact in
-                    Text(contact.name)
-                }
-
                 List {
+                    Section("Next CatchUps") {
+                        NextCatchUpsGridView(nextCatchUps: filteredNextCatchups, shouldNavigateViaGrid: $shouldNavigateViaGrid, tappedGridContact: $tappedGridContact)
+                    }
+
                     Section("All CatchUps") {
                         ForEach(selectedContacts) { contact in
                             NavigationLink(destination: DetailScreen(contact: contact)) {
@@ -86,6 +87,10 @@ struct HomeScreen : View {
                         }
                     }
                 }
+            }
+
+            .navigationDestination(isPresented: $shouldNavigateViaGrid) {
+                DetailScreen(contact: tappedGridContact)
             }
 		}
 		.accentColor(.orange)

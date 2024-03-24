@@ -28,5 +28,6 @@ struct DetailScreen: View {
 			ContactInfoListView(contact: contact)
 		}
         .onAppear(perform: Utils.clearNotificationBadge)
+        .navigationBarTitleDisplayMode(.inline)
     }
 }

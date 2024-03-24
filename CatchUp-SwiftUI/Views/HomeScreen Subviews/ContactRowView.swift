@@ -13,11 +13,7 @@ struct ContactRowView: View {
 
     var body: some View {
         HStack {
-            Converter.getContactPicture(from: contact.picture)
-                .renderingMode(.original)
-                .resizable()
-                .frame(width: 45, height: 45, alignment: .leading)
-                .clipShape(Circle())
+            ContactPictureView(contact: contact)
 
             VStack(alignment: .leading, spacing: 2) {
                 Text(contact.name)

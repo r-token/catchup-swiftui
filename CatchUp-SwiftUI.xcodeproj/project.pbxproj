@@ -31,6 +31,8 @@
 		F4BAD42D2B94E45D0009CD50 /* SelectedContact.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4BAD42C2B94E45D0009CD50 /* SelectedContact.swift */; };
 		F4BAD42F2B94E8740009CD50 /* CatchUpApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4BAD42E2B94E8740009CD50 /* CatchUpApp.swift */; };
 		F4BAD4312B94F5680009CD50 /* ModelContext+sqliteCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4BAD4302B94F5680009CD50 /* ModelContext+sqliteCommand.swift */; };
+		F4F7535D2BB0956800B20090 /* NextCatchUpsGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F7535C2BB0956800B20090 /* NextCatchUpsGridView.swift */; };
+		F4F7535F2BB0969A00B20090 /* ContactPictureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F7535E2BB0969A00B20090 /* ContactPictureView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -60,6 +62,8 @@
 		F4BAD42C2B94E45D0009CD50 /* SelectedContact.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedContact.swift; sourceTree = "<group>"; };
 		F4BAD42E2B94E8740009CD50 /* CatchUpApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatchUpApp.swift; sourceTree = "<group>"; };
 		F4BAD4302B94F5680009CD50 /* ModelContext+sqliteCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ModelContext+sqliteCommand.swift"; sourceTree = "<group>"; };
+		F4F7535C2BB0956800B20090 /* NextCatchUpsGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NextCatchUpsGridView.swift; sourceTree = "<group>"; };
+		F4F7535E2BB0969A00B20090 /* ContactPictureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactPictureView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -92,7 +96,9 @@
 			isa = PBXGroup;
 			children = (
 				F4118B482B9E8FC7001BC8C7 /* ContactRowView.swift */,
+				F4F7535E2BB0969A00B20090 /* ContactPictureView.swift */,
 				F4118B4A2B9E912E001BC8C7 /* OpenContactPickerButtonView.swift */,
+				F4F7535C2BB0956800B20090 /* NextCatchUpsGridView.swift */,
 			);
 			path = "HomeScreen Subviews";
 			sourceTree = "<group>";
@@ -269,6 +275,7 @@
 				F4A9B85B2443FFF3001D8C55 /* Conversions.swift in Sources */,
 				14BE3AD324593556004F72DE /* Utils.swift in Sources */,
 				F4871DA1244FC43C00925392 /* NotificationHelper.swift in Sources */,
+				F4F7535D2BB0956800B20090 /* NextCatchUpsGridView.swift in Sources */,
 				F4118B4D2B9EA11A001BC8C7 /* NamePreferenceChangeStack.swift in Sources */,
 				F494F95824424A03003CE7B5 /* ContactHelper.swift in Sources */,
 				F4118B4F2B9EA168001BC8C7 /* ContactInfoListView.swift in Sources */,
@@ -280,6 +287,7 @@
 				F4BAD42D2B94E45D0009CD50 /* SelectedContact.swift in Sources */,
 				F48E37F922C455C3008B0B8B /* HomeScreen.swift in Sources */,
 				F4AD59AE244C9FF600296568 /* IAPService.swift in Sources */,
+				F4F7535F2BB0969A00B20090 /* ContactPictureView.swift in Sources */,
 				F4BAD4312B94F5680009CD50 /* ModelContext+sqliteCommand.swift in Sources */,
 				F4A9B8522442A0F5001D8C55 /* DetailScreen.swift in Sources */,
 				F4118B492B9E8FC7001BC8C7 /* ContactRowView.swift in Sources */,
