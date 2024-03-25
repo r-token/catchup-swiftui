@@ -331,7 +331,7 @@ struct ContactHelper {
             CNContactDatesKey as CNKeyDescriptor
         ]
 
-        DispatchQueue.global().async {
+        DispatchQueue.global(qos: .background).async {
             var allContacts: [CNContact] = []
 
             do {

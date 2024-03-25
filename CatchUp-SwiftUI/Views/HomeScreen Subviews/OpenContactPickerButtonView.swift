@@ -17,8 +17,7 @@ struct OpenContactPickerButtonView: View {
         }
         .font(.headline)
         .foregroundColor(.blue)
-        .padding(.top)
-        .padding(.bottom)
+        .padding(.top, 10)
     }
 }
 

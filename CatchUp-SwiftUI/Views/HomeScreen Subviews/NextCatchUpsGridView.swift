@@ -9,8 +9,9 @@
 import SwiftUI
 
 struct NextCatchUpsGridView: View {
-    var nextCatchUps: [SelectedContact]
+    @Environment(\.colorScheme) var colorScheme
 
+    var nextCatchUps: [SelectedContact]
     @Binding var shouldNavigateViaGrid: Bool
     @Binding var tappedGridContact: SelectedContact
 
@@ -38,9 +39,11 @@ struct NextCatchUpsGridView: View {
                 }
                 .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
                 .padding(10)
-                .background(Color.white)
+                .background(colorScheme == .light ? Color.white : Color(UIColor(red: 0.15, green: 0.15, blue: 0.15, alpha: 1)))
                 .cornerRadius(10)
-                .shadow(color: Color.gray.opacity(0.4), radius: 3, x: 0, y: 2)
+                .if(colorScheme == .light) { view in
+                    view.shadow(color: Color.gray.opacity(0.4), radius: 3, x: 0, y: 2)
+                }
 
                 .onTapGesture {
                     tappedGridContact = contact

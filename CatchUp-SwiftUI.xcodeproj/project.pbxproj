@@ -33,6 +33,7 @@
 		F4BAD4312B94F5680009CD50 /* ModelContext+sqliteCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4BAD4302B94F5680009CD50 /* ModelContext+sqliteCommand.swift */; };
 		F4F7535D2BB0956800B20090 /* NextCatchUpsGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F7535C2BB0956800B20090 /* NextCatchUpsGridView.swift */; };
 		F4F7535F2BB0969A00B20090 /* ContactPictureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F7535E2BB0969A00B20090 /* ContactPictureView.swift */; };
+		F4F753652BB11FA300B20090 /* View+if.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F753642BB11FA300B20090 /* View+if.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -64,6 +65,7 @@
 		F4BAD4302B94F5680009CD50 /* ModelContext+sqliteCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ModelContext+sqliteCommand.swift"; sourceTree = "<group>"; };
 		F4F7535C2BB0956800B20090 /* NextCatchUpsGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NextCatchUpsGridView.swift; sourceTree = "<group>"; };
 		F4F7535E2BB0969A00B20090 /* ContactPictureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactPictureView.swift; sourceTree = "<group>"; };
+		F4F753642BB11FA300B20090 /* View+if.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+if.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -180,6 +182,7 @@
 			children = (
 				F4095B6324C66F87007163E3 /* SKProduct+localizedPrice.swift */,
 				F4BAD4302B94F5680009CD50 /* ModelContext+sqliteCommand.swift */,
+				F4F753642BB11FA300B20090 /* View+if.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -274,6 +277,7 @@
 				F4A9B8572442A1F7001D8C55 /* GradientView.swift in Sources */,
 				F4A9B85B2443FFF3001D8C55 /* Conversions.swift in Sources */,
 				14BE3AD324593556004F72DE /* Utils.swift in Sources */,
+				F4F753652BB11FA300B20090 /* View+if.swift in Sources */,
 				F4871DA1244FC43C00925392 /* NotificationHelper.swift in Sources */,
 				F4F7535D2BB0956800B20090 /* NextCatchUpsGridView.swift in Sources */,
 				F4118B4D2B9EA11A001BC8C7 /* NamePreferenceChangeStack.swift in Sources */,
