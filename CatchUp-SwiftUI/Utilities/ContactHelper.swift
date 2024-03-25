@@ -12,7 +12,6 @@ import Contacts
 import CoreData
 
 struct ContactHelper {
-
     // MARK: Functions for DetailScreen
     
     static func contactHasPhone(_ contact: SelectedContact) -> Bool {
@@ -38,7 +37,15 @@ struct ContactHelper {
     static func contactHasSecondaryAddress(_ contact: SelectedContact) -> Bool {
         return contact.secondary_address != "" ? true : false
     }
-    
+
+    static func contactHasBirthday(_ contact: SelectedContact) -> Bool {
+        return contact.birthday != "" ? true : false
+    }
+
+    static func contactHasAnniversary(_ contact: SelectedContact) -> Bool {
+        return contact.anniversary != "" ? true : false
+    }
+
     // MARK: Functions for ContactPickerViewController
     
     static func encodeContactPicture(for contact: CNContact) -> String {

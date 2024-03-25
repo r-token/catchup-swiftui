@@ -11,18 +11,18 @@ import SwiftUI
 import UserNotifications
 import CoreData
 
-class NotificationHelper {
+struct NotificationHelper {
     static func createNewNotification(for contact: SelectedContact, modelContext: ModelContext) {
         let addRequest = {
             if preferenceIsNotSetToNever(for: contact) {
                 addGeneralNotification(for: contact, modelContext: modelContext)
             }
             
-            if contactHasBirthday(contact) {
+            if ContactHelper.contactHasBirthday(contact) {
                 addBirthdayNotification(for: contact, modelContext: modelContext)
             }
             
-            if contactHasAnniversary(contact) {
+            if ContactHelper.contactHasAnniversary(contact) {
                 addAnniversaryNotification(for: contact, modelContext: modelContext)
             }
 
@@ -34,14 +34,6 @@ class NotificationHelper {
     
     static func preferenceIsNotSetToNever(for contact: SelectedContact) -> Bool {
         return contact.notification_preference != 0 ? true : false
-    }
-    
-    static func contactHasBirthday(_ contact: SelectedContact) -> Bool {
-        return contact.birthday != "" ? true : false
-    }
-    
-    static func contactHasAnniversary(_ contact: SelectedContact) -> Bool {
-        return contact.anniversary != "" ? true : false
     }
     
     static func addGeneralNotification(for contact: SelectedContact, modelContext: ModelContext) {
@@ -289,11 +281,11 @@ class NotificationHelper {
     static func removeExistingNotifications(for contact: SelectedContact) {
         removeGeneralNotification(for: contact)
         
-        if contactHasBirthday(contact) {
+        if ContactHelper.contactHasBirthday(contact) {
             removeBirthdayNotification(for: contact)
         }
         
-        if contactHasAnniversary(contact) {
+        if ContactHelper.contactHasAnniversary(contact) {
             removeAnniversaryNotification(for: contact)
         }
     }
@@ -320,8 +312,6 @@ class NotificationHelper {
     }
 
     static func getNextNotificationDateFor(contact: SelectedContact) -> String {
-        var soonestUpcomingNotificationDateString = "Unknown"
-
         // Get next notification date for the general notification
         var components = DateComponents()
         switch contact.notification_preference {
@@ -345,24 +335,20 @@ class NotificationHelper {
             print("do nothing")
         }
 
-        print("dateComponents for \(contact.name): \(components)")
-
+        var soonestUpcomingNotificationDateString = "Unknown"
         soonestUpcomingNotificationDateString = calculateDateFromComponents(components)
-        print("soonestUpcomingNotification for \(contact.name) is now \(soonestUpcomingNotificationDateString)")
 
-        if contactHasBirthday(contact) {
+        if ContactHelper.contactHasBirthday(contact) {
             let birthdayDateString = calculateDateFromComponents(getBirthdayDateComponents(for: contact))
             if birthdayDateString < soonestUpcomingNotificationDateString {
                 soonestUpcomingNotificationDateString = birthdayDateString
-                print("soonestUpcomingNotification for \(contact.name) is now \(soonestUpcomingNotificationDateString) because their birthday is \(birthdayDateString)")
             }
         }
 
-        if contactHasAnniversary(contact) {
+        if ContactHelper.contactHasAnniversary(contact) {
             let anniversaryDateString = calculateDateFromComponents(getAnniversaryDateComponents(for: contact))
             if anniversaryDateString < soonestUpcomingNotificationDateString {
                 soonestUpcomingNotificationDateString = anniversaryDateString
-                print("soonestUpcomingNotification for \(contact.name) is now \(soonestUpcomingNotificationDateString) because their anniversary is \(anniversaryDateString)")
             }
         }
 

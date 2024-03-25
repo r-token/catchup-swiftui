@@ -11,7 +11,7 @@ import Foundation
 import CoreData
 import UserNotifications
 
-class Utils {
+struct Utils {
     static func clearNotificationBadge() {
         UNUserNotificationCenter.current().setBadgeCount(0)
     }

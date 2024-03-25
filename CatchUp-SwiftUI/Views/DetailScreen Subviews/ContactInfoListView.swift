@@ -96,14 +96,14 @@ struct ContactInfoListView: View {
                         Text(contact.secondary_address)
                     }
                 }
-                if NotificationHelper.contactHasBirthday(contact) {
+                if ContactHelper.contactHasBirthday(contact) {
                     VStack(alignment: .leading, spacing: 3) {
                         Text("Birthday")
                             .font(.caption)
                         Text(Converter.getFormattedBirthdayOrAnniversary(from: contact.birthday))
                     }
                 }
-                if NotificationHelper.contactHasAnniversary(contact) {
+                if ContactHelper.contactHasAnniversary(contact) {
                     VStack(alignment: .leading, spacing: 3) {
                         Text("Anniversary")
                             .font(.caption)

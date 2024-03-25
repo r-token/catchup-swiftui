@@ -10,7 +10,7 @@ import Foundation
 import SwiftUI
 import PhoneNumberKit
 
-class Converter {
+struct Converter {
     // MARK: Only used in DetailScreen
     static func getFormattedPhoneNumber(from phoneNumber: String) -> String {
         let phoneNumberKit = PhoneNumberKit()
