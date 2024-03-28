@@ -13,7 +13,7 @@ struct NextCatchUpsGridView: View {
 
     var nextCatchUps: [SelectedContact]
     @Binding var shouldNavigateViaGrid: Bool
-    @Binding var tappedGridContact: SelectedContact
+    @Binding var tappedGridContact: SelectedContact?
 
     // 2 column grid
     let columns = [

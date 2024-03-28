@@ -360,7 +360,7 @@ struct ContactHelper {
                 return nameFormatter.string(from: contact) == name
             }
 
-            print("Found matching contacts: \(filteredContacts)")
+            print("Found matching contact: \(filteredContacts.first?.givenName ?? "Unknown")")
 
             DispatchQueue.main.async {
                 completion(filteredContacts.first)

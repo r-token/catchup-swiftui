@@ -23,7 +23,7 @@ enum IAPServiceAlertType{
     }
 }
 
-class IAPService: NSObject {
+final class IAPService: NSObject {
     static let shared = IAPService()
     
     let graciousTipProductID = "gracious_tip_0.99"
@@ -39,7 +39,7 @@ class IAPService: NSObject {
     // MARK: - MAKE PURCHASE OF A PRODUCT
     func canMakePurchases() -> Bool {  return SKPaymentQueue.canMakePayments()  }
     
-    func leaveATip(index: Int){
+    func leaveATip(index: Int) {
         if iapProducts.count == 0 {
 			print("No IAPs to purchase")
 			return
@@ -92,7 +92,9 @@ extension IAPService: SKProductsRequestDelegate, SKPaymentTransactionObserver{
     // MARK: - REQUEST IAP PRODUCTS
     func productsRequest (_ request:SKProductsRequest, didReceive response:SKProductsResponse) {
         if (response.products.count > 0) {
-            iapProducts = response.products
+            let sortedProducts = response.products.sorted(by: { $0.price.decimalValue < $1.price.decimalValue })
+
+            iapProducts = sortedProducts
             for product in iapProducts{
                 let numberFormatter = NumberFormatter()
                 numberFormatter.formatterBehavior = .behavior10_4

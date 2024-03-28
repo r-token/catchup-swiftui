@@ -10,9 +10,7 @@ import SwiftUI
 
 struct AboutScreen: View {
 	@State private var showingUpdateScreen = false
-	
-	let generator = UINotificationFeedbackGenerator()
-	
+
 	let smallTip = IAPService.shared.getSmallTipAmount()
 	let mediumTip = IAPService.shared.getMediumTipAmount()
 	let largeTip = IAPService.shared.getLargeTipAmount()
@@ -58,38 +56,38 @@ struct AboutScreen: View {
                     Spacer()
                     
                     Button(smallTip) {
-                        graciousTipPressed()
+                        tappedSmallTip()
                     }
-                        .font(.headline)
-                        .foregroundColor(.white)
-                        .padding()
-                        .background(RoundedRectangle(cornerRadius: 20).fill(LinearGradient(gradient: Gradient(colors: [.orange, .red]), startPoint: .top, endPoint: .bottom))
-                        )
-                        .shadow(radius: 15)
+                    .font(.headline)
+                    .foregroundColor(.white)
+                    .padding()
+                    .background(RoundedRectangle(cornerRadius: 20).fill(LinearGradient(gradient: Gradient(colors: [.orange, .red]), startPoint: .top, endPoint: .bottom))
+                    )
+                    .shadow(radius: 15)
                     
                     Spacer()
                     
                     Button(mediumTip) {
-                        generousTipPressed()
+                        tappedMediumTip()
                     }
-                        .font(.headline)
-                        .foregroundColor(.white)
-                        .padding()
-                        .background(RoundedRectangle(cornerRadius: 20).fill(LinearGradient(gradient: Gradient(colors: [.orange, .red]), startPoint: .top, endPoint: .bottom))
-                        )
-                        .shadow(radius: 15)
+                    .font(.headline)
+                    .foregroundColor(.white)
+                    .padding()
+                    .background(RoundedRectangle(cornerRadius: 20).fill(LinearGradient(gradient: Gradient(colors: [.orange, .red]), startPoint: .top, endPoint: .bottom))
+                    )
+                    .shadow(radius: 15)
                     
                     Spacer()
                     
                     Button(largeTip) {
-                        gratuitousTipPressed()
+                        tappedLargeTip()
                     }
-                        .font(.headline)
-                        .foregroundColor(.white)
-                        .padding()
-                        .background(RoundedRectangle(cornerRadius: 20).fill(LinearGradient(gradient: Gradient(colors: [.orange, .red]), startPoint: .top, endPoint: .bottom))
-                        )
-                        .shadow(radius: 15)
+                    .font(.headline)
+                    .foregroundColor(.white)
+                    .padding()
+                    .background(RoundedRectangle(cornerRadius: 20).fill(LinearGradient(gradient: Gradient(colors: [.orange, .red]), startPoint: .top, endPoint: .bottom))
+                    )
+                    .shadow(radius: 15)
                     
                     Spacer()
                 }
@@ -120,19 +118,22 @@ struct AboutScreen: View {
             UpdatesScreen()
         }
     }
-	
-	func graciousTipPressed() {
-		generator.notificationOccurred(.success)
+
+    @MainActor
+    func tappedSmallTip() {
+        UINotificationFeedbackGenerator().notificationOccurred(.success)
+        IAPService.shared.leaveATip(index: 0)
+    }
+
+    @MainActor
+	func tappedMediumTip() {
+        UINotificationFeedbackGenerator().notificationOccurred(.success)
 		IAPService.shared.leaveATip(index: 1)
     }
 	
-	func generousTipPressed() {
-		generator.notificationOccurred(.success)
-		IAPService.shared.leaveATip(index: 0)
-    }
-	
-	func gratuitousTipPressed() {
-		generator.notificationOccurred(.success)
+    @MainActor
+	func tappedLargeTip() {
+        UINotificationFeedbackGenerator().notificationOccurred(.success)
 		IAPService.shared.leaveATip(index: 2)
     }
 }
