@@ -12,10 +12,11 @@ import UserNotifications
 import CoreData
 
 struct NotificationHelper {
+    @MainActor
     static func createNewNotification(for contact: SelectedContact, modelContext: ModelContext) {
+        updateNextNotificationDateTimeFor(contact: contact)
+        
         let addRequest = {
-            updateNextNotificationDateTimeFor(contact: contact)
-
             if preferenceIsNotSetToNever(for: contact) {
                 addGeneralNotification(for: contact, modelContext: modelContext)
             }
@@ -306,6 +307,7 @@ struct NotificationHelper {
         UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [contact.anniversary_notification_id.uuidString])
     }
 
+    @MainActor
     static func updateNextNotificationDateTimeFor(contact: SelectedContact) {
         let nextNotificationDateTime = getNextNotificationDateFor(contact: contact)
         contact.next_notification_date_time = nextNotificationDateTime
@@ -375,6 +377,7 @@ struct NotificationHelper {
         return "Unknown"
     }
 
+    @MainActor
     static func resetNotifications(for selectedContacts: [SelectedContact], modelContext: ModelContext) {
         DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
             UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
