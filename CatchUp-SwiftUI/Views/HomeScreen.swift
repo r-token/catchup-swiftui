@@ -54,7 +54,7 @@ struct HomeScreen : View {
                     }
 				}
                 .refreshable {
-                     ContactHelper.updateSelectedContacts(selectedContacts)
+                    ContactHelper.updateSelectedContacts(selectedContacts)
                 }
 
                 .onChange(of: contactPicker.chosenContacts) { initialContacts, contacts in
