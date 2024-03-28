@@ -11,7 +11,7 @@ import SwiftUI
 struct NextCatchUpsGridView: View {
     @Environment(\.colorScheme) var colorScheme
 
-    var nextCatchUps: [SelectedContact]
+    let nextCatchUps: [SelectedContact]
     @Binding var shouldNavigateViaGrid: Bool
     @Binding var tappedGridContact: SelectedContact?
 

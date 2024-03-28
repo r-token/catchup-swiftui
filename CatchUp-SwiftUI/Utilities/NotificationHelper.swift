@@ -14,6 +14,8 @@ import CoreData
 struct NotificationHelper {
     static func createNewNotification(for contact: SelectedContact, modelContext: ModelContext) {
         let addRequest = {
+            updateNextNotificationDateTimeFor(contact: contact)
+
             if preferenceIsNotSetToNever(for: contact) {
                 addGeneralNotification(for: contact, modelContext: modelContext)
             }
@@ -25,8 +27,6 @@ struct NotificationHelper {
             if ContactHelper.contactHasAnniversary(contact) {
                 addAnniversaryNotification(for: contact, modelContext: modelContext)
             }
-
-            updateNextNotificationDateTimeFor(contact: contact)
         }
 
         checkNotificationAuthorizationStatusAndAddRequest(action: addRequest)

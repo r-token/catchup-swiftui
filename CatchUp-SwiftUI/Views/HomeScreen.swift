@@ -27,7 +27,9 @@ struct HomeScreen : View {
     @State private var contactPicker = ContactPickerDelegate()
 
     var filteredNextCatchups: [SelectedContact] {
-        return Array(nextCatchups.filter({ $0.next_notification_date_time != "" }).prefix(4))
+        withAnimation {
+            return Array(nextCatchups.filter({ $0.next_notification_date_time != "" }).prefix(4))
+        }
     }
 
     @MainActor
