@@ -28,11 +28,11 @@ struct ContactInfoView: View {
     }
 
     var tappablePrimaryEmail: URL {
-        Converter.getTappablePhoneNumber(from: contact.email)
+        Converter.getTappableEmail(from: contact.email)
     }
 
     var tappableSecondaryEmail: URL {
-        Converter.getTappablePhoneNumber(from: contact.secondary_email)
+        Converter.getTappableEmail(from: contact.secondary_email)
     }
 
     var body: some View {
@@ -64,6 +64,7 @@ struct ContactInfoView: View {
                     .font(.caption)
 
                 Button(contact.email) {
+                    print("tapping email \(tappablePrimaryEmail)")
                     UIApplication.shared.open(tappablePrimaryEmail)
                 }
                 .foregroundColor(.blue)

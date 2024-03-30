@@ -22,11 +22,11 @@ struct NotificationHelper {
             }
             
             if ContactHelper.contactHasBirthday(contact) {
-                addBirthdayNotification(for: contact, modelContext: modelContext)
+                addBirthdayNotification(for: contact)
             }
             
             if ContactHelper.contactHasAnniversary(contact) {
-                addAnniversaryNotification(for: contact, modelContext: modelContext)
+                addAnniversaryNotification(for: contact)
             }
         }
 
@@ -51,10 +51,10 @@ struct NotificationHelper {
             try? modelContext.save()
         }
 
-        scheduleNotification(for: contact, dateComponents: dateComponents, identifier: identifier, content: notificationContent, modelContext: modelContext)
+        scheduleNotification(for: contact, dateComponents: dateComponents, identifier: identifier, content: notificationContent)
     }
     
-    static func addBirthdayNotification(for contact: SelectedContact, modelContext: ModelContext) {
+    static func addBirthdayNotification(for contact: SelectedContact) {
         let birthdayNotificationContent = UNMutableNotificationContent()
         birthdayNotificationContent.title = "🥳 Today is \(contact.name)'s birthday!"
         birthdayNotificationContent.body = "Be sure to CatchUp and wish them a great one!"
@@ -64,10 +64,10 @@ struct NotificationHelper {
         let birthdayIdentifier = UUID()
         let birthdayDateComponents = getBirthdayDateComponents(for: contact)
 
-        scheduleNotification(for: contact, dateComponents: birthdayDateComponents, identifier: birthdayIdentifier, content: birthdayNotificationContent, modelContext: modelContext)
+        scheduleNotification(for: contact, dateComponents: birthdayDateComponents, identifier: birthdayIdentifier, content: birthdayNotificationContent)
     }
     
-    static func addAnniversaryNotification(for contact: SelectedContact, modelContext: ModelContext) {
+    static func addAnniversaryNotification(for contact: SelectedContact) {
         let anniversaryNotificationContent = UNMutableNotificationContent()
         anniversaryNotificationContent.title = "😍 Tomorrow is \(contact.name)'s anniversary!"
         anniversaryNotificationContent.body = "Be sure to CatchUp and wish them the best."
@@ -77,7 +77,7 @@ struct NotificationHelper {
         let anniversaryIdentifier = UUID()
         let anniversaryDateComponents = getAnniversaryDateComponents(for: contact)
 
-        scheduleNotification(for: contact, dateComponents: anniversaryDateComponents, identifier: anniversaryIdentifier, content: anniversaryNotificationContent, modelContext: modelContext)
+        scheduleNotification(for: contact, dateComponents: anniversaryDateComponents, identifier: anniversaryIdentifier, content: anniversaryNotificationContent)
     }
     
     static func checkNotificationAuthorizationStatusAndAddRequest(action: @escaping() -> Void) {
@@ -167,7 +167,7 @@ struct NotificationHelper {
         return anniversaryDateComponents
     }
     
-    static func scheduleNotification(for contact: SelectedContact, dateComponents: DateComponents, identifier: UUID, content: UNMutableNotificationContent, modelContext: ModelContext) {
+    static func scheduleNotification(for contact: SelectedContact, dateComponents: DateComponents, identifier: UUID, content: UNMutableNotificationContent) {
 
         let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
         let request = UNNotificationRequest(identifier: identifier.uuidString, content: content, trigger: trigger)
@@ -181,7 +181,6 @@ struct NotificationHelper {
         }
 
         print("scheduling notification for contact: \(contact.name)")
-        try? modelContext.save()
 
         UNUserNotificationCenter.current().add(request)
     }
