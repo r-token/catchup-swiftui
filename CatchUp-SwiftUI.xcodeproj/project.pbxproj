@@ -14,8 +14,9 @@
 		F4118B452B9E68AE001BC8C7 /* ContactPickerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4118B442B9E68AE001BC8C7 /* ContactPickerDelegate.swift */; };
 		F4118B492B9E8FC7001BC8C7 /* ContactRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4118B482B9E8FC7001BC8C7 /* ContactRowView.swift */; };
 		F4118B4B2B9E912E001BC8C7 /* OpenContactPickerButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4118B4A2B9E912E001BC8C7 /* OpenContactPickerButtonView.swift */; };
-		F4118B4D2B9EA11A001BC8C7 /* NamePreferenceChangeStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4118B4C2B9EA11A001BC8C7 /* NamePreferenceChangeStack.swift */; };
-		F4118B4F2B9EA168001BC8C7 /* ContactInfoListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4118B4E2B9EA168001BC8C7 /* ContactInfoListView.swift */; };
+		F4118B4D2B9EA11A001BC8C7 /* NameAndPreferenceStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4118B4C2B9EA11A001BC8C7 /* NameAndPreferenceStack.swift */; };
+		F4118B4F2B9EA168001BC8C7 /* ContactInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4118B4E2B9EA168001BC8C7 /* ContactInfoView.swift */; };
+		F435D42F2BB78A6F00C43586 /* NotificationPreferenceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F435D42E2BB78A6F00C43586 /* NotificationPreferenceView.swift */; };
 		F4871DA1244FC43C00925392 /* NotificationHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4871DA0244FC43C00925392 /* NotificationHelper.swift */; };
 		F48E37F922C455C3008B0B8B /* HomeScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = F48E37F822C455C3008B0B8B /* HomeScreen.swift */; };
 		F48E37FB22C455CB008B0B8B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F48E37FA22C455CB008B0B8B /* Assets.xcassets */; };
@@ -24,7 +25,6 @@
 		F4A9B8522442A0F5001D8C55 /* DetailScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A9B8512442A0F5001D8C55 /* DetailScreen.swift */; };
 		F4A9B8552442A179001D8C55 /* ContactPhoto.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A9B8542442A179001D8C55 /* ContactPhoto.swift */; };
 		F4A9B8572442A1F7001D8C55 /* GradientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A9B8562442A1F7001D8C55 /* GradientView.swift */; };
-		F4A9B8592442AB81001D8C55 /* PreferenceScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A9B8582442AB81001D8C55 /* PreferenceScreen.swift */; };
 		F4A9B85B2443FFF3001D8C55 /* Conversions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A9B85A2443FFF3001D8C55 /* Conversions.swift */; };
 		F4AD59AE244C9FF600296568 /* IAPService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AD59AD244C9FF600296568 /* IAPService.swift */; };
 		F4AD59B0244CA12C00296568 /* AboutScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AD59AF244CA12C00296568 /* AboutScreen.swift */; };
@@ -43,8 +43,9 @@
 		F4118B442B9E68AE001BC8C7 /* ContactPickerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactPickerDelegate.swift; sourceTree = "<group>"; };
 		F4118B482B9E8FC7001BC8C7 /* ContactRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactRowView.swift; sourceTree = "<group>"; };
 		F4118B4A2B9E912E001BC8C7 /* OpenContactPickerButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenContactPickerButtonView.swift; sourceTree = "<group>"; };
-		F4118B4C2B9EA11A001BC8C7 /* NamePreferenceChangeStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NamePreferenceChangeStack.swift; sourceTree = "<group>"; };
-		F4118B4E2B9EA168001BC8C7 /* ContactInfoListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactInfoListView.swift; sourceTree = "<group>"; };
+		F4118B4C2B9EA11A001BC8C7 /* NameAndPreferenceStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NameAndPreferenceStack.swift; sourceTree = "<group>"; };
+		F4118B4E2B9EA168001BC8C7 /* ContactInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactInfoView.swift; sourceTree = "<group>"; };
+		F435D42E2BB78A6F00C43586 /* NotificationPreferenceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationPreferenceView.swift; sourceTree = "<group>"; };
 		F4871DA0244FC43C00925392 /* NotificationHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationHelper.swift; sourceTree = "<group>"; };
 		F48E37EE22C455C3008B0B8B /* CatchUp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CatchUp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F48E37F822C455C3008B0B8B /* HomeScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeScreen.swift; sourceTree = "<group>"; };
@@ -55,7 +56,6 @@
 		F4A9B8512442A0F5001D8C55 /* DetailScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailScreen.swift; sourceTree = "<group>"; };
 		F4A9B8542442A179001D8C55 /* ContactPhoto.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactPhoto.swift; sourceTree = "<group>"; };
 		F4A9B8562442A1F7001D8C55 /* GradientView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientView.swift; sourceTree = "<group>"; };
-		F4A9B8582442AB81001D8C55 /* PreferenceScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferenceScreen.swift; sourceTree = "<group>"; };
 		F4A9B85A2443FFF3001D8C55 /* Conversions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Conversions.swift; sourceTree = "<group>"; };
 		F4AD59AC244B7B6000296568 /* CatchUp-SwiftUI.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "CatchUp-SwiftUI.entitlements"; sourceTree = "<group>"; };
 		F4AD59AD244C9FF600296568 /* IAPService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IAPService.swift; sourceTree = "<group>"; };
@@ -87,7 +87,6 @@
 				F4118B502B9EA2E3001BC8C7 /* HomeScreen Subviews */,
 				F4A9B8512442A0F5001D8C55 /* DetailScreen.swift */,
 				F4118B512B9EA2F7001BC8C7 /* DetailScreen Subviews */,
-				F4A9B8582442AB81001D8C55 /* PreferenceScreen.swift */,
 				F4AD59AF244CA12C00296568 /* AboutScreen.swift */,
 				14BE3AD62459F610004F72DE /* UpdatesScreen.swift */,
 			);
@@ -110,8 +109,9 @@
 			children = (
 				F4A9B8562442A1F7001D8C55 /* GradientView.swift */,
 				F4A9B8542442A179001D8C55 /* ContactPhoto.swift */,
-				F4118B4C2B9EA11A001BC8C7 /* NamePreferenceChangeStack.swift */,
-				F4118B4E2B9EA168001BC8C7 /* ContactInfoListView.swift */,
+				F4118B4C2B9EA11A001BC8C7 /* NameAndPreferenceStack.swift */,
+				F4118B4E2B9EA168001BC8C7 /* ContactInfoView.swift */,
+				F435D42E2BB78A6F00C43586 /* NotificationPreferenceView.swift */,
 			);
 			path = "DetailScreen Subviews";
 			sourceTree = "<group>";
@@ -280,14 +280,14 @@
 				F4F753652BB11FA300B20090 /* View+if.swift in Sources */,
 				F4871DA1244FC43C00925392 /* NotificationHelper.swift in Sources */,
 				F4F7535D2BB0956800B20090 /* NextCatchUpsGridView.swift in Sources */,
-				F4118B4D2B9EA11A001BC8C7 /* NamePreferenceChangeStack.swift in Sources */,
+				F4118B4D2B9EA11A001BC8C7 /* NameAndPreferenceStack.swift in Sources */,
 				F494F95824424A03003CE7B5 /* ContactHelper.swift in Sources */,
-				F4118B4F2B9EA168001BC8C7 /* ContactInfoListView.swift in Sources */,
+				F4118B4F2B9EA168001BC8C7 /* ContactInfoView.swift in Sources */,
+				F435D42F2BB78A6F00C43586 /* NotificationPreferenceView.swift in Sources */,
 				F4095B6424C66F87007163E3 /* SKProduct+localizedPrice.swift in Sources */,
 				F4BAD42F2B94E8740009CD50 /* CatchUpApp.swift in Sources */,
 				14BE3AD72459F610004F72DE /* UpdatesScreen.swift in Sources */,
 				F4AD59B0244CA12C00296568 /* AboutScreen.swift in Sources */,
-				F4A9B8592442AB81001D8C55 /* PreferenceScreen.swift in Sources */,
 				F4BAD42D2B94E45D0009CD50 /* SelectedContact.swift in Sources */,
 				F48E37F922C455C3008B0B8B /* HomeScreen.swift in Sources */,
 				F4AD59AE244C9FF600296568 /* IAPService.swift in Sources */,

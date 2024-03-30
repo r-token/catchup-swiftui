@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct DetailScreen: View {
-	@State private var isShowingPreferenceScreen = false
+    @Environment(\.modelContext) var modelContext
     
     @Bindable var contact: SelectedContact
 
@@ -20,14 +20,33 @@ struct DetailScreen: View {
 				.frame(height: 75)
 			
             ContactPhoto(image: Converter.getContactPicture(from: contact.picture))
-				.offset(x: 0, y: -130)
-				.padding(.bottom, -130)
-			
-			NamePreferenceChangeStack(contact: contact, isShowingPreferenceScreen: $isShowingPreferenceScreen)
+				.offset(x: 0, y: -110)
+				.padding(.bottom, -110)
 
-			ContactInfoListView(contact: contact)
+            NameAndPreferenceStack(contact: contact)
+
+            List {
+                Section("Notification Preference") {
+                    NotificationPreferenceView(contact: contact)
+                }
+                Section("Contact Information") {
+                    ContactInfoView(contact: contact)
+                }
+            }
 		}
-        .onAppear(perform: Utils.clearNotificationBadge)
+        .onAppear {
+            Utils.clearNotificationBadge()
+        }
+
+        .onDisappear {
+            NotificationHelper.removeExistingNotifications(for: contact)
+            NotificationHelper.createNewNotification(for: contact, modelContext: modelContext)
+        }
+
         .navigationBarTitleDisplayMode(.inline)
     }
+}
+
+#Preview {
+    DetailScreen(contact: SelectedContact.sampleData)
 }
