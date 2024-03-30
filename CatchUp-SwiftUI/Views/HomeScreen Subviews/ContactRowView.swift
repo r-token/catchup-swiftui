@@ -20,7 +20,7 @@ struct ContactRowView: View {
                     .font(.headline)
                 Text(Converter.convertNotificationPreferenceIntToString(preference: Int(contact.notification_preference), contact: contact))
                     .font(.caption)
-                    .foregroundColor(.gray)
+                    .foregroundStyle(.gray)
             }
         }
     }

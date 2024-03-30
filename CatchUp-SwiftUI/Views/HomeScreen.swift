@@ -84,7 +84,7 @@ struct HomeScreen : View {
                             isShowingAboutSheet = true
                         } label: {
                             Image(systemName: "person.crop.square")
-                                .foregroundColor(.blue)
+                                .foregroundStyle(.blue)
                         }
                         .sheet(isPresented: $isShowingAboutSheet) {
                             AboutScreen()
@@ -108,7 +108,7 @@ struct HomeScreen : View {
 
             if isColdLaunch {
                 print("resetting notifications")
-                NotificationHelper.resetNotifications(for: selectedContacts, modelContext: modelContext)
+                NotificationHelper.resetNotifications(for: selectedContacts)
             }
         }
 

@@ -89,19 +89,30 @@ struct NotificationPreferenceView: View {
             } else if contact.notification_preference == 3 { // monthly
                 whatDayText = "What day? We'll pick a random week."
             }
+
+            NotificationHelper.updateNextNotificationDateTimeFor(contact: contact)
+        }
+
+        .onChange(of: contact.notification_preference_weekday) {
+            contact.notification_preference_week_of_month = .random(in: 1..<5)
+            NotificationHelper.updateNextNotificationDateTimeFor(contact: contact)
         }
 
         .onChange(of: notificationPreferenceTime) { initialTime, newTime in
             let calendar = Calendar.current
             let components = calendar.dateComponents([.hour, .minute], from : newTime)
-            NotificationHelper.updateNotificationTime(for: contact, hour: components.hour!, minute: components.minute!, modelContext: modelContext)
+            NotificationHelper.updateNotificationTime(for: contact, hour: components.hour!, minute: components.minute!)
+
+            NotificationHelper.updateNextNotificationDateTimeFor(contact: contact)
         }
 
         .onChange(of: notificationPreferenceCustomDate) { initialDate, newDate in
             let year = Calendar.current.component(.year, from: newDate)
             let month = Calendar.current.component(.month, from: newDate)
             let day = Calendar.current.component(.day, from: newDate)
-            NotificationHelper.updateNotificationCustomDate(for: contact, month: month, day: day, year: year, modelContext: modelContext)
+            NotificationHelper.updateNotificationCustomDate(for: contact, month: month, day: day, year: year)
+
+            NotificationHelper.updateNextNotificationDateTimeFor(contact: contact)
         }
     }
 

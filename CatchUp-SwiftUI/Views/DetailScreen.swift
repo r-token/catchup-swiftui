@@ -9,9 +9,12 @@
 import SwiftUI
 
 struct DetailScreen: View {
-    @Environment(\.modelContext) var modelContext
-    
     @Bindable var contact: SelectedContact
+
+    var nextCatchUpTime: String {
+        print("recalculating nextCatchUpTime")
+        return ContactHelper.getFriendlyNextCatchUpTime(for: contact)
+    }
 
     var body: some View {
 		VStack {
@@ -26,6 +29,9 @@ struct DetailScreen: View {
             NameAndPreferenceStack(contact: contact)
 
             List {
+                Section {
+                    NextCatchUpRow(nextCatchUpTime: nextCatchUpTime)
+                }
                 Section("Notification Preference") {
                     NotificationPreferenceView(contact: contact)
                 }
@@ -40,7 +46,7 @@ struct DetailScreen: View {
 
         .onDisappear {
             NotificationHelper.removeExistingNotifications(for: contact)
-            NotificationHelper.createNewNotification(for: contact, modelContext: modelContext)
+            NotificationHelper.createNewNotification(for: contact)
         }
 
         .navigationBarTitleDisplayMode(.inline)

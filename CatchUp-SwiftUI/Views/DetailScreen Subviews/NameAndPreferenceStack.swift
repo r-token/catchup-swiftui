@@ -9,8 +9,6 @@
 import SwiftUI
 
 struct NameAndPreferenceStack: View {
-    @Environment(\.modelContext) var modelContext
-    
     let contact: SelectedContact
 
     var body: some View {
@@ -21,9 +19,10 @@ struct NameAndPreferenceStack: View {
 
             HStack(spacing: 0) {
                 Text("Preference: ")
-                    .foregroundColor(.gray)
-                Text(Converter.convertNotificationPreferenceIntToString(preference: Int(contact.notification_preference), contact: contact))
-                    .foregroundColor(.gray)
+                    .foregroundStyle(.gray)
+
+                Text(Converter.convertNotificationPreferenceIntToString(preference: contact.notification_preference, contact: contact))
+                    .foregroundStyle(.gray)
             }
         }
         .padding(.bottom, 5)

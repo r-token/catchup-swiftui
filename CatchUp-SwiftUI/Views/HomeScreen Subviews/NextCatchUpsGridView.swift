@@ -32,7 +32,7 @@ struct NextCatchUpsGridView: View {
                         Text(contact.name.components(separatedBy: " ").first ?? contact.name)
                             .font(.headline)
 
-                        Text(friendlyNextCatchUpTime(for: contact))
+                        Text(ContactHelper.getFriendlyNextCatchUpTime(for: contact))
                             .foregroundStyle(.gray)
                             .font(.caption)
                     }
@@ -54,28 +54,6 @@ struct NextCatchUpsGridView: View {
         .padding(.bottom, 5)
         .listRowInsets(EdgeInsets(top: 5, leading: 0, bottom: 0, trailing: 0))
         .listRowBackground(Color.clear)
-    }
-
-    func friendlyNextCatchUpTime(for contact: SelectedContact) -> String {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-
-        if let date = dateFormatter.date(from: contact.next_notification_date_time) {
-            let friendlyFormatter = DateFormatter()
-
-            if Calendar.current.isDateInToday(date) {
-                friendlyFormatter.dateFormat = "h:mm a"
-                return "Today at \(friendlyFormatter.string(from: date))"
-            } else if Calendar.current.isDateInTomorrow(date) {
-                friendlyFormatter.dateFormat = "h:mm a"
-                return "Tomorrow at \(friendlyFormatter.string(from: date))"
-            } else {
-                friendlyFormatter.dateFormat = "MMMM d 'at' h:mm a"
-                return friendlyFormatter.string(from: date)
-            }
-        } else {
-            return "Unknown"
-        }
     }
 }
 

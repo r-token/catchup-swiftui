@@ -13,12 +13,12 @@ import CoreData
 
 struct NotificationHelper {
     @MainActor
-    static func createNewNotification(for contact: SelectedContact, modelContext: ModelContext) {
+    static func createNewNotification(for contact: SelectedContact) {
         updateNextNotificationDateTimeFor(contact: contact)
         
         let addRequest = {
             if preferenceIsNotSetToNever(for: contact) {
-                addGeneralNotification(for: contact, modelContext: modelContext)
+                addGeneralNotification(for: contact)
             }
             
             if ContactHelper.contactHasBirthday(contact) {
@@ -37,7 +37,7 @@ struct NotificationHelper {
         return contact.notification_preference != 0 ? true : false
     }
     
-    static func addGeneralNotification(for contact: SelectedContact, modelContext: ModelContext) {
+    static func addGeneralNotification(for contact: SelectedContact) {
         let notificationContent = UNMutableNotificationContent()
         notificationContent.title = "👋 CatchUp with \(contact.name)"
         notificationContent.body = generateRandomNotificationBody()
@@ -46,10 +46,6 @@ struct NotificationHelper {
 
         let identifier = UUID()
         let dateComponents = getNotificationDateComponents(for: contact)
-        if let weekOfMonth = dateComponents.weekOfMonth {
-            contact.notification_preference_week_of_month = weekOfMonth
-            try? modelContext.save()
-        }
 
         scheduleNotification(for: contact, dateComponents: dateComponents, identifier: identifier, content: notificationContent)
     }
@@ -117,7 +113,7 @@ struct NotificationHelper {
             dateComponents.hour = Int(contact.notification_preference_hour)
             dateComponents.minute = Int(contact.notification_preference_minute)
             dateComponents.weekday = Int(contact.notification_preference_weekday)+1
-            dateComponents.weekOfMonth = Int.random(in: 2..<5)
+            dateComponents.weekOfMonth = Int(contact.notification_preference_week_of_month)
             break
         case 4: // Custom Date
             dateComponents.month = Int(contact.notification_preference_custom_month)
@@ -234,38 +230,30 @@ struct NotificationHelper {
         }
     }
     
-    static func updateNotificationPreference(for contact: SelectedContact, selection: Int, modelContext: ModelContext) {
+    static func updateNotificationPreference(for contact: SelectedContact, selection: Int) {
         let newPreference = selection
         contact.notification_preference = newPreference
-
-        try? modelContext.save()
     }
     
-    static func updateNotificationTime(for contact: SelectedContact, hour: Int, minute: Int, modelContext: ModelContext) {
+    static func updateNotificationTime(for contact: SelectedContact, hour: Int, minute: Int) {
         let newHour = hour
         let newMinute = minute
         contact.notification_preference_hour = newHour
         contact.notification_preference_minute = newMinute
-
-        try? modelContext.save()
     }
     
-    static func updateNotificationPreferenceWeekday(for contact: SelectedContact, weekday: Int, modelContext: ModelContext) {
+    static func updateNotificationPreferenceWeekday(for contact: SelectedContact, weekday: Int) {
         let newWeekday = weekday
         contact.notification_preference_weekday = newWeekday
-
-        try? modelContext.save()
     }
     
-    static func updateNotificationCustomDate(for contact: SelectedContact, month: Int, day: Int, year: Int, modelContext: ModelContext) {
+    static func updateNotificationCustomDate(for contact: SelectedContact, month: Int, day: Int, year: Int) {
         let customMonth = month
         let customDay = day
         let customYear = year
         contact.notification_preference_custom_month = customMonth
         contact.notification_preference_custom_day = customDay
         contact.notification_preference_custom_year = customYear
-
-        try? modelContext.save()
     }
     
     static func requestAuthorizationForNotifications() {
@@ -377,13 +365,13 @@ struct NotificationHelper {
     }
 
     @MainActor
-    static func resetNotifications(for selectedContacts: [SelectedContact], modelContext: ModelContext) {
+    static func resetNotifications(for selectedContacts: [SelectedContact]) {
         DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
             UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
 
             for contact in selectedContacts {
                 if contact.notification_preference != 0 {
-                    NotificationHelper.createNewNotification(for: contact, modelContext: modelContext)
+                    NotificationHelper.createNewNotification(for: contact)
                 }
             }
         }

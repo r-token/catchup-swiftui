@@ -20,11 +20,11 @@ struct UpdatesScreen: View {
 					Text("New Update")
 						.font(.largeTitle)
 						.bold()
-						.foregroundColor(.orange)
-					
+						.foregroundStyle(.orange)
+
 					Text("Version \(Utils.getCurrentAppVersion())")
 						.font(.headline)
-						.foregroundColor(.blue)
+						.foregroundStyle(.blue)
 
 					
 					Text("Release Notes:")

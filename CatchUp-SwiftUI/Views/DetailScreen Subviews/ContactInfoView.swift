@@ -9,6 +9,10 @@
 import SwiftUI
 
 struct ContactInfoView: View {
+    @State private var isShowingEmailAlert = false
+    @State private var emailString = ""
+    @State private var emailUrlForAlert: URL?
+
     let contact: SelectedContact
 
     var formattedPrimaryPhoneNumber: String {
@@ -44,7 +48,7 @@ struct ContactInfoView: View {
                 Button(formattedPrimaryPhoneNumber) {
                     UIApplication.shared.open(tappablePrimaryPhoneNumber)
                 }
-                .foregroundColor(.blue)
+                .foregroundStyle(.blue)
             }
         }
         if ContactHelper.contactHasSecondaryPhone(contact) {
@@ -55,7 +59,7 @@ struct ContactInfoView: View {
                 Button(formattedSecondaryPhoneNumber) {
                     UIApplication.shared.open(tappableSecondaryPhoneNumber)
                 }
-                .foregroundColor(.blue)
+                .foregroundStyle(.blue)
             }
         }
         if ContactHelper.contactHasEmail(contact) {
@@ -64,10 +68,21 @@ struct ContactInfoView: View {
                     .font(.caption)
 
                 Button(contact.email) {
-                    print("tapping email \(tappablePrimaryEmail)")
-                    UIApplication.shared.open(tappablePrimaryEmail)
+                    emailString = contact.email
+                    emailUrlForAlert = tappablePrimaryEmail
+                    isShowingEmailAlert = true
                 }
-                .foregroundColor(.blue)
+                .foregroundStyle(.blue)
+            }
+
+            .alert("Email \(emailString)?", isPresented: $isShowingEmailAlert) {
+                if let emailUrlForAlert {
+                    Button("Yes") {
+                        UIApplication.shared.open(emailUrlForAlert)
+                    }
+                }
+
+                Button("Cancel", role: .cancel) {}
             }
         }
         if ContactHelper.contactHasSecondaryEmail(contact) {
@@ -76,9 +91,11 @@ struct ContactInfoView: View {
                     .font(.caption)
 
                 Button(contact.secondary_email) {
-                    UIApplication.shared.open(tappableSecondaryEmail)
+                    emailString = contact.secondary_email
+                    emailUrlForAlert = tappableSecondaryEmail
+                    isShowingEmailAlert = true
                 }
-                .foregroundColor(.blue)
+                .foregroundStyle(.blue)
             }
         }
         if ContactHelper.contactHasAddress(contact) {

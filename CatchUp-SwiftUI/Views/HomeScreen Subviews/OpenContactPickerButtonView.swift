@@ -16,7 +16,7 @@ struct OpenContactPickerButtonView: View {
             Text("Add Contacts")
         }
         .font(.headline)
-        .foregroundColor(.blue)
+        .foregroundStyle(.blue)
         .padding(.top, 10)
     }
 }

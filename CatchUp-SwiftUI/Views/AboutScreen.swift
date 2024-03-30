@@ -28,7 +28,7 @@ struct AboutScreen: View {
                     .shadow(radius: 10)
                 
                 Text("CatchUp")
-                    .foregroundColor(.orange)
+                    .foregroundStyle(.orange)
                     .font(.largeTitle)
                     .bold()
                 
@@ -59,7 +59,7 @@ struct AboutScreen: View {
                         tappedSmallTip()
                     }
                     .font(.headline)
-                    .foregroundColor(.white)
+                    .foregroundStyle(.white)
                     .padding()
                     .background(RoundedRectangle(cornerRadius: 20).fill(LinearGradient(gradient: Gradient(colors: [.orange, .red]), startPoint: .top, endPoint: .bottom))
                     )
@@ -71,7 +71,7 @@ struct AboutScreen: View {
                         tappedMediumTip()
                     }
                     .font(.headline)
-                    .foregroundColor(.white)
+                    .foregroundStyle(.white)
                     .padding()
                     .background(RoundedRectangle(cornerRadius: 20).fill(LinearGradient(gradient: Gradient(colors: [.orange, .red]), startPoint: .top, endPoint: .bottom))
                     )
@@ -83,7 +83,7 @@ struct AboutScreen: View {
                         tappedLargeTip()
                     }
                     .font(.headline)
-                    .foregroundColor(.white)
+                    .foregroundStyle(.white)
                     .padding()
                     .background(RoundedRectangle(cornerRadius: 20).fill(LinearGradient(gradient: Gradient(colors: [.orange, .red]), startPoint: .top, endPoint: .bottom))
                     )
@@ -108,7 +108,7 @@ struct AboutScreen: View {
                 } label: {
                     Text("Show Latest Update Details")
                         .font(.headline)
-                        .foregroundColor(.blue)
+                        .foregroundStyle(.blue)
                 }
             }
 		}

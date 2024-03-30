@@ -231,6 +231,28 @@ struct ContactHelper {
 		return anniversaryString
 	}
 
+    static func getFriendlyNextCatchUpTime(for contact: SelectedContact) -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+
+        if let date = dateFormatter.date(from: contact.next_notification_date_time) {
+            let friendlyFormatter = DateFormatter()
+
+            if Calendar.current.isDateInToday(date) {
+                friendlyFormatter.dateFormat = "h:mm a"
+                return "Today at \(friendlyFormatter.string(from: date))"
+            } else if Calendar.current.isDateInTomorrow(date) {
+                friendlyFormatter.dateFormat = "h:mm a"
+                return "Tomorrow at \(friendlyFormatter.string(from: date))"
+            } else {
+                friendlyFormatter.dateFormat = "MMMM d 'at' h:mm a"
+                return friendlyFormatter.string(from: date)
+            }
+        } else {
+            return "Unknown"
+        }
+    }
+
     static func createSelectedContact(contact: CNContact) -> SelectedContact {
         let currentMinute = Calendar.current.component(.minute, from: Date())
         let currentHour = Calendar.current.component(.hour, from: Date())
