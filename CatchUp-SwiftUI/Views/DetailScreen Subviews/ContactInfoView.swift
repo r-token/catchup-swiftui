@@ -6,6 +6,7 @@
 //  Copyright © 2024 Token Solutions. All rights reserved.
 //
 
+import MapKit
 import SwiftUI
 
 struct ContactInfoView: View {
@@ -102,14 +103,20 @@ struct ContactInfoView: View {
             VStack(alignment: .leading, spacing: 3) {
                 Text("Address")
                     .font(.caption)
-                Text(contact.address)
+                Button(contact.address) {
+                    openAddressInMaps(address: contact.address)
+                }
+                .foregroundStyle(.blue)
             }
         }
         if ContactHelper.contactHasSecondaryAddress(contact) {
             VStack(alignment: .leading, spacing: 3) {
                 Text("Secondary Address")
                     .font(.caption)
-                Text(contact.secondary_address)
+                Button(contact.secondary_address) {
+                    openAddressInMaps(address: contact.secondary_address)
+                }
+                .foregroundStyle(.blue)
             }
         }
         if ContactHelper.contactHasBirthday(contact) {
@@ -124,6 +131,26 @@ struct ContactInfoView: View {
                 Text("Anniversary")
                     .font(.caption)
                 Text(Converter.getFormattedBirthdayOrAnniversary(from: contact.anniversary))
+            }
+        }
+    }
+
+    func openAddressInMaps(address: String){
+        let geocoder = CLGeocoder()
+        geocoder.geocodeAddressString(address) { (placemarks, error) in
+            guard let placemarks = placemarks?.first else {
+                return
+            }
+
+            let location = placemarks.location?.coordinate
+
+            if let lat = location?.latitude, let long = location?.longitude{
+                let destination = MKMapItem(placemark: MKPlacemark(coordinate: CLLocationCoordinate2D(latitude: lat, longitude: long)))
+                destination.name = address
+
+                MKMapItem.openMaps(
+                    with: [destination]
+                )
             }
         }
     }
