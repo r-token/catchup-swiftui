@@ -24,5 +24,5 @@ struct NextCatchUpRow: View {
 }
 
 #Preview {
-    NextCatchUpRow()
+    NextCatchUpRow(nextCatchUpTime: "April 3 at 7:15 AM")
 }

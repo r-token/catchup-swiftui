@@ -18,6 +18,7 @@
 		F4118B4F2B9EA168001BC8C7 /* ContactInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4118B4E2B9EA168001BC8C7 /* ContactInfoView.swift */; };
 		F435D42F2BB78A6F00C43586 /* NotificationPreferenceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F435D42E2BB78A6F00C43586 /* NotificationPreferenceView.swift */; };
 		F435D4312BB7E1D300C43586 /* NextCatchUpRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = F435D4302BB7E1D300C43586 /* NextCatchUpRow.swift */; };
+		F435D4332BB8E7E700C43586 /* RemoveContactButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = F435D4322BB8E7E700C43586 /* RemoveContactButton.swift */; };
 		F4871DA1244FC43C00925392 /* NotificationHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4871DA0244FC43C00925392 /* NotificationHelper.swift */; };
 		F48E37F922C455C3008B0B8B /* HomeScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = F48E37F822C455C3008B0B8B /* HomeScreen.swift */; };
 		F48E37FB22C455CB008B0B8B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F48E37FA22C455CB008B0B8B /* Assets.xcassets */; };
@@ -48,6 +49,7 @@
 		F4118B4E2B9EA168001BC8C7 /* ContactInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactInfoView.swift; sourceTree = "<group>"; };
 		F435D42E2BB78A6F00C43586 /* NotificationPreferenceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationPreferenceView.swift; sourceTree = "<group>"; };
 		F435D4302BB7E1D300C43586 /* NextCatchUpRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NextCatchUpRow.swift; sourceTree = "<group>"; };
+		F435D4322BB8E7E700C43586 /* RemoveContactButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoveContactButton.swift; sourceTree = "<group>"; };
 		F4871DA0244FC43C00925392 /* NotificationHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationHelper.swift; sourceTree = "<group>"; };
 		F48E37EE22C455C3008B0B8B /* CatchUp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CatchUp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F48E37F822C455C3008B0B8B /* HomeScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeScreen.swift; sourceTree = "<group>"; };
@@ -115,6 +117,7 @@
 				F4118B4E2B9EA168001BC8C7 /* ContactInfoView.swift */,
 				F435D42E2BB78A6F00C43586 /* NotificationPreferenceView.swift */,
 				F435D4302BB7E1D300C43586 /* NextCatchUpRow.swift */,
+				F435D4322BB8E7E700C43586 /* RemoveContactButton.swift */,
 			);
 			path = "DetailScreen Subviews";
 			sourceTree = "<group>";
@@ -294,6 +297,7 @@
 				F4BAD42D2B94E45D0009CD50 /* SelectedContact.swift in Sources */,
 				F48E37F922C455C3008B0B8B /* HomeScreen.swift in Sources */,
 				F435D4312BB7E1D300C43586 /* NextCatchUpRow.swift in Sources */,
+				F435D4332BB8E7E700C43586 /* RemoveContactButton.swift in Sources */,
 				F4AD59AE244C9FF600296568 /* IAPService.swift in Sources */,
 				F4F7535F2BB0969A00B20090 /* ContactPictureView.swift in Sources */,
 				F4BAD4312B94F5680009CD50 /* ModelContext+sqliteCommand.swift in Sources */,

@@ -38,6 +38,8 @@ struct DetailScreen: View {
                 Section("Contact Information") {
                     ContactInfoView(contact: contact)
                 }
+
+                RemoveContactButton(contact: contact)
             }
 		}
         .onAppear {
