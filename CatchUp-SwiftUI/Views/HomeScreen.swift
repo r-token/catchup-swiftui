@@ -6,18 +6,21 @@
 //  Copyright © 2019 Token Solutions. All rights reserved.
 //
 
+import ContactsUI
+import StoreKit
 import SwiftData
 import SwiftUI
-import ContactsUI
 
 struct HomeScreen : View {
     @Environment(\.modelContext) var modelContext
     @Environment(\.scenePhase) var scenePhase
+    @Environment(\.requestReview) var requestReview
 
     @Query(sort: \SelectedContact.name) var selectedContacts: [SelectedContact]
     @Query(sort: \SelectedContact.next_notification_date_time) var nextCatchups: [SelectedContact]
 
     @AppStorage("savedVersion") var savedVersion = "2.0.0"
+    @AppStorage("timesUserHasLaunchedApp") var timesUserHasLaunchedApp = 0
 
     @State private var isColdLaunch = true
 	@State private var isShowingUpdatesSheet = false
@@ -102,13 +105,16 @@ struct HomeScreen : View {
 		.accentColor(.orange)
 
         .onAppear {
-            print("sqlite path: \(modelContext.sqliteCommand)")
             clearNotificationBadgeAndCheckForUpdate()
             NotificationHelper.requestAuthorizationForNotifications()
+            if timesUserHasLaunchedApp > 5 {
+                requestReview()
+            }
 
             if isColdLaunch {
                 print("resetting notifications")
                 NotificationHelper.resetNotifications(for: selectedContacts)
+                timesUserHasLaunchedApp += 1
             }
         }
 
