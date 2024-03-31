@@ -107,11 +107,12 @@ struct HomeScreen : View {
         .onAppear {
             clearNotificationBadgeAndCheckForUpdate()
             NotificationHelper.requestAuthorizationForNotifications()
-            if timesUserHasLaunchedApp > 5 {
-                requestReview()
-            }
 
             if isColdLaunch {
+                if timesUserHasLaunchedApp > 5 {
+                    requestReview()
+                }
+
                 print("resetting notifications")
                 NotificationHelper.resetNotifications(for: selectedContacts)
                 timesUserHasLaunchedApp += 1
