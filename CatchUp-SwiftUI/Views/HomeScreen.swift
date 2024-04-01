@@ -42,71 +42,40 @@ struct HomeScreen : View {
     }
 	
     var body: some View {
-        NavigationStack {
-            VStack {
-                List {
-                    Section("Next CatchUps") {
-                        NextCatchUpsGridView(nextCatchUps: filteredNextCatchups, shouldNavigateViaGrid: $shouldNavigateViaGrid, tappedGridContact: $tappedGridContact)
-                    }
+        VStack {
+            List {
+                Section("Next CatchUps") {
+                    NextCatchUpsGridView(nextCatchUps: filteredNextCatchups, shouldNavigateViaGrid: $shouldNavigateViaGrid, tappedGridContact: $tappedGridContact)
+                }
 
-                    Section("All CatchUps") {
-                        ForEach(selectedContacts) { contact in
-                            NavigationLink(destination: DetailScreen(contact: contact)) {
-                                ContactRowView(contact: contact)
-                            }
+                Section("All CatchUps") {
+                    ForEach(selectedContacts) { contact in
+                        NavigationLink(destination: DetailScreen(contact: contact)) {
+                            ContactRowView(contact: contact)
                         }
-                        .onDelete(perform: removePendingNotificationsAndDeleteContact)
                     }
-				}
-                .refreshable {
-                    ContactHelper.updateSelectedContacts(selectedContacts)
-                }
-
-                .onChange(of: contactPicker.chosenContacts) { initialContacts, contacts in
-                    if !contacts.isEmpty {
-                        saveSelectedContact(for: contacts)
-                    }
-                    contactPicker.chosenContacts = []
-                }
-
-                Button {
-                    openContactPicker()
-                } label: {
-					OpenContactPickerButtonView()
+                    .onDelete(perform: removePendingNotificationsAndDeleteContact)
                 }
             }
-            .navigationBarTitle("CatchUp")
-
-            .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
-                    EditButton()
-                        .foregroundStyle(.blue)
-                }
-
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button {
-                        isShowingAboutSheet = true
-                    } label: {
-                        Image(systemName: "person.crop.square")
-                            .foregroundStyle(.blue)
-                    }
-                    .sheet(isPresented: $isShowingAboutSheet) {
-                        AboutScreen()
-                    }
-                }
+            .refreshable {
+                ContactHelper.updateSelectedContacts(selectedContacts)
             }
 
-            .navigationDestination(isPresented: $shouldNavigateViaGrid) {
-                if let tappedGridContact {
-                    DetailScreen(contact: tappedGridContact)
+            .onChange(of: contactPicker.chosenContacts) { initialContacts, contacts in
+                if !contacts.isEmpty {
+                    saveSelectedContact(for: contacts)
                 }
+                contactPicker.chosenContacts = []
             }
-            
-            .sheet(isPresented: $isShowingUpdatesSheet) {
-                UpdatesScreen()
+
+            Button {
+                openContactPicker()
+            } label: {
+                OpenContactPickerButtonView()
             }
-		}
-		.accentColor(.orange)
+        }
+        .accentColor(.orange)
+        .navigationBarTitle("CatchUp")
 
         .onAppear {
             clearNotificationBadgeAndCheckForUpdate()
@@ -130,6 +99,35 @@ struct HomeScreen : View {
                 }
             }
             isColdLaunch = false
+        }
+
+        .sheet(isPresented: $isShowingUpdatesSheet) {
+            UpdatesScreen()
+        }
+
+        .toolbar {
+            ToolbarItem(placement: .topBarLeading) {
+                EditButton()
+                    .foregroundStyle(.blue)
+            }
+
+            ToolbarItem(placement: .topBarTrailing) {
+                Button {
+                    isShowingAboutSheet = true
+                } label: {
+                    Image(systemName: "person.crop.square")
+                        .foregroundStyle(.blue)
+                }
+                .sheet(isPresented: $isShowingAboutSheet) {
+                    AboutScreen()
+                }
+            }
+        }
+
+        .navigationDestination(isPresented: $shouldNavigateViaGrid) {
+            if let tappedGridContact {
+                DetailScreen(contact: tappedGridContact)
+            }
         }
     }
 

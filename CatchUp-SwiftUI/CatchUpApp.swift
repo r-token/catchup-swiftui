@@ -15,6 +15,8 @@ struct CatchUpApp: App {
     let url = URL.applicationSupportDirectory.appending(path: "CatchUp-SwiftUI.sqlite")
     let modelContainer: ModelContainer
 
+    @State private var dataController = DataController()
+
     init() {
         do {
             modelContainer = try ModelContainer(
@@ -27,8 +29,15 @@ struct CatchUpApp: App {
 
     var body: some Scene {
         WindowGroup {
-            HomeScreen()
+            NavigationSplitView {
+                HomeScreen()
+            } detail: {
+                if let selectedContact = dataController.selectedContact {
+                    DetailScreen(contact: selectedContact)
+                }
+            }
         }
         .modelContainer(modelContainer)
+        .environment(dataController)
     }
 }

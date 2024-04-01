@@ -9,6 +9,7 @@
 import SwiftUI
 
 struct DetailScreen: View {
+    @Environment(DataController.self) var dataController
     @Bindable var contact: SelectedContact
 
     var nextCatchUpTime: String {
@@ -45,11 +46,13 @@ struct DetailScreen: View {
 		}
         .onAppear {
             Utils.clearNotificationBadge()
+            dataController.selectedContact = contact
         }
 
         .onDisappear {
             NotificationHelper.removeExistingNotifications(for: contact)
             NotificationHelper.createNewNotification(for: contact)
+            dataController.selectedContact = nil
         }
 
         .navigationBarTitleDisplayMode(.inline)
