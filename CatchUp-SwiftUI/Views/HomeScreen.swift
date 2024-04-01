@@ -109,7 +109,7 @@ struct HomeScreen : View {
             NotificationHelper.requestAuthorizationForNotifications()
 
             if isColdLaunch {
-                if timesUserHasLaunchedApp > 5 {
+                if timesUserHasLaunchedApp > 5 && Int.random(in: 1...3) == 2 {
                     requestReview()
                 }
 
