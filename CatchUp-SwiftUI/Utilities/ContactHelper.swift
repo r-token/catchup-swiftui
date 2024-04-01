@@ -231,6 +231,10 @@ struct ContactHelper {
 		return anniversaryString
 	}
 
+    static func getFirstName(for contact: SelectedContact) -> String {
+        contact.name.components(separatedBy: " ").first ?? contact.name
+    }
+
     static func getFriendlyNextCatchUpTime(for contact: SelectedContact) -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"

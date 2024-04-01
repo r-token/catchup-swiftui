@@ -31,6 +31,7 @@ struct DetailScreen: View {
             List {
                 Section {
                     NextCatchUpRow(nextCatchUpTime: nextCatchUpTime)
+                    BirthdayOrAnniversaryRow(contact: contact)
                 }
                 Section("Notification Preference") {
                     NotificationPreferenceView(contact: contact)

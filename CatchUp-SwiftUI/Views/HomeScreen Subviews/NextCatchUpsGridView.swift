@@ -29,7 +29,7 @@ struct NextCatchUpsGridView: View {
                         .padding(.trailing, 5)
 
                     VStack(alignment: .leading, spacing: 2) {
-                        Text(contact.name.components(separatedBy: " ").first ?? contact.name)
+                        Text(ContactHelper.getFirstName(for: contact))
                             .font(.headline)
 
                         Text(ContactHelper.getFriendlyNextCatchUpTime(for: contact))

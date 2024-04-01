@@ -20,6 +20,7 @@ struct NextCatchUpRow: View {
             Text(nextCatchUpTime)
                 .foregroundStyle(.gray)
         }
+        .listRowSeparator(.hidden)
     }
 }
 
