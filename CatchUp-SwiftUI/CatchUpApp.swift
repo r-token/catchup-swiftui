@@ -34,6 +34,8 @@ struct CatchUpApp: App {
             } detail: {
                 if let selectedContact = dataController.selectedContact {
                     DetailScreen(contact: selectedContact)
+                } else {
+                    NoContactSelectedScreen()
                 }
             }
             .accentColor(.orange)

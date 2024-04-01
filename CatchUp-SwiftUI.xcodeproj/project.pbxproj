@@ -21,6 +21,7 @@
 		F435D4332BB8E7E700C43586 /* RemoveContactButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = F435D4322BB8E7E700C43586 /* RemoveContactButton.swift */; };
 		F435D4352BBA3EB100C43586 /* BirthdayOrAnniversaryRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = F435D4342BBA3EB100C43586 /* BirthdayOrAnniversaryRow.swift */; };
 		F435D4372BBA4EC600C43586 /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F435D4362BBA4EC600C43586 /* DataController.swift */; };
+		F435D4392BBB7B7800C43586 /* NoContactSelectedScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = F435D4382BBB7B7800C43586 /* NoContactSelectedScreen.swift */; };
 		F4871DA1244FC43C00925392 /* NotificationHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4871DA0244FC43C00925392 /* NotificationHelper.swift */; };
 		F48E37F922C455C3008B0B8B /* HomeScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = F48E37F822C455C3008B0B8B /* HomeScreen.swift */; };
 		F48E37FB22C455CB008B0B8B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F48E37FA22C455CB008B0B8B /* Assets.xcassets */; };
@@ -54,6 +55,7 @@
 		F435D4322BB8E7E700C43586 /* RemoveContactButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoveContactButton.swift; sourceTree = "<group>"; };
 		F435D4342BBA3EB100C43586 /* BirthdayOrAnniversaryRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BirthdayOrAnniversaryRow.swift; sourceTree = "<group>"; };
 		F435D4362BBA4EC600C43586 /* DataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
+		F435D4382BBB7B7800C43586 /* NoContactSelectedScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoContactSelectedScreen.swift; sourceTree = "<group>"; };
 		F4871DA0244FC43C00925392 /* NotificationHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationHelper.swift; sourceTree = "<group>"; };
 		F48E37EE22C455C3008B0B8B /* CatchUp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CatchUp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F48E37F822C455C3008B0B8B /* HomeScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeScreen.swift; sourceTree = "<group>"; };
@@ -97,6 +99,7 @@
 				F4118B512B9EA2F7001BC8C7 /* DetailScreen Subviews */,
 				F4AD59AF244CA12C00296568 /* AboutScreen.swift */,
 				14BE3AD62459F610004F72DE /* UpdatesScreen.swift */,
+				F435D4382BBB7B7800C43586 /* NoContactSelectedScreen.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -289,6 +292,7 @@
 				F4A9B8572442A1F7001D8C55 /* GradientView.swift in Sources */,
 				F4A9B85B2443FFF3001D8C55 /* Conversions.swift in Sources */,
 				14BE3AD324593556004F72DE /* Utils.swift in Sources */,
+				F435D4392BBB7B7800C43586 /* NoContactSelectedScreen.swift in Sources */,
 				F4F753652BB11FA300B20090 /* View+if.swift in Sources */,
 				F4871DA1244FC43C00925392 /* NotificationHelper.swift in Sources */,
 				F4F7535D2BB0956800B20090 /* NextCatchUpsGridView.swift in Sources */,
