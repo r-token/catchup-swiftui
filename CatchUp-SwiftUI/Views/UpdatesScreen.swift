@@ -13,9 +13,8 @@ struct UpdatesScreen: View {
 		ScrollView {
 			VStack(alignment: .leading, spacing: 10) {
 				Group {
-					
 					Spacer()
-						.frame(height: 45)
+						.frame(height: 10)
 					
 					Text("New Update")
 						.font(.largeTitle)
@@ -25,26 +24,32 @@ struct UpdatesScreen: View {
 					Text("Version \(Utils.getCurrentAppVersion())")
 						.font(.headline)
 						.foregroundStyle(.blue)
-
 					
 					Text("Release Notes:")
 						.font(.headline)
 					
 					Divider()
 					Spacer()
-					
 				}
 				
 				Group {
-					Text("– iOS 15 compatibility")
-					
+                    Text("– A grid of your next CatchUps")
+
+                    Spacer()
+
+                    Text("– Pull-to-refresh photo & contact information for your selected contacts")
+
+                    Spacer()
+
+					Text("– Automatic cloud syncing with other Apple devices")
+
 					Spacer()
-					
-					Text("– CatchUp now requires iOS 14 or newer")
-                    
+
+                    Text("– UI redesign")
+
                     Spacer()
                     
-                    Text("– More to come soon!")
+                    Text("– Significant under-the-hood improvements")
 				}
                 
 				Spacer()

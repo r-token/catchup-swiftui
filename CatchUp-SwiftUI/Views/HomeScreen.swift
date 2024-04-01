@@ -74,24 +74,24 @@ struct HomeScreen : View {
                 } label: {
 					OpenContactPickerButtonView()
                 }
+            }
+            .navigationBarTitle("CatchUp")
 
-				.navigationBarTitle("CatchUp")
-                .toolbar {
-                    ToolbarItem(placement: .topBarLeading) {
-                        EditButton()
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    EditButton()
+                        .foregroundStyle(.blue)
+                }
+
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        isShowingAboutSheet = true
+                    } label: {
+                        Image(systemName: "person.crop.square")
                             .foregroundStyle(.blue)
                     }
-
-                    ToolbarItem(placement: .topBarTrailing) {
-                        Button {
-                            isShowingAboutSheet = true
-                        } label: {
-                            Image(systemName: "person.crop.square")
-                                .foregroundStyle(.blue)
-                        }
-                        .sheet(isPresented: $isShowingAboutSheet) {
-                            AboutScreen()
-                        }
+                    .sheet(isPresented: $isShowingAboutSheet) {
+                        AboutScreen()
                     }
                 }
             }
@@ -100,6 +100,10 @@ struct HomeScreen : View {
                 if let tappedGridContact {
                     DetailScreen(contact: tappedGridContact)
                 }
+            }
+            
+            .sheet(isPresented: $isShowingUpdatesSheet) {
+                UpdatesScreen()
             }
 		}
 		.accentColor(.orange)
@@ -190,7 +194,7 @@ struct HomeScreen : View {
         if savedVersion == version {
             print("App is up to date!")
         } else {
-            if Utils.updateIsMajor() {
+            if Utils.updateIsMajor() && timesUserHasLaunchedApp > 0 {
 				// Toggle to show UpdatesScreen as a sheet
 				print("Major update detected, showing UpdatesScreen...")
 				isShowingUpdatesSheet = true

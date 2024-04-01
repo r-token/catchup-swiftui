@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct AboutScreen: View {
-	@State private var showingUpdateScreen = false
+	@State private var isShowingUpdateScreen = false
 
 	let smallTip = IAPService.shared.getSmallTipAmount()
 	let mediumTip = IAPService.shared.getMediumTipAmount()
@@ -104,7 +104,7 @@ struct AboutScreen: View {
             
             Group {
                 Button {
-                    showingUpdateScreen = true
+                    isShowingUpdateScreen = true
                 } label: {
                     Text("Show Latest Update Details")
                         .font(.headline)
@@ -114,7 +114,7 @@ struct AboutScreen: View {
 		}
 		.padding()
         
-        .sheet(isPresented: $showingUpdateScreen) {
+        .sheet(isPresented: $isShowingUpdateScreen) {
             UpdatesScreen()
         }
     }
