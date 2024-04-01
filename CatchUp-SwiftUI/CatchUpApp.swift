@@ -36,6 +36,7 @@ struct CatchUpApp: App {
                     DetailScreen(contact: selectedContact)
                 }
             }
+            .accentColor(.orange)
         }
         .modelContainer(modelContainer)
         .environment(dataController)

@@ -74,7 +74,6 @@ struct HomeScreen : View {
                 OpenContactPickerButtonView()
             }
         }
-        .accentColor(.orange)
         .navigationBarTitle("CatchUp")
 
         .onAppear {
