@@ -86,12 +86,16 @@ struct NotificationPreferenceView: View {
             setInitialState()
         }
 
-        .onChange(of: contact.notification_preference) {
-            if contact.notification_preference != initialNotificationPreference {
+        .onChange(of: contact.notification_preference) { oldValue, newValue in
+            if newValue != initialNotificationPreference {
                 print("contact.notification_preference changed")
-                if contact.notification_preference == 2 { // weekly
+                initialNotificationPreference = 999
+                contact.notification_preference_week_of_month = .random(in: 2..<5)
+
+                if newValue == 2 { // weekly
                     whatDayText = "What day?"
-                } else if contact.notification_preference == 3 { // monthly
+                    contact.notification_preference_week_of_month = 0
+                } else if newValue == 3 { // monthly
                     whatDayText = "What day? We'll pick a random week."
                 }
 
@@ -100,16 +104,15 @@ struct NotificationPreferenceView: View {
         }
 
         .onChange(of: contact.notification_preference_weekday) { initialValue, newValue in
-            if contact.notification_preference_weekday != initialNotificationPreferenceWeekday {
-                print("contact.notification_preference_weekday changed from \(initialValue) to \(newValue)")
-                contact.notification_preference_week_of_month = .random(in: 1..<5)
-
+            if newValue != initialNotificationPreferenceWeekday {
+                initialNotificationPreferenceWeekday = 999
                 resetNotificationsForContact()
             }
         }
 
         .onChange(of: notificationPreferenceTime) { initialTime, newTime in
-            if notificationPreferenceTime != initialNotificationPreferenceTime {
+            if newTime != initialNotificationPreferenceTime {
+                initialNotificationPreferenceTime = Date()
                 print("notificationPreferenceTime changed")
                 let calendar = Calendar.current
                 let components = calendar.dateComponents([.hour, .minute], from : newTime)
@@ -120,7 +123,8 @@ struct NotificationPreferenceView: View {
         }
 
         .onChange(of: notificationPreferenceCustomDate) { initialDate, newDate in
-            if notificationPreferenceCustomDate != initialNotificationPreferenceCustomDate {
+            if newDate != initialNotificationPreferenceCustomDate {
+                initialNotificationPreferenceCustomDate = Date()
                 print("notificationPreferenceCustomDate changed")
                 let year = Calendar.current.component(.year, from: newDate)
                 let month = Calendar.current.component(.month, from: newDate)

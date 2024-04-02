@@ -253,7 +253,7 @@ struct ContactHelper {
                 return friendlyFormatter.string(from: date)
             }
         } else {
-            return "Unknown"
+            return "None"
         }
     }
 
@@ -263,7 +263,7 @@ struct ContactHelper {
         let currentDay = Calendar.current.component(.day, from: Date())
         let currentMonth = Calendar.current.component(.month, from: Date())
         let currentYear = Calendar.current.component(.year, from: Date())
-        let currentWeekOfMonth = Calendar.current.component(.weekOfYear, from: Date())
+        let currentWeekOfMonth = Calendar.current.component(.weekOfMonth, from: Date())
 
         let id = UUID()
         let address = ContactHelper.getContactPrimaryAddress(for: contact)

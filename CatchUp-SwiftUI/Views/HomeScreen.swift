@@ -44,17 +44,23 @@ struct HomeScreen : View {
     var body: some View {
         VStack {
             List {
-                Section("Next CatchUps") {
-                    NextCatchUpsGridView(nextCatchUps: filteredNextCatchups, shouldNavigateViaGrid: $shouldNavigateViaGrid, tappedGridContact: $tappedGridContact)
-                }
-
-                Section("All CatchUps") {
-                    ForEach(selectedContacts) { contact in
-                        NavigationLink(destination: DetailScreen(contact: contact)) {
-                            ContactRowView(contact: contact)
+                if selectedContacts.count > 0 {
+                    if selectedContacts.contains(where: { $0.notification_preference != 0 }) {
+                        Section("Next CatchUps") {
+                            NextCatchUpsGridView(nextCatchUps: filteredNextCatchups, shouldNavigateViaGrid: $shouldNavigateViaGrid, tappedGridContact: $tappedGridContact)
                         }
                     }
-                    .onDelete(perform: removePendingNotificationsAndDeleteContact)
+
+                    Section("All CatchUps") {
+                        ForEach(selectedContacts) { contact in
+                            NavigationLink(destination: DetailScreen(contact: contact)) {
+                                ContactRowView(contact: contact)
+                            }
+                        }
+                        .onDelete(perform: removePendingNotificationsAndDeleteContact)
+                    }
+                } else {
+                    Text("No CatchUps yet! Tap the 'Add Contacts' button to add some.")
                 }
             }
             .refreshable {

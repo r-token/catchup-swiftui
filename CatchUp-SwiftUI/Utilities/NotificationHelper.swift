@@ -325,6 +325,7 @@ struct NotificationHelper {
         }
 
         var soonestUpcomingNotificationDateString = "Unknown"
+        print("components for \(contact.name): \(components)")
         soonestUpcomingNotificationDateString = calculateDateFromComponents(components)
 
         if ContactHelper.contactHasBirthday(contact) {
@@ -351,7 +352,6 @@ struct NotificationHelper {
 
         // Calculate the date based on the provided components and current date
         if let calculatedDate = calendar.nextDate(after: currentDate, matching: dateComponents, matchingPolicy: .nextTime) {
-            // Create a DateFormatter instance
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss" // Define the desired date format
 
