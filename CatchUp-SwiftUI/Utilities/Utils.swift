@@ -41,4 +41,14 @@ struct Utils {
         print("fetching IAPs")
         IAPService.shared.fetchAvailableProducts()
     }
+
+    @MainActor
+    static func isPhone() -> Bool {
+        return UIDevice.current.userInterfaceIdiom == .phone
+    }
+
+    @MainActor
+    static func isiPadOrMac() -> Bool {
+        return UIDevice.current.userInterfaceIdiom == .pad || UIDevice.current.userInterfaceIdiom == .mac
+    }
 }

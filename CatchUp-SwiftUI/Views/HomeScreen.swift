@@ -64,6 +64,7 @@ struct HomeScreen : View {
                 }
             }
             .refreshable {
+                NotificationHelper.resetNotifications(for: selectedContacts, delayTime: 0)
                 ContactHelper.updateSelectedContacts(selectedContacts)
             }
 
@@ -84,9 +85,11 @@ struct HomeScreen : View {
 
         .onAppear {
             clearNotificationBadgeAndCheckForUpdate()
-            NotificationHelper.requestAuthorizationForNotifications()
 
             if isColdLaunch {
+                isColdLaunch = false
+                NotificationHelper.requestAuthorizationForNotifications()
+
                 if timesUserHasLaunchedApp > 5 && Int.random(in: 1...3) == 2 {
                     requestReview()
                 }
@@ -99,11 +102,7 @@ struct HomeScreen : View {
         .onChange(of: scenePhase) { initialPhase, newPhase in
             if newPhase == .active {
                 Utils.clearAppIconNotificationBadge()
-                if !isColdLaunch {
-                    NotificationHelper.resetNotifications(for: selectedContacts, delayTime: 3)
-                    updateNextNotificationTime(for: selectedContacts)
-                }
-                isColdLaunch = false
+                updateNextNotificationTime(for: selectedContacts)
             }
         }
 

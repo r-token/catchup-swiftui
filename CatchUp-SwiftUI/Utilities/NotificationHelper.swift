@@ -325,7 +325,6 @@ struct NotificationHelper {
         }
 
         var soonestUpcomingNotificationDateString = "Unknown"
-        print("components for \(contact.name): \(components)")
         soonestUpcomingNotificationDateString = calculateDateFromComponents(components)
 
         if ContactHelper.contactHasBirthday(contact) {
@@ -342,7 +341,6 @@ struct NotificationHelper {
             }
         }
 
-        print("soonestUpcomingNotification for \(contact.name): \(soonestUpcomingNotificationDateString)")
         return soonestUpcomingNotificationDateString
     }
 
@@ -360,7 +358,6 @@ struct NotificationHelper {
             return formattedDate
         }
 
-        print("returning Unknown for soonestUpcomingNotification")
         return "Unknown"
     }
 

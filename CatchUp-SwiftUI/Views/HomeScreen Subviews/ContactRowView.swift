@@ -9,10 +9,12 @@
 import SwiftUI
 
 struct ContactRowView: View {
+    @Environment(DataController.self) var dataController
     @Environment(\.scenePhase) var scenePhase
     let contact: SelectedContact
 
     @State private var shouldShowUnreadIndicator = false
+    @State private var captionTextColor = Color(.gray)
 
     var body: some View {
         HStack {
@@ -23,7 +25,12 @@ struct ContactRowView: View {
                     .font(.headline)
                 Text(Converter.convertNotificationPreferenceIntToString(preference: Int(contact.notification_preference), contact: contact))
                     .font(.caption)
-                    .foregroundStyle(.gray)
+                    .if(Utils.isPhone()) { view in
+                        view.foregroundStyle(.gray)
+                    }
+                    .if(Utils.isiPadOrMac()) { view in
+                        view.foregroundStyle(dataController.selectedContact == contact ? .white : .gray)
+                    }
             }
 
             Spacer()
@@ -42,6 +49,14 @@ struct ContactRowView: View {
         .onChange(of: scenePhase) {
             if scenePhase == .active {
                 shouldShowUnreadIndicator = determineIfShouldShowIndicator()
+            }
+        }
+
+        .onChange(of: dataController.selectedContact) {
+            if contact == dataController.selectedContact {
+                captionTextColor = .white
+            } else {
+                captionTextColor = .gray
             }
         }
     }

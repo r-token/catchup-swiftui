@@ -9,6 +9,7 @@
 import SwiftUI
 
 struct NotificationPreferenceView: View {
+    @Environment(DataController.self) var dataController
     @Environment(\.modelContext) var modelContext
 
     @State private var initialNotificationPreference = 0
@@ -137,6 +138,7 @@ struct NotificationPreferenceView: View {
     }
 
     func setInitialState() {
+        dataController.selectedContact = contact
         setInitialNotificateDateTime()
 
         if contact.notification_preference == 2 { // weekly
