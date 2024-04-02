@@ -85,19 +85,20 @@ struct HomeScreen : View {
                     requestReview()
                 }
 
-                print("resetting notifications")
-                NotificationHelper.resetNotifications(for: selectedContacts)
+                NotificationHelper.resetNotifications(for: selectedContacts, delayTime: 3)
                 timesUserHasLaunchedApp += 1
             }
         }
 
         .onChange(of: scenePhase) { initialPhase, newPhase in
-            if !isColdLaunch {
-                if newPhase == .active {
+            if newPhase == .active {
+                Utils.clearNotificationBadge()
+                if !isColdLaunch {
+                    NotificationHelper.resetNotifications(for: selectedContacts, delayTime: 3)
                     updateNextNotificationTime(for: selectedContacts)
                 }
+                isColdLaunch = false
             }
-            isColdLaunch = false
         }
 
         .sheet(isPresented: $isShowingUpdatesSheet) {

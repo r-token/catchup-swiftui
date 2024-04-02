@@ -11,9 +11,16 @@ import SwiftUI
 struct NotificationPreferenceView: View {
     @Environment(\.modelContext) var modelContext
 
+    @State private var initialNotificationPreference = 0
+    @State private var initialNotificationPreferenceWeekday = 0
+    @State private var initialNotificationPreferenceTime = Date()
+    @State private var initialNotificationPreferenceCustomDate = Date()
+
     @State private var notificationPreferenceTime = Date()
     @State private var notificationPreferenceCustomDate = Date()
+
     @State private var whatDayText = ""
+    @State private var viewDidAppear = false
 
     @Bindable var contact: SelectedContact
 
@@ -72,47 +79,66 @@ struct NotificationPreferenceView: View {
             }
         }
         .onAppear {
-            setInitialNotificateDateTime()
-            
-            if contact.notification_preference == 2 { // weekly
-                whatDayText = "What day?"
-            } else if contact.notification_preference == 3 { // monthly
-                whatDayText = "What day? We'll pick a random week."
-            }
+            setInitialState()
+        }
 
-            print("contact notification preference: \(contact.notification_preference)")
+        .onChange(of: contact) {
+            setInitialState()
         }
 
         .onChange(of: contact.notification_preference) {
-            if contact.notification_preference == 2 { // weekly
-                whatDayText = "What day?"
-            } else if contact.notification_preference == 3 { // monthly
-                whatDayText = "What day? We'll pick a random week."
-            }
+            if contact.notification_preference != initialNotificationPreference {
+                print("contact.notification_preference changed")
+                if contact.notification_preference == 2 { // weekly
+                    whatDayText = "What day?"
+                } else if contact.notification_preference == 3 { // monthly
+                    whatDayText = "What day? We'll pick a random week."
+                }
 
-            NotificationHelper.updateNextNotificationDateTimeFor(contact: contact)
+                resetNotificationsForContact()
+            }
         }
 
-        .onChange(of: contact.notification_preference_weekday) {
-            contact.notification_preference_week_of_month = .random(in: 1..<5)
-            NotificationHelper.updateNextNotificationDateTimeFor(contact: contact)
+        .onChange(of: contact.notification_preference_weekday) { initialValue, newValue in
+            if contact.notification_preference_weekday != initialNotificationPreferenceWeekday {
+                print("contact.notification_preference_weekday changed from \(initialValue) to \(newValue)")
+                contact.notification_preference_week_of_month = .random(in: 1..<5)
+
+                resetNotificationsForContact()
+            }
         }
 
         .onChange(of: notificationPreferenceTime) { initialTime, newTime in
-            let calendar = Calendar.current
-            let components = calendar.dateComponents([.hour, .minute], from : newTime)
-            NotificationHelper.updateNotificationTime(for: contact, hour: components.hour!, minute: components.minute!)
+            if notificationPreferenceTime != initialNotificationPreferenceTime {
+                print("notificationPreferenceTime changed")
+                let calendar = Calendar.current
+                let components = calendar.dateComponents([.hour, .minute], from : newTime)
+                NotificationHelper.updateNotificationTime(for: contact, hour: components.hour!, minute: components.minute!)
 
-            NotificationHelper.updateNextNotificationDateTimeFor(contact: contact)
+                resetNotificationsForContact()
+            }
         }
 
         .onChange(of: notificationPreferenceCustomDate) { initialDate, newDate in
-            let year = Calendar.current.component(.year, from: newDate)
-            let month = Calendar.current.component(.month, from: newDate)
-            let day = Calendar.current.component(.day, from: newDate)
-            NotificationHelper.updateNotificationCustomDate(for: contact, month: month, day: day, year: year)
+            if notificationPreferenceCustomDate != initialNotificationPreferenceCustomDate {
+                print("notificationPreferenceCustomDate changed")
+                let year = Calendar.current.component(.year, from: newDate)
+                let month = Calendar.current.component(.month, from: newDate)
+                let day = Calendar.current.component(.day, from: newDate)
+                NotificationHelper.updateNotificationCustomDate(for: contact, month: month, day: day, year: year)
 
-            NotificationHelper.updateNextNotificationDateTimeFor(contact: contact)
+                resetNotificationsForContact()
+            }
+        }
+    }
+
+    func setInitialState() {
+        setInitialNotificateDateTime()
+
+        if contact.notification_preference == 2 { // weekly
+            whatDayText = "What day?"
+        } else if contact.notification_preference == 3 { // monthly
+            whatDayText = "What day? We'll pick a random week."
         }
     }
 
@@ -124,8 +150,21 @@ struct NotificationPreferenceView: View {
         let customDateComponents = DateComponents(calendar: calendar, year: Int(contact.notification_preference_custom_year), month: Int(contact.notification_preference_custom_month), day: Int(contact.notification_preference_custom_day))
         let customDate = Calendar.current.date(from: customDateComponents)
 
+        initialNotificationPreference = contact.notification_preference
+        initialNotificationPreferenceWeekday = contact.notification_preference_weekday
+        initialNotificationPreferenceTime = time ?? Date()
+        initialNotificationPreferenceCustomDate = customDate ?? Date()
+
         notificationPreferenceTime = time ?? Date()
         notificationPreferenceCustomDate = customDate ?? Date()
+    }
+
+    @MainActor
+    func resetNotificationsForContact() {
+        print("resetting notifications for \(contact.name)")
+        NotificationHelper.removeExistingNotifications(for: contact)
+        NotificationHelper.createNewNotification(for: contact)
+        NotificationHelper.updateNextNotificationDateTimeFor(contact: contact)
     }
 }
 

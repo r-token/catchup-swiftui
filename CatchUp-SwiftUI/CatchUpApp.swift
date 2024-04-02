@@ -38,9 +38,9 @@ struct CatchUpApp: App {
                     NoContactSelectedScreen()
                 }
             }
+            .environment(dataController)
             .accentColor(.orange)
         }
         .modelContainer(modelContainer)
-        .environment(dataController)
     }
 }

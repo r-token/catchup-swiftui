@@ -365,8 +365,9 @@ struct NotificationHelper {
     }
 
     @MainActor
-    static func resetNotifications(for selectedContacts: [SelectedContact]) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+    static func resetNotifications(for selectedContacts: [SelectedContact], delayTime: Double) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + delayTime) {
+            print("resetting notifications")
             UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
 
             for contact in selectedContacts {

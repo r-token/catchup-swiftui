@@ -50,8 +50,6 @@ struct DetailScreen: View {
         }
 
         .onDisappear {
-            NotificationHelper.removeExistingNotifications(for: contact)
-            NotificationHelper.createNewNotification(for: contact)
             dataController.selectedContact = nil
         }
 
