@@ -52,7 +52,7 @@ struct ContactRowView: View {
         formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
         let formattedTodayDate = formatter.string(from: today)
 
-        if formattedTodayDate >= contact.unread_badge_date_time {
+        if contact.unread_badge_date_time != "" && formattedTodayDate >= contact.unread_badge_date_time {
             return true
         } else {
             return false

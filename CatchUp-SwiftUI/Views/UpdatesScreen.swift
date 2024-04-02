@@ -41,6 +41,10 @@ struct UpdatesScreen: View {
 
                     Spacer()
 
+                    Text("– Unread indicators for contacts it's time to CatchUp with")
+
+                    Spacer()
+
 					Text("– Automatic cloud syncing with other Apple devices")
 
 					Spacer()
