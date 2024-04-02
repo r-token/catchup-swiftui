@@ -9,7 +9,10 @@
 import SwiftUI
 
 struct ContactRowView: View {
+    @Environment(\.scenePhase) var scenePhase
     let contact: SelectedContact
+
+    @State private var shouldShowUnreadIndicator = false
 
     var body: some View {
         HStack {
@@ -22,6 +25,37 @@ struct ContactRowView: View {
                     .font(.caption)
                     .foregroundStyle(.gray)
             }
+
+            Spacer()
+
+            if shouldShowUnreadIndicator {
+                Circle()
+                    .foregroundStyle(.orange)
+                    .frame(width: 15, height: 15)
+                    .padding(.horizontal)
+            }
+        }
+        .onAppear {
+            shouldShowUnreadIndicator = determineIfShouldShowIndicator()
+        }
+
+        .onChange(of: scenePhase) {
+            if scenePhase == .active {
+                shouldShowUnreadIndicator = determineIfShouldShowIndicator()
+            }
+        }
+    }
+
+    func determineIfShouldShowIndicator() -> Bool {
+        let today = Date.now
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        let formattedTodayDate = formatter.string(from: today)
+
+        if formattedTodayDate >= contact.unread_badge_date_time {
+            return true
+        } else {
+            return false
         }
     }
 }

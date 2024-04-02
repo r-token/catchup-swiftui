@@ -92,7 +92,7 @@ struct HomeScreen : View {
 
         .onChange(of: scenePhase) { initialPhase, newPhase in
             if newPhase == .active {
-                Utils.clearNotificationBadge()
+                Utils.clearAppIconNotificationBadge()
                 if !isColdLaunch {
                     NotificationHelper.resetNotifications(for: selectedContacts, delayTime: 3)
                     updateNextNotificationTime(for: selectedContacts)
@@ -171,7 +171,7 @@ struct HomeScreen : View {
 
     func clearNotificationBadgeAndCheckForUpdate() {
         Utils.fetchAvailableIAPs()
-        Utils.clearNotificationBadge()
+        Utils.clearAppIconNotificationBadge()
 
         checkForUpdate()
     }

@@ -45,7 +45,8 @@ struct DetailScreen: View {
             }
 		}
         .onAppear {
-            Utils.clearNotificationBadge()
+            Utils.clearAppIconNotificationBadge()
+            Utils.clearUnreadBadge(for: contact)
             dataController.selectedContact = contact
         }
 

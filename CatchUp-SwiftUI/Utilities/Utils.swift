@@ -12,10 +12,14 @@ import CoreData
 import UserNotifications
 
 struct Utils {
-    static func clearNotificationBadge() {
+    static func clearAppIconNotificationBadge() {
         UNUserNotificationCenter.current().setBadgeCount(0)
     }
-    
+
+    static func clearUnreadBadge(for contact: SelectedContact) {
+        contact.unread_badge_date_time = contact.next_notification_date_time
+    }
+
     static func getCurrentAppVersion() -> String {
         let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"]
         let version = (appVersion as! String)

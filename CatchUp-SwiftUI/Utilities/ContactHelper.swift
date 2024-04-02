@@ -310,7 +310,8 @@ struct ContactHelper {
             picture: picture,
             secondary_address: secondary_address,
             secondary_email: secondary_email,
-            secondary_phone: secondary_phone
+            secondary_phone: secondary_phone,
+            unread_badge_date_time: ""
         )
 
         return selectedContact

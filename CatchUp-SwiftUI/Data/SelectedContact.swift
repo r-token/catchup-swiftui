@@ -35,6 +35,7 @@ class SelectedContact {
     var secondary_email: String = ""
     var secondary_phone: String = ""
     var next_notification_date_time: String = ""
+    var unread_badge_date_time: String = ""
 
     init(
         address: String,
@@ -59,7 +60,8 @@ class SelectedContact {
         picture: String,
         secondary_address: String,
         secondary_email: String,
-        secondary_phone: String
+        secondary_phone: String,
+        unread_badge_date_time: String
     ) {
         self.address = address
         self.anniversary = anniversary
@@ -84,6 +86,7 @@ class SelectedContact {
         self.secondary_address = secondary_address
         self.secondary_email = secondary_email
         self.secondary_phone = secondary_phone
+        self.unread_badge_date_time = unread_badge_date_time
     }
 
     static let sampleData = SelectedContact(
@@ -109,6 +112,7 @@ class SelectedContact {
         picture: "photo-as-data-string",
         secondary_address: "",
         secondary_email: "",
-        secondary_phone: ""
+        secondary_phone: "",
+        unread_badge_date_time: ""
     )
 }

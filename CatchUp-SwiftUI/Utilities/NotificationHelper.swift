@@ -374,6 +374,11 @@ struct NotificationHelper {
                 if contact.notification_preference != 0 {
                     NotificationHelper.createNewNotification(for: contact)
                 }
+
+                if contact.unread_badge_date_time == "" {
+                    print("updating unread badge date time for \(contact.name)")
+                    contact.unread_badge_date_time = contact.next_notification_date_time
+                }
             }
         }
     }
