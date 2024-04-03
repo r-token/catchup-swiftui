@@ -191,10 +191,10 @@ struct HomeScreen : View {
     }
     
     func checkForUpdate() {
-        let version = Utils.getCurrentAppVersion()
-        print("latest version: \(version)")
+        let latestVersion = Utils.getCurrentAppVersion()
+        print("latest version: \(latestVersion)")
 
-        if savedVersion == version {
+        if savedVersion == latestVersion {
             print("App is up to date!")
         } else {
             if Utils.updateIsMajor() && timesUserHasLaunchedApp > 0 {
@@ -202,7 +202,7 @@ struct HomeScreen : View {
 				print("Major update detected, showing UpdatesScreen...")
 				isShowingUpdatesSheet = true
 			}
-            savedVersion = version
+            savedVersion = latestVersion
         }
     }
 }
