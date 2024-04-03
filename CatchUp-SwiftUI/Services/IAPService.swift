@@ -23,7 +23,7 @@ enum IAPServiceAlertType{
     }
 }
 
-class IAPService: NSObject {
+final class IAPService: NSObject {
     static let shared = IAPService()
     
     let graciousTipProductID = "gracious_tip_0.99"
@@ -39,13 +39,13 @@ class IAPService: NSObject {
     // MARK: - MAKE PURCHASE OF A PRODUCT
     func canMakePurchases() -> Bool {  return SKPaymentQueue.canMakePayments()  }
     
-    func leaveATip(index: Int){
+    func leaveATip(index: Int) {
         if iapProducts.count == 0 {
 			print("No IAPs to purchase")
 			return
 		}
         
-        if self.canMakePurchases() {
+        if canMakePurchases() {
             let product = iapProducts[index]
             let payment = SKPayment(product: product)
             SKPaymentQueue.default().add(self)
@@ -59,27 +59,15 @@ class IAPService: NSObject {
     }
 	
 	func getSmallTipAmount() -> String {
-		if iapProducts.count > 0 {
-			return iapProducts[1].localizedPrice
-		} else {
-			return "$0.99"
-		}
+        return iapProducts.first(where: { $0.productIdentifier == "gracious_tip_0.99" })?.localizedPrice ?? "$0.99"
 	}
 	
 	func getMediumTipAmount() -> String {
-		if iapProducts.count > 0 {
-			return iapProducts[0].localizedPrice
-		} else {
-			return "$1.99"
-		}
+        return iapProducts.first(where: { $0.productIdentifier == "generous_tip_1.99" })?.localizedPrice ?? "$1.99"
 	}
 	
 	func getLargeTipAmount() -> String {
-		if iapProducts.count > 0 {
-			return iapProducts[2].localizedPrice
-		} else {
-			return "$4.99"
-		}
+        return iapProducts.first(where: { $0.productIdentifier == "gratuitous_tip_4.99" })?.localizedPrice ?? "$4.99"
 	}
     
 	// MARK: - RESTORE PURCHASE
@@ -103,9 +91,10 @@ class IAPService: NSObject {
 extension IAPService: SKProductsRequestDelegate, SKPaymentTransactionObserver{
     // MARK: - REQUEST IAP PRODUCTS
     func productsRequest (_ request:SKProductsRequest, didReceive response:SKProductsResponse) {
-        
         if (response.products.count > 0) {
-            iapProducts = response.products
+            let sortedProducts = response.products.sorted(by: { $0.price.decimalValue < $1.price.decimalValue })
+
+            iapProducts = sortedProducts
             for product in iapProducts{
                 let numberFormatter = NumberFormatter()
                 numberFormatter.formatterBehavior = .behavior10_4

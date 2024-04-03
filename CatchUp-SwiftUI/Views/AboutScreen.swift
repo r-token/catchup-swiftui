@@ -9,10 +9,8 @@
 import SwiftUI
 
 struct AboutScreen: View {
-	@State private var showingUpdateScreen = false
-	
-	let generator = UINotificationFeedbackGenerator()
-	
+	@State private var isShowingUpdateScreen = false
+
 	let smallTip = IAPService.shared.getSmallTipAmount()
 	let mediumTip = IAPService.shared.getMediumTipAmount()
 	let largeTip = IAPService.shared.getLargeTipAmount()
@@ -30,7 +28,7 @@ struct AboutScreen: View {
                     .shadow(radius: 10)
                 
                 Text("CatchUp")
-                    .foregroundColor(.orange)
+                    .foregroundStyle(.orange)
                     .font(.largeTitle)
                     .bold()
                 
@@ -58,38 +56,38 @@ struct AboutScreen: View {
                     Spacer()
                     
                     Button(smallTip) {
-                        self.graciousTipPressed()
+                        tappedSmallTip()
                     }
-                        .font(.headline)
-                        .foregroundColor(.white)
-                        .padding()
-                        .background(RoundedRectangle(cornerRadius: 20).fill(LinearGradient(gradient: Gradient(colors: [.orange, .red]), startPoint: .top, endPoint: .bottom))
-                        )
-                        .shadow(radius: 15)
+                    .font(.headline)
+                    .foregroundStyle(.white)
+                    .padding()
+                    .background(RoundedRectangle(cornerRadius: 20).fill(LinearGradient(gradient: Gradient(colors: [.orange, .red]), startPoint: .top, endPoint: .bottom))
+                    )
+                    .shadow(radius: 15)
                     
                     Spacer()
                     
                     Button(mediumTip) {
-                        self.generousTipPressed()
+                        tappedMediumTip()
                     }
-                        .font(.headline)
-                        .foregroundColor(.white)
-                        .padding()
-                        .background(RoundedRectangle(cornerRadius: 20).fill(LinearGradient(gradient: Gradient(colors: [.orange, .red]), startPoint: .top, endPoint: .bottom))
-                        )
-                        .shadow(radius: 15)
+                    .font(.headline)
+                    .foregroundStyle(.white)
+                    .padding()
+                    .background(RoundedRectangle(cornerRadius: 20).fill(LinearGradient(gradient: Gradient(colors: [.orange, .red]), startPoint: .top, endPoint: .bottom))
+                    )
+                    .shadow(radius: 15)
                     
                     Spacer()
                     
                     Button(largeTip) {
-                        self.gratuitousTipPressed()
+                        tappedLargeTip()
                     }
-                        .font(.headline)
-                        .foregroundColor(.white)
-                        .padding()
-                        .background(RoundedRectangle(cornerRadius: 20).fill(LinearGradient(gradient: Gradient(colors: [.orange, .red]), startPoint: .top, endPoint: .bottom))
-                        )
-                        .shadow(radius: 15)
+                    .font(.headline)
+                    .foregroundStyle(.white)
+                    .padding()
+                    .background(RoundedRectangle(cornerRadius: 20).fill(LinearGradient(gradient: Gradient(colors: [.orange, .red]), startPoint: .top, endPoint: .bottom))
+                    )
+                    .shadow(radius: 15)
                     
                     Spacer()
                 }
@@ -105,40 +103,41 @@ struct AboutScreen: View {
             }
             
             Group {
-                Button(action: {
-                    self.showingUpdateScreen = true
-                }) {
+                Button {
+                    isShowingUpdateScreen = true
+                } label: {
                     Text("Show Latest Update Details")
                         .font(.headline)
-                        .foregroundColor(.blue)
+                        .foregroundStyle(.blue)
                 }
             }
 		}
 		.padding()
         
-        .sheet(isPresented: $showingUpdateScreen) {
+        .sheet(isPresented: $isShowingUpdateScreen) {
             UpdatesScreen()
         }
     }
-	
-	func graciousTipPressed() {
-		generator.notificationOccurred(.success)
+
+    @MainActor
+    func tappedSmallTip() {
+        UINotificationFeedbackGenerator().notificationOccurred(.success)
+        IAPService.shared.leaveATip(index: 0)
+    }
+
+    @MainActor
+	func tappedMediumTip() {
+        UINotificationFeedbackGenerator().notificationOccurred(.success)
 		IAPService.shared.leaveATip(index: 1)
     }
 	
-	func generousTipPressed() {
-		generator.notificationOccurred(.success)
-		IAPService.shared.leaveATip(index: 0)
-    }
-	
-	func gratuitousTipPressed() {
-		generator.notificationOccurred(.success)
+    @MainActor
+	func tappedLargeTip() {
+        UINotificationFeedbackGenerator().notificationOccurred(.success)
 		IAPService.shared.leaveATip(index: 2)
     }
 }
 
-struct AboutScreen_Previews: PreviewProvider {
-	static var previews: some View {
-        AboutScreen()
-    }
+#Preview {
+    AboutScreen()
 }
