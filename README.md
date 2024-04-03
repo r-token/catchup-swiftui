@@ -17,18 +17,20 @@ Set these up as recurring reminders, like every week or month, or a custom day t
 *Step Three*: There is no step three
 
 **Features**:
-- Full light and dark mode support
-- Receive reminders to catch up with your Contacts, even when not connected to the internet
-- Customization for nearly every reminder choice
-- Automatic reminders for contacts' birthdays/anniversaries if you have them set in your Contacts app before adding them to CatchUp
-- No ads
+– Receive reminders to catch up with your contacts, even when not connected to the internet
+– Automatic reminders for contacts' birthdays/anniversaries if you have them set in your Contacts app
+- A grid of your upcoming catchups
+- Unread indicators for contacts it's time to CatchUp with
+- Pull down on the home screen to update your contacts' pictures and information
+- Automatic cloud syncing with other Apple devices
+– Full light and dark mode support
+– No ads
 
 CatchUp is free and has no ads. This is a passion project that honestly helps me out, and I'd rather not muddy the waters with advertising I can't control. If you'd like to support development, you are welcome to leave a tip in the Tip Jar within the app.
 
 **Nerd stuff**:
-- 99% of the user interface was built with SwiftUI, the contact picker is the only bridge into UIKit
-- All persistence/storage is done with Core Data and all data stays local to your device
-- 35% reduction in code from v1.x to v2.x
+– 99% of the user interface was built with SwiftUI. The contact picker is the only bridge into UIKit
+– All persistence/storage is done with SwiftData. I don't store any of your data on my servers
 
 A note on privacy:
 I store NONE of your contacts or any of your personal information. The contacts you choose and the preferences you set for them are stored locally on your device, and are never sent anywhere else. Read my full privacy policy at https://ryantoken.com/privacy-policy
