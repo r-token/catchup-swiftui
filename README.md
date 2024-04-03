@@ -17,6 +17,7 @@ Set these up as recurring reminders, like every week or month, or a custom day t
 *Step Three*: There is no step three
 
 **Features**:
+
 – Receive reminders to catch up with your contacts, even when not connected to the internet
 – Automatic reminders for contacts' birthdays/anniversaries if you have them set in your Contacts app
 - A grid of your upcoming catchups
