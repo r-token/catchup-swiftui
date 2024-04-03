@@ -130,6 +130,7 @@ struct NotificationPreferenceView: View {
                 let year = Calendar.current.component(.year, from: newDate)
                 let month = Calendar.current.component(.month, from: newDate)
                 let day = Calendar.current.component(.day, from: newDate)
+                NotificationHelper.updateNotificationTime(for: contact, hour: 12, minute: 30)
                 NotificationHelper.updateNotificationCustomDate(for: contact, month: month, day: day, year: year)
 
                 resetNotificationsForContact()
@@ -146,14 +147,25 @@ struct NotificationPreferenceView: View {
         } else if contact.notification_preference == 3 { // monthly
             whatDayText = "What day? We'll pick a random week."
         }
+
+        Utils.clearUnreadBadge(for: contact)
     }
 
     func setInitialNotificateDateTime() {
         let calendar = Calendar.current
-        let timeComponents = DateComponents(calendar: calendar, hour: Int(contact.notification_preference_hour), minute: Int(contact.notification_preference_minute))
+        let timeComponents = DateComponents(
+            calendar: calendar,
+            hour: Int(contact.notification_preference_hour),
+            minute: Int(contact.notification_preference_minute)
+        )
         let time = Calendar.current.date(from: timeComponents)
 
-        let customDateComponents = DateComponents(calendar: calendar, year: Int(contact.notification_preference_custom_year), month: Int(contact.notification_preference_custom_month), day: Int(contact.notification_preference_custom_day))
+        let customDateComponents = DateComponents(
+            calendar: calendar,
+            year: Int(contact.notification_preference_custom_year),
+            month: Int(contact.notification_preference_custom_month),
+            day: Int(contact.notification_preference_custom_day)
+        )
         let customDate = Calendar.current.date(from: customDateComponents)
 
         initialNotificationPreference = contact.notification_preference
@@ -170,7 +182,6 @@ struct NotificationPreferenceView: View {
         print("resetting notifications for \(contact.name)")
         NotificationHelper.removeExistingNotifications(for: contact)
         NotificationHelper.createNewNotification(for: contact)
-        NotificationHelper.updateNextNotificationDateTimeFor(contact: contact)
     }
 }
 

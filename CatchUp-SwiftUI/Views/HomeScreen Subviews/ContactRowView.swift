@@ -14,7 +14,6 @@ struct ContactRowView: View {
     let contact: SelectedContact
 
     @State private var shouldShowUnreadIndicator = false
-    @State private var captionTextColor = Color(.gray)
 
     var body: some View {
         HStack {
@@ -25,6 +24,7 @@ struct ContactRowView: View {
                     .font(.headline)
                 Text(Converter.convertNotificationPreferenceIntToString(preference: Int(contact.notification_preference), contact: contact))
                     .font(.caption)
+
                     .if(Utils.isPhone()) { view in
                         view.foregroundStyle(.gray)
                     }
@@ -53,11 +53,7 @@ struct ContactRowView: View {
         }
 
         .onChange(of: dataController.selectedContact) {
-            if contact == dataController.selectedContact {
-                captionTextColor = .white
-            } else {
-                captionTextColor = .gray
-            }
+            shouldShowUnreadIndicator = determineIfShouldShowIndicator()
         }
     }
 

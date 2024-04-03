@@ -100,27 +100,27 @@ struct NotificationHelper {
         case 0: // Never
             break
         case 1: // Daily
-            dateComponents.hour = Int(contact.notification_preference_hour)
-            dateComponents.minute = Int(contact.notification_preference_minute)
+            dateComponents.hour = contact.notification_preference_hour
+            dateComponents.minute = contact.notification_preference_minute
             break
         case 2: // Weekly
-            dateComponents.hour = Int(contact.notification_preference_hour)
-            dateComponents.minute = Int(contact.notification_preference_minute)
+            dateComponents.hour = contact.notification_preference_hour
+            dateComponents.minute = contact.notification_preference_minute
             // weekday units are 1-7, I store them as 0-6 though. Need to add 1
-            dateComponents.weekday = Int(contact.notification_preference_weekday)+1
+            dateComponents.weekday = contact.notification_preference_weekday+1
             break
         case 3: // Monthly
-            dateComponents.hour = Int(contact.notification_preference_hour)
-            dateComponents.minute = Int(contact.notification_preference_minute)
-            dateComponents.weekday = Int(contact.notification_preference_weekday)+1
-            dateComponents.weekOfMonth = Int(contact.notification_preference_week_of_month)
+            dateComponents.hour = contact.notification_preference_hour
+            dateComponents.minute = contact.notification_preference_minute
+            dateComponents.weekday = contact.notification_preference_weekday+1
+            dateComponents.weekOfMonth = contact.notification_preference_week_of_month
             break
         case 4: // Custom Date
-            dateComponents.month = Int(contact.notification_preference_custom_month)
-            dateComponents.day = Int(contact.notification_preference_custom_day)
-            dateComponents.year = Int(contact.notification_preference_custom_year)
-            dateComponents.hour = 12
-            dateComponents.minute = 30
+            dateComponents.month = contact.notification_preference_custom_month
+            dateComponents.day = contact.notification_preference_custom_day
+            dateComponents.year = contact.notification_preference_custom_year
+            dateComponents.hour = contact.notification_preference_hour
+            dateComponents.minute = contact.notification_preference_minute
             break
         default:
             print("It's impossible to get here")
@@ -176,7 +176,7 @@ struct NotificationHelper {
             contact.anniversary_notification_id = identifier
         }
 
-        print("scheduling notification for contact: \(contact.name)")
+        print("scheduling notification for \(contact.name) with date components: \(trigger.dateComponents)")
 
         UNUserNotificationCenter.current().add(request)
     }
@@ -231,29 +231,22 @@ struct NotificationHelper {
     }
     
     static func updateNotificationPreference(for contact: SelectedContact, selection: Int) {
-        let newPreference = selection
-        contact.notification_preference = newPreference
+        contact.notification_preference = selection
     }
     
     static func updateNotificationTime(for contact: SelectedContact, hour: Int, minute: Int) {
-        let newHour = hour
-        let newMinute = minute
-        contact.notification_preference_hour = newHour
-        contact.notification_preference_minute = newMinute
+        contact.notification_preference_hour = hour
+        contact.notification_preference_minute = minute
     }
     
     static func updateNotificationPreferenceWeekday(for contact: SelectedContact, weekday: Int) {
-        let newWeekday = weekday
-        contact.notification_preference_weekday = newWeekday
+        contact.notification_preference_weekday = weekday
     }
     
     static func updateNotificationCustomDate(for contact: SelectedContact, month: Int, day: Int, year: Int) {
-        let customMonth = month
-        let customDay = day
-        let customYear = year
-        contact.notification_preference_custom_month = customMonth
-        contact.notification_preference_custom_day = customDay
-        contact.notification_preference_custom_year = customYear
+        contact.notification_preference_custom_month = month
+        contact.notification_preference_custom_day = day
+        contact.notification_preference_custom_year = year
     }
     
     static func requestAuthorizationForNotifications() {
