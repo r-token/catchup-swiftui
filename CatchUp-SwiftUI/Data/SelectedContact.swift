@@ -89,6 +89,30 @@ class SelectedContact {
         self.unread_badge_date_time = unread_badge_date_time
     }
 
+    func preferenceIsNever() -> Bool {
+        notification_preference == 0
+    }
+
+    func preferenceIsDaily() -> Bool {
+        notification_preference == 1
+    }
+
+    func preferenceIsWeekly() -> Bool {
+        notification_preference == 2
+    }
+
+    func preferenceIsMonthly() -> Bool {
+        notification_preference == 3
+    }
+
+    func preferenceIsAnnually() -> Bool {
+        notification_preference == 4
+    }
+
+    func preferenceIsCustom() -> Bool {
+        notification_preference == 5
+    }
+
     static let sampleData = SelectedContact(
         address: "2190 E 11th Ave",
         anniversary: "06/20/2020",

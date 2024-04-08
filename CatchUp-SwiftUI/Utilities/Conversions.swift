@@ -110,18 +110,21 @@ struct Converter {
     static func convertNotificationPreferenceIntToString(preference: Int, contact: SelectedContact) -> String {
 		let time = convertHourAndMinuteFromIntToString(for: contact)
 		let weekday = convertWeekdayFromIntToString(for: contact)
-		let customDate = convertCustomDateFromIntToString(for: contact)
-		
+
 		switch preference {
-		case 0:
+		case 0: // never
 			return "No Reminder Set"
-		case 1:
+		case 1: // daily
 			return "Daily at \(time)"
-		case 2:
+		case 2: // weekly
 			return "\(weekday)s at \(time)"
-		case 3:
+		case 3: // monthly
 			return "Monthly on \(weekday)s"
-		case 4:
+        case 4: // annually
+            let customDate = convertCustomDateFromIntToString(for: contact, annuallyOrCustom: .annually)
+            return "Annually on \(customDate)"
+		case 5: // custom
+            let customDate = convertCustomDateFromIntToString(for: contact, annuallyOrCustom: .custom)
 			return customDate
 		default:
 			return "Unknown"
@@ -265,12 +268,12 @@ struct Converter {
 		return time
 	}
 	
-    static func convertCustomDateFromIntToString(for contact: SelectedContact) -> String {
+    static func convertCustomDateFromIntToString(for contact: SelectedContact, annuallyOrCustom: NotificationOption) -> String {
 		var month: String
 		var day: String
 		var year: String
 		
-		switch contact.notification_preference_custom_month {
+		switch contact.notification_preference_custom_month+1 {
 		case 1:
 			month = "January"
 			break
@@ -327,8 +330,15 @@ struct Converter {
 		day = formatter.string(from: dayDate)
 		year = String(contact.notification_preference_custom_year)
 		
-		let customDate = ("\(month) \(day), \(year)")
-		
-		return customDate
+        if annuallyOrCustom == .annually {
+            let customDate = ("\(month) \(day)")
+            return customDate
+        } else if annuallyOrCustom == .custom {
+            let customDate = ("\(month) \(day), \(year)")
+            return customDate
+        } else {
+            let customDate = ("\(month) \(day), \(year)")
+            return customDate
+        }
 	}
 }
