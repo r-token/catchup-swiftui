@@ -38,24 +38,18 @@ struct NotificationPreferenceView: View {
                 }
             }
 
-            if !contact.preferenceIsNever() && !contact.preferenceIsCustom() { // Not never, and not custom
-                if contact.preferenceIsDaily() {
-                    TimePickerRow(notificationPreferenceTime: $notificationPreferenceTime)
-                }
-
-                if contact.preferenceIsWeekly() || contact.preferenceIsMonthly() {
-                    // Day of the Week Picker
-                    Picker(selection: $contact.notification_preference_weekday, label: Text(whatDayText)) {
-                        ForEach(0..<dayOptions.count, id: \.self) { index in
-                            Text(dayOptions[index].rawValue).tag(index)
-                        }
+            if contact.preferenceIsDaily() {
+                TimePickerRow(notificationPreferenceTime: $notificationPreferenceTime)
+            } else if contact.preferenceIsWeekly() || contact.preferenceIsMonthly() {
+                // Day of the Week Picker
+                Picker(selection: $contact.notification_preference_weekday, label: Text(whatDayText)) {
+                    ForEach(0..<dayOptions.count, id: \.self) { index in
+                        Text(dayOptions[index].rawValue).tag(index)
                     }
-
-                    TimePickerRow(notificationPreferenceTime: $notificationPreferenceTime)
                 }
-            }
 
-            if contact.preferenceIsAnnually() {
+                TimePickerRow(notificationPreferenceTime: $notificationPreferenceTime)
+            } else if contact.preferenceIsAnnually() {
                 // Month Picker
                 Picker(selection: $contact.notification_preference_custom_month, label: Text("What month?")) {
                     ForEach(0..<monthOptions.count, id: \.self) { index in
@@ -71,9 +65,7 @@ struct NotificationPreferenceView: View {
                 }
 
                 TimePickerRow(notificationPreferenceTime: $notificationPreferenceTime)
-            }
-
-            if contact.preferenceIsCustom() {
+            } else if contact.preferenceIsCustom() {
                 HStack {
                     Text("When would you like to be notified?")
 
@@ -107,7 +99,10 @@ struct NotificationPreferenceView: View {
                     contact.notification_preference_week_of_month = 0
                 } else if newValue == 3 { // monthly
                     whatDayText = "What day? We'll pick a random week."
-                } else if newValue == 4 { // annually
+                } else if newValue == 4 { // quarterly
+                    contact.notification_preference_quarterly_set_time = Date()
+                    print("scheduling quarterly time interval notification")
+                } else if newValue == 5 { // annually
                     NotificationHelper.setYearPreference(for: contact)
                 }
 

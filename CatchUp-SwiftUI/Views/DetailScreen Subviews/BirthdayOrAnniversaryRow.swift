@@ -26,13 +26,10 @@ struct BirthdayOrAnniversaryRow: View {
             }
         } else if contact.next_notification_date_time == dayBeforeAnniversaryString() {
             VStack {
-                HStack {
-                    Spacer()
-                    Text("🧡 The day before your anniversary!")
-                        .foregroundStyle(.orange)
-                    Spacer()
-                }
-                .padding(.top, 2)
+                Text("🧡 The day before your anniversary!")
+                    .foregroundStyle(.orange)
+                    .multilineTextAlignment(.leading)
+                    .padding(.top, 2)
 
                 Spacer()
             }

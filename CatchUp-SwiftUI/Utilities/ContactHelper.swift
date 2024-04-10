@@ -277,6 +277,7 @@ struct ContactHelper {
         let notification_preference = 0
         let notification_preference_hour = currentHour
         let notification_preference_minute = currentMinute
+        let notification_preference_quarterly_set_time = Date()
         let notification_preference_weekday = 0
         let notification_preference_custom_year = currentYear
         let notification_preference_custom_month = currentMonth
@@ -304,6 +305,7 @@ struct ContactHelper {
             notification_preference_custom_year: notification_preference_custom_year,
             notification_preference_hour: notification_preference_hour,
             notification_preference_minute: notification_preference_minute,
+            notification_preference_quarterly_set_time: notification_preference_quarterly_set_time,
             notification_preference_weekday: notification_preference_weekday,
             notification_preference_week_of_month: currentWeekOfMonth,
             phone: phone,

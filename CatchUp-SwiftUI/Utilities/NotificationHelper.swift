@@ -49,7 +49,7 @@ struct NotificationHelper {
 
         scheduleNotification(for: contact, dateComponents: dateComponents, identifier: identifier, content: notificationContent)
     }
-    
+
     static func addBirthdayNotification(for contact: SelectedContact) {
         let birthdayNotificationContent = UNMutableNotificationContent()
         birthdayNotificationContent.title = "🥳 Today is \(contact.name)'s birthday!"
@@ -96,29 +96,33 @@ struct NotificationHelper {
     static func getNextNotificationDateFor(contact: SelectedContact) -> String {
         // Get next notification date for the general notification
         var components = DateComponents()
-        switch contact.notification_preference {
-        case 1: // daily
+
+        if contact.preferenceIsDaily() {
             components.hour = contact.notification_preference_hour
             components.minute = contact.notification_preference_minute
-        case 2, 3: // weekly, monthly
+        } else if contact.preferenceIsWeekly() || contact.preferenceIsMonthly() {
             components.hour = contact.notification_preference_hour
             components.minute = contact.notification_preference_minute
             components.weekday = contact.notification_preference_weekday + 1
             if contact.notification_preference_week_of_month != 0 {
                 components.weekOfMonth = contact.notification_preference_week_of_month + 1
             }
-        case 4, 5: // annually, custom date
+        } else if contact.preferenceIsQuarterly() {
+            print("Quarterly is handled separately by UNTimeIntervalNotificationTrigger")
+        } else if contact.preferenceIsAnnually() || contact.preferenceIsCustom() {
             components.hour = contact.notification_preference_hour
             components.minute = contact.notification_preference_minute
             components.month = contact.notification_preference_custom_month + 1
             components.day = contact.notification_preference_custom_day
             components.year = contact.notification_preference_custom_year
-        default:
-            print("do nothing")
         }
 
         var soonestUpcomingNotificationDateString = "Unknown"
-        soonestUpcomingNotificationDateString = calculateDateStringFromComponents(components)
+        if contact.preferenceIsQuarterly() {
+            soonestUpcomingNotificationDateString = getNextNotificationDateForQuarterlyPreference(contact: contact)
+        } else {
+            soonestUpcomingNotificationDateString = calculateDateStringFromComponents(components)
+        }
 
         if ContactHelper.contactHasBirthday(contact) {
             let birthdayDateString = calculateDateStringFromComponents(getBirthdayDateComponents(for: contact))
@@ -137,52 +141,47 @@ struct NotificationHelper {
         return soonestUpcomingNotificationDateString
     }
 
-
     static func getNotificationDateComponents(for contact: SelectedContact) -> DateComponents {
         var dateComponents = DateComponents()
 
-        switch contact.notification_preference {
-        case 0: // Never
-            break
-        case 1: // Daily
+        if contact.preferenceIsDaily() {
             dateComponents.hour = contact.notification_preference_hour
             dateComponents.minute = contact.notification_preference_minute
-            break
-        case 2: // Weekly
+        } else if contact.preferenceIsWeekly() {
             dateComponents.hour = contact.notification_preference_hour
             dateComponents.minute = contact.notification_preference_minute
             // weekday units are 1-7, I store them as 0-6 though. Need to add 1
             dateComponents.weekday = contact.notification_preference_weekday+1
-            break
-        case 3: // Monthly
+        } else if contact.preferenceIsMonthly() {
             dateComponents.hour = contact.notification_preference_hour
             dateComponents.minute = contact.notification_preference_minute
             dateComponents.weekday = contact.notification_preference_weekday+1
             dateComponents.weekOfMonth = contact.notification_preference_week_of_month
-            break
-        case 4: // Annually
+        } else if contact.preferenceIsAnnually() || contact.preferenceIsCustom() {
             dateComponents.month = contact.notification_preference_custom_month+1
             dateComponents.day = contact.notification_preference_custom_day
             dateComponents.year = contact.notification_preference_custom_year
             dateComponents.hour = contact.notification_preference_hour
             dateComponents.minute = contact.notification_preference_minute
-            break
-        case 5: // Custom Date
-            dateComponents.month = contact.notification_preference_custom_month
-            dateComponents.day = contact.notification_preference_custom_day
-            dateComponents.year = contact.notification_preference_custom_year
-            dateComponents.hour = contact.notification_preference_hour
-            dateComponents.minute = contact.notification_preference_minute
-            break
-        default:
-            print("It's impossible to get here")
         }
 
         print("Notification date components for \(contact.name): \(dateComponents)")
 
         return dateComponents
     }
-    
+
+    static func getNextNotificationDateForQuarterlyPreference(contact: SelectedContact) -> String {
+        if contact.notification_preference_quarterly_set_time.addingTimeInterval(7776000) < Date() {
+            print("resetting quarterly notification preference")
+            // reset the quarterly set time and reset the notification
+            contact.notification_preference_quarterly_set_time = Date()
+            NotificationHelper.removeGeneralNotification(for: contact)
+            NotificationHelper.addGeneralNotification(for: contact)
+        }
+
+        return calculateDateStringFromDate(contact.notification_preference_quarterly_set_time)
+    }
+
     static func getBirthdayDateComponents(for contact: SelectedContact) -> DateComponents {
         var birthdayDateComponents = DateComponents()
         
@@ -218,10 +217,21 @@ struct NotificationHelper {
     }
     
     static func scheduleNotification(for contact: SelectedContact, dateComponents: DateComponents, identifier: UUID, content: UNMutableNotificationContent) {
+        var calendarTrigger: UNCalendarNotificationTrigger?
+        var timeIntervalTrigger: UNTimeIntervalNotificationTrigger?
+        var request: UNNotificationRequest
 
-        let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
-        let request = UNNotificationRequest(identifier: identifier.uuidString, content: content, trigger: trigger)
-        
+        // quarterly notifications are handled by UNTimeIntervalNotificationTrigger instead of UNCalendarNotificationTrigger, so we handle them separately
+        if contact.preferenceIsQuarterly() {
+            let oneDay: Double = 86400 // seconds
+            // set a recurring time interval for every 90 days
+            timeIntervalTrigger = UNTimeIntervalNotificationTrigger(timeInterval: (oneDay*90), repeats: true)
+            request = UNNotificationRequest(identifier: identifier.uuidString, content: content, trigger: timeIntervalTrigger)
+        } else {
+            calendarTrigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
+            request = UNNotificationRequest(identifier: identifier.uuidString, content: content, trigger: calendarTrigger)
+        }
+
         if content.title == "👋 CatchUp with \(contact.name)" {
             contact.notification_identifier = identifier
         } else if content.title == "🥳 Today is \(contact.name)'s birthday!" {
@@ -230,7 +240,13 @@ struct NotificationHelper {
             contact.anniversary_notification_id = identifier
         }
 
-        print("scheduling notification for \(contact.name) with date components: \(trigger.dateComponents)")
+        if let timeIntervalTrigger {
+            print("scheduling notification for \(contact.name) with time interval: \(timeIntervalTrigger.timeInterval)")
+        } else {
+            if let calendarTrigger {
+                print("scheduling notification for \(contact.name) with date components: \(calendarTrigger.dateComponents)")
+            }
+        }
 
         UNUserNotificationCenter.current().add(request)
     }
@@ -347,11 +363,24 @@ struct NotificationHelper {
         contact.next_notification_date_time = nextNotificationDateTime
     }
 
+    static func getDateComponentsFromDate(_ date: Date) -> DateComponents {
+        let calendar = Calendar.current
+
+        let timeInterval: TimeInterval = 7776000 // 90 days in seconds
+        let newDate = date.addingTimeInterval(timeInterval)
+
+        let dateComponents = calendar.dateComponents([.year, .month, .day, .hour, .minute, .second], from: newDate)
+        return dateComponents
+    }
+
+    static func calculateDateStringFromDate(_ date: Date) -> String {
+        let dateComponents = getDateComponentsFromDate(date)
+        return calculateDateStringFromComponents(dateComponents)
+    }
+
     static func calculateDateStringFromComponents(_ dateComponents: DateComponents) -> String {
         let calendar = Calendar.current
         let currentDate = Date()
-
-        print("getting dateString from components \(dateComponents)")
 
         // Calculate the date based on the provided components and current date
         if let calculatedDate = calendar.nextDate(after: currentDate, matching: dateComponents, matchingPolicy: .nextTime) {
@@ -360,11 +389,11 @@ struct NotificationHelper {
 
             // Convert the calculated date to a human-readable date string
             let formattedDate = dateFormatter.string(from: calculatedDate)
-            print("returning \(formattedDate)")
+            // print("returning \(formattedDate)")
             return formattedDate
         }
 
-        print("returning Unknown")
+        // print("returning Unknown")
         return "Unknown"
     }
 

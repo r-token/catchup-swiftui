@@ -107,30 +107,71 @@ struct Converter {
         return image
     }
 	
-    static func convertNotificationPreferenceIntToString(preference: Int, contact: SelectedContact) -> String {
+    static func convertNotificationPreferenceToString(contact: SelectedContact) -> String {
 		let time = convertHourAndMinuteFromIntToString(for: contact)
 		let weekday = convertWeekdayFromIntToString(for: contact)
 
-		switch preference {
-		case 0: // never
-			return "No Reminder Set"
-		case 1: // daily
-			return "Daily at \(time)"
-		case 2: // weekly
-			return "\(weekday)s at \(time)"
-		case 3: // monthly
-			return "Monthly on \(weekday)s"
-        case 4: // annually
+        if contact.preferenceIsNever() {
+            return "No Reminder Set"
+        } else if contact.preferenceIsDaily() {
+            return "Daily at \(time)"
+        } else if contact.preferenceIsWeekly() {
+            return "\(weekday)s at \(time)"
+        } else if contact.preferenceIsMonthly() {
+            return "Monthly on \(weekday)s"
+        } else if contact.preferenceIsQuarterly() {
+            return getQuarterlyPreferenceText(for: contact)
+        } else if contact.preferenceIsAnnually() {
             let customDate = convertCustomDateFromIntToString(for: contact, annuallyOrCustom: .annually)
             return "Annually on \(customDate)"
-		case 5: // custom
+        } else if contact.preferenceIsCustom() {
             let customDate = convertCustomDateFromIntToString(for: contact, annuallyOrCustom: .custom)
-			return customDate
-		default:
-			return "Unknown"
-		}
+            return customDate
+        }
+
+        return ""
 	}
-	
+
+    private static func getQuarterlyPreferenceText(for contact: SelectedContact) -> String {
+        let nextCatchUpDate = contact.notification_preference_quarterly_set_time.addingTimeInterval(77760000)
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        let nextCatchUpDateString = dateFormatter.string(from: nextCatchUpDate)
+        if let localNextCatchUpDateString = getLocalHoursMinutes(from: nextCatchUpDateString) {
+            return "Quarterly at \(localNextCatchUpDateString)"
+        } else {
+            return "Quarterly"
+        }
+    }
+
+    private static func getLocalHoursMinutes(from dateString: String) -> String? {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+
+        // Try converting the string to a Date object
+        guard let date = formatter.date(from: dateString) else {
+            return nil // Handle invalid date string
+        }
+
+        // Get current locale and create calendar
+        let currentLocale = Locale.current
+        let calendar = Calendar(identifier: currentLocale.calendar.identifier)
+
+        // Extract components (including time zone) from the date
+        let dateComponents = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: date)
+
+        // Create a new Date object in the user's local time zone
+        guard let localDate = calendar.date(from: dateComponents) else {
+            return nil // Handle potential error creating local date
+        }
+
+        // Format the local date to extract hours and minutes
+        let timeFormatter = DateFormatter()
+        timeFormatter.dateFormat = "h:mm a" // Format for output time string
+
+        return timeFormatter.string(from: localDate)
+    }
+
     static func convertWeekdayFromIntToString(for contact: SelectedContact) -> String {
 		let weekday: String
 		
@@ -168,9 +209,9 @@ struct Converter {
 		var hour: String
 		var suffix: String
 		
-		let am = "am"
-		let pm = "pm"
-		
+		let am = " AM"
+		let pm = " PM"
+
 		switch contact.notification_preference_hour {
 		case 0:
 			hour = "12:"

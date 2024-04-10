@@ -21,7 +21,7 @@ struct NameAndPreferenceStack: View {
                 Text("Preference: ")
                     .foregroundStyle(.gray)
 
-                Text(Converter.convertNotificationPreferenceIntToString(preference: contact.notification_preference, contact: contact))
+                Text(Converter.convertNotificationPreferenceToString(contact: contact))
                     .foregroundStyle(.gray)
             }
         }
