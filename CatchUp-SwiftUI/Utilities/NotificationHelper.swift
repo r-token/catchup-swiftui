@@ -117,21 +117,21 @@ struct NotificationHelper {
             components.year = contact.notification_preference_custom_year
         }
 
-        var soonestUpcomingNotificationDateString = "Unknown"
+        var soonestUpcomingNotificationDateString = ""
         if contact.preferenceIsQuarterly() {
             soonestUpcomingNotificationDateString = getNextNotificationDateForQuarterlyPreference(contact: contact)
         } else {
             soonestUpcomingNotificationDateString = calculateDateStringFromComponents(components)
         }
 
-        if ContactHelper.contactHasBirthday(contact) {
+        if ContactHelper.contactHasBirthday(contact) && !contact.preferenceIsNever() {
             let birthdayDateString = calculateDateStringFromComponents(getBirthdayDateComponents(for: contact))
             if birthdayDateString < soonestUpcomingNotificationDateString {
                 soonestUpcomingNotificationDateString = birthdayDateString
             }
         }
 
-        if ContactHelper.contactHasAnniversary(contact) {
+        if ContactHelper.contactHasAnniversary(contact) && !contact.preferenceIsNever() {
             let anniversaryDateString = calculateDateStringFromComponents(getAnniversaryDateComponents(for: contact))
             if anniversaryDateString < soonestUpcomingNotificationDateString {
                 soonestUpcomingNotificationDateString = anniversaryDateString

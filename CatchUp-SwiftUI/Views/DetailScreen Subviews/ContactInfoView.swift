@@ -124,6 +124,13 @@ struct ContactInfoView: View {
                 Text("Birthday")
                     .font(.caption)
                 Text(Converter.getFormattedBirthdayOrAnniversary(from: contact.birthday))
+                if !contact.preferenceIsNever() {
+                    Text("🥳 We will notify you on their birthday")
+                        .foregroundStyle(.orange)
+                        .multilineTextAlignment(.leading)
+                        .font(.callout)
+                        .padding(.top, 3)
+                }
             }
         }
         if ContactHelper.contactHasAnniversary(contact) {
@@ -131,6 +138,13 @@ struct ContactInfoView: View {
                 Text("Anniversary")
                     .font(.caption)
                 Text(Converter.getFormattedBirthdayOrAnniversary(from: contact.anniversary))
+                if !contact.preferenceIsNever() {
+                    Text("💜 We will notify you the day before their anniversary")
+                        .foregroundStyle(.purple)
+                        .multilineTextAlignment(.leading)
+                        .font(.callout)
+                        .padding(.top, 3)
+                }
             }
         }
     }
