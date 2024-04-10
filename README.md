@@ -2,7 +2,9 @@
 
 **[Featured on Brett Terpstra's *Systematic* Podcast](https://esn.fm/systematic/218)** (around the 46:00 mark)
 
-**[Featured in Germany on iPhone-Ticker.de](https://www.iphone-ticker.de/catchup-app-hilft-in-kontakt-zu-bleiben-160121/)**
+**[Featured once in Germany on iPhone-Ticker.de](https://www.iphone-ticker.de/catchup-app-hilft-in-kontakt-zu-bleiben-160121/)**
+
+**[Featured again in Germany on iPhone-Ticker.de](https://www.iphone-ticker.de/catchup-3-0-app-erinnert-an-freunde-und-bekannte-232703/)**
 
 Free with no ads!
 
