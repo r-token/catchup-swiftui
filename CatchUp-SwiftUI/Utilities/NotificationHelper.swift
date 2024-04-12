@@ -47,7 +47,7 @@ struct NotificationHelper {
         let identifier = UUID()
         let dateComponents = getNotificationDateComponents(for: contact)
 
-        scheduleNotification(for: contact, dateComponents: dateComponents, identifier: identifier, content: notificationContent)
+        scheduleNotification(for: contact, isBirthdayOrAnniversary: false, dateComponents: dateComponents, identifier: identifier, content: notificationContent)
     }
 
     static func addBirthdayNotification(for contact: SelectedContact) {
@@ -60,7 +60,7 @@ struct NotificationHelper {
         let birthdayIdentifier = UUID()
         let birthdayDateComponents = getBirthdayDateComponents(for: contact)
 
-        scheduleNotification(for: contact, dateComponents: birthdayDateComponents, identifier: birthdayIdentifier, content: birthdayNotificationContent)
+        scheduleNotification(for: contact, isBirthdayOrAnniversary: true, dateComponents: birthdayDateComponents, identifier: birthdayIdentifier, content: birthdayNotificationContent)
     }
     
     static func addAnniversaryNotification(for contact: SelectedContact) {
@@ -73,7 +73,7 @@ struct NotificationHelper {
         let anniversaryIdentifier = UUID()
         let anniversaryDateComponents = getAnniversaryDateComponents(for: contact)
 
-        scheduleNotification(for: contact, dateComponents: anniversaryDateComponents, identifier: anniversaryIdentifier, content: anniversaryNotificationContent)
+        scheduleNotification(for: contact, isBirthdayOrAnniversary: true, dateComponents: anniversaryDateComponents, identifier: anniversaryIdentifier, content: anniversaryNotificationContent)
     }
     
     static func checkNotificationAuthorizationStatusAndAddRequest(action: @escaping() -> Void) {
@@ -112,7 +112,11 @@ struct NotificationHelper {
         } else if contact.preferenceIsAnnually() || contact.preferenceIsCustom() {
             components.hour = contact.notification_preference_hour
             components.minute = contact.notification_preference_minute
-            components.month = contact.notification_preference_custom_month + 1
+            if contact.preferenceIsAnnually() {
+                components.month = contact.notification_preference_custom_month + 1
+            } else if contact.preferenceIsCustom() {
+                components.month = contact.notification_preference_custom_month
+            }
             components.day = contact.notification_preference_custom_day
             components.year = contact.notification_preference_custom_year
         }
@@ -158,7 +162,11 @@ struct NotificationHelper {
             dateComponents.weekday = contact.notification_preference_weekday+1
             dateComponents.weekOfMonth = contact.notification_preference_week_of_month
         } else if contact.preferenceIsAnnually() || contact.preferenceIsCustom() {
-            dateComponents.month = contact.notification_preference_custom_month+1
+            if contact.preferenceIsAnnually() {
+                dateComponents.month = contact.notification_preference_custom_month+1
+            } else if contact.preferenceIsCustom() {
+                dateComponents.month = contact.notification_preference_custom_month
+            }
             dateComponents.day = contact.notification_preference_custom_day
             dateComponents.year = contact.notification_preference_custom_year
             dateComponents.hour = contact.notification_preference_hour
@@ -216,13 +224,13 @@ struct NotificationHelper {
         return anniversaryDateComponents
     }
     
-    static func scheduleNotification(for contact: SelectedContact, dateComponents: DateComponents, identifier: UUID, content: UNMutableNotificationContent) {
+    static func scheduleNotification(for contact: SelectedContact, isBirthdayOrAnniversary: Bool, dateComponents: DateComponents, identifier: UUID, content: UNMutableNotificationContent) {
         var calendarTrigger: UNCalendarNotificationTrigger?
         var timeIntervalTrigger: UNTimeIntervalNotificationTrigger?
         var request: UNNotificationRequest
 
         // quarterly notifications are handled by UNTimeIntervalNotificationTrigger instead of UNCalendarNotificationTrigger, so we handle them separately
-        if contact.preferenceIsQuarterly() {
+        if contact.preferenceIsQuarterly() && !isBirthdayOrAnniversary {
             let oneDay: Double = 86400 // seconds
             // set a recurring time interval for every 90 days
             timeIntervalTrigger = UNTimeIntervalNotificationTrigger(timeInterval: (oneDay*90), repeats: true)

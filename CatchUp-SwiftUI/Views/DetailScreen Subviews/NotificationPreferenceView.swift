@@ -78,6 +78,8 @@ struct NotificationPreferenceView: View {
                     )
                     .labelsHidden()
                 }
+
+                TimePickerRow(notificationPreferenceTime: $notificationPreferenceTime)
             }
         }
         .onAppear {
