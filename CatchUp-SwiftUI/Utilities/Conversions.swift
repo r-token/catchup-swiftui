@@ -120,7 +120,7 @@ struct Converter {
         } else if contact.preferenceIsMonthly() {
             return "Monthly on \(weekday)s"
         } else if contact.preferenceIsQuarterly() {
-            return getQuarterlyPreferenceText(for: contact)
+            return ContactHelper.getFriendlyNextCatchUpTime(for: contact, forQuarterlyPreference: true)
         } else if contact.preferenceIsAnnually() {
             let customDate = convertCustomDateFromIntToString(for: contact, annuallyOrCustom: .annually)
             return "Annually on \(customDate)"
@@ -131,46 +131,6 @@ struct Converter {
 
         return ""
 	}
-
-    private static func getQuarterlyPreferenceText(for contact: SelectedContact) -> String {
-        let nextCatchUpDate = contact.notification_preference_quarterly_set_time.addingTimeInterval(Constants.ninetyDaysInSeconds)
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-        let nextCatchUpDateString = dateFormatter.string(from: nextCatchUpDate)
-        if let localNextCatchUpDateString = getLocalHoursMinutes(from: nextCatchUpDateString) {
-            return "Quarterly at \(localNextCatchUpDateString)"
-        } else {
-            return "Quarterly"
-        }
-    }
-
-    private static func getLocalHoursMinutes(from dateString: String) -> String? {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-
-        // Try converting the string to a Date object
-        guard let date = formatter.date(from: dateString) else {
-            return nil // Handle invalid date string
-        }
-
-        // Get current locale and create calendar
-        let currentLocale = Locale.current
-        let calendar = Calendar(identifier: currentLocale.calendar.identifier)
-
-        // Extract components (including time zone) from the date
-        let dateComponents = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: date)
-
-        // Create a new Date object in the user's local time zone
-        guard let localDate = calendar.date(from: dateComponents) else {
-            return nil // Handle potential error creating local date
-        }
-
-        // Format the local date to extract hours and minutes
-        let timeFormatter = DateFormatter()
-        timeFormatter.dateFormat = "h:mm a" // Format for output time string
-
-        return timeFormatter.string(from: localDate)
-    }
 
     static func convertWeekdayFromIntToString(for contact: SelectedContact) -> String {
 		let weekday: String

@@ -14,7 +14,7 @@ struct DetailScreen: View {
 
     var nextCatchUpTime: String {
         print("recalculating nextCatchUpTime")
-        return ContactHelper.getFriendlyNextCatchUpTime(for: contact)
+        return ContactHelper.getFriendlyNextCatchUpTime(for: contact, forQuarterlyPreference: false)
     }
 
     var body: some View {

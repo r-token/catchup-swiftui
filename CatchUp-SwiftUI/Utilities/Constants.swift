@@ -9,5 +9,5 @@
 import Foundation
 
 struct Constants {
-    static let ninetyDaysInSeconds: TimeInterval = 77760000
+    static let ninetyDaysInSeconds: TimeInterval = 7776000
 }

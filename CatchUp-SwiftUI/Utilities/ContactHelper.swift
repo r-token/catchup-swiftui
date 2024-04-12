@@ -235,12 +235,17 @@ struct ContactHelper {
         contact.name.components(separatedBy: " ").first ?? contact.name
     }
 
-    static func getFriendlyNextCatchUpTime(for contact: SelectedContact) -> String {
+    static func getFriendlyNextCatchUpTime(for contact: SelectedContact, forQuarterlyPreference: Bool) -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
 
         if let date = dateFormatter.date(from: contact.next_notification_date_time) {
             let friendlyFormatter = DateFormatter()
+
+            if forQuarterlyPreference {
+                friendlyFormatter.dateFormat = "h:mm a"
+                return "Quarterly at \(friendlyFormatter.string(from: date))"
+            }
 
             if Calendar.current.isDateInToday(date) {
                 friendlyFormatter.dateFormat = "h:mm a"
