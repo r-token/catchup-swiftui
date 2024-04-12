@@ -171,7 +171,7 @@ struct NotificationHelper {
     }
 
     static func getNextNotificationDateForQuarterlyPreference(contact: SelectedContact) -> String {
-        if contact.notification_preference_quarterly_set_time.addingTimeInterval(7776000) < Date() {
+        if contact.notification_preference_quarterly_set_time.addingTimeInterval(Constants.ninetyDaysInSeconds) < Date() {
             print("resetting quarterly notification preference")
             // reset the quarterly set time and reset the notification
             contact.notification_preference_quarterly_set_time = Date()
@@ -366,7 +366,7 @@ struct NotificationHelper {
     static func getDateComponentsFromDate(_ date: Date) -> DateComponents {
         let calendar = Calendar.current
 
-        let timeInterval: TimeInterval = 7776000 // 90 days in seconds
+        let timeInterval: TimeInterval = Constants.ninetyDaysInSeconds
         let newDate = date.addingTimeInterval(timeInterval)
 
         let dateComponents = calendar.dateComponents([.year, .month, .day, .hour, .minute, .second], from: newDate)

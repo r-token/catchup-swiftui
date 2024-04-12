@@ -133,7 +133,7 @@ struct Converter {
 	}
 
     private static func getQuarterlyPreferenceText(for contact: SelectedContact) -> String {
-        let nextCatchUpDate = contact.notification_preference_quarterly_set_time.addingTimeInterval(77760000)
+        let nextCatchUpDate = contact.notification_preference_quarterly_set_time.addingTimeInterval(Constants.ninetyDaysInSeconds)
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
         let nextCatchUpDateString = dateFormatter.string(from: nextCatchUpDate)

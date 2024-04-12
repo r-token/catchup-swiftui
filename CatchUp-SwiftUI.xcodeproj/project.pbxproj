@@ -26,6 +26,7 @@
 		F443F8142BC371A400787A59 /* DayOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = F443F8132BC371A400787A59 /* DayOption.swift */; };
 		F443F8162BC3745F00787A59 /* TimePickerRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = F443F8152BC3745F00787A59 /* TimePickerRow.swift */; };
 		F443F8182BC3755F00787A59 /* MonthOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = F443F8172BC3755F00787A59 /* MonthOption.swift */; };
+		F479F52D2BC760650076E804 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = F479F52C2BC760650076E804 /* Constants.swift */; };
 		F4871DA1244FC43C00925392 /* NotificationHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4871DA0244FC43C00925392 /* NotificationHelper.swift */; };
 		F48E37F922C455C3008B0B8B /* HomeScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = F48E37F822C455C3008B0B8B /* HomeScreen.swift */; };
 		F48E37FB22C455CB008B0B8B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F48E37FA22C455CB008B0B8B /* Assets.xcassets */; };
@@ -64,6 +65,7 @@
 		F443F8132BC371A400787A59 /* DayOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayOption.swift; sourceTree = "<group>"; };
 		F443F8152BC3745F00787A59 /* TimePickerRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimePickerRow.swift; sourceTree = "<group>"; };
 		F443F8172BC3755F00787A59 /* MonthOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthOption.swift; sourceTree = "<group>"; };
+		F479F52C2BC760650076E804 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		F4871DA0244FC43C00925392 /* NotificationHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationHelper.swift; sourceTree = "<group>"; };
 		F48E37EE22C455C3008B0B8B /* CatchUp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CatchUp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F48E37F822C455C3008B0B8B /* HomeScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeScreen.swift; sourceTree = "<group>"; };
@@ -156,6 +158,7 @@
 				14BE3AD224593556004F72DE /* Utils.swift */,
 				F494F95724424A03003CE7B5 /* ContactHelper.swift */,
 				F4871DA0244FC43C00925392 /* NotificationHelper.swift */,
+				F479F52C2BC760650076E804 /* Constants.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -308,6 +311,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F4A9B8552442A179001D8C55 /* ContactPhoto.swift in Sources */,
+				F479F52D2BC760650076E804 /* Constants.swift in Sources */,
 				F4118B4B2B9E912E001BC8C7 /* OpenContactPickerButtonView.swift in Sources */,
 				F4A9B8572442A1F7001D8C55 /* GradientView.swift in Sources */,
 				F4A9B85B2443FFF3001D8C55 /* Conversions.swift in Sources */,
