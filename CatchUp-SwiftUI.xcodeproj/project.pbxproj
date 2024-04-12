@@ -41,6 +41,7 @@
 		F4BAD42D2B94E45D0009CD50 /* SelectedContact.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4BAD42C2B94E45D0009CD50 /* SelectedContact.swift */; };
 		F4BAD42F2B94E8740009CD50 /* CatchUpApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4BAD42E2B94E8740009CD50 /* CatchUpApp.swift */; };
 		F4BAD4312B94F5680009CD50 /* ModelContext+sqliteCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4BAD4302B94F5680009CD50 /* ModelContext+sqliteCommand.swift */; };
+		F4D5E68E2BC9F96E003E9F61 /* CalloutButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4D5E68D2BC9F96E003E9F61 /* CalloutButtonView.swift */; };
 		F4F7535D2BB0956800B20090 /* NextCatchUpsGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F7535C2BB0956800B20090 /* NextCatchUpsGridView.swift */; };
 		F4F7535F2BB0969A00B20090 /* ContactPictureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F7535E2BB0969A00B20090 /* ContactPictureView.swift */; };
 		F4F753652BB11FA300B20090 /* View+if.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F753642BB11FA300B20090 /* View+if.swift */; };
@@ -83,6 +84,7 @@
 		F4BAD42C2B94E45D0009CD50 /* SelectedContact.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedContact.swift; sourceTree = "<group>"; };
 		F4BAD42E2B94E8740009CD50 /* CatchUpApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatchUpApp.swift; sourceTree = "<group>"; };
 		F4BAD4302B94F5680009CD50 /* ModelContext+sqliteCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ModelContext+sqliteCommand.swift"; sourceTree = "<group>"; };
+		F4D5E68D2BC9F96E003E9F61 /* CalloutButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalloutButtonView.swift; sourceTree = "<group>"; };
 		F4F7535C2BB0956800B20090 /* NextCatchUpsGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NextCatchUpsGridView.swift; sourceTree = "<group>"; };
 		F4F7535E2BB0969A00B20090 /* ContactPictureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactPictureView.swift; sourceTree = "<group>"; };
 		F4F753642BB11FA300B20090 /* View+if.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+if.swift"; sourceTree = "<group>"; };
@@ -110,6 +112,7 @@
 				F4AD59AF244CA12C00296568 /* AboutScreen.swift */,
 				14BE3AD62459F610004F72DE /* UpdatesScreen.swift */,
 				F435D4382BBB7B7800C43586 /* NoContactSelectedScreen.swift */,
+				F4D5E68C2BC9F956003E9F61 /* Multiscreen Subviews */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -233,6 +236,14 @@
 			path = Data;
 			sourceTree = "<group>";
 		};
+		F4D5E68C2BC9F956003E9F61 /* Multiscreen Subviews */ = {
+			isa = PBXGroup;
+			children = (
+				F4D5E68D2BC9F96E003E9F61 /* CalloutButtonView.swift */,
+			);
+			path = "Multiscreen Subviews";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -333,6 +344,7 @@
 				F4BAD42D2B94E45D0009CD50 /* SelectedContact.swift in Sources */,
 				F443F8162BC3745F00787A59 /* TimePickerRow.swift in Sources */,
 				F48E37F922C455C3008B0B8B /* HomeScreen.swift in Sources */,
+				F4D5E68E2BC9F96E003E9F61 /* CalloutButtonView.swift in Sources */,
 				F435D4312BB7E1D300C43586 /* NextCatchUpRow.swift in Sources */,
 				F435D4332BB8E7E700C43586 /* RemoveContactButton.swift in Sources */,
 				F435D4352BBA3EB100C43586 /* BirthdayOrAnniversaryRow.swift in Sources */,

@@ -51,4 +51,12 @@ struct Utils {
     static func isiPadOrMac() -> Bool {
         return UIDevice.current.userInterfaceIdiom == .pad || UIDevice.current.userInterfaceIdiom == .mac
     }
+
+    @MainActor
+    static func requestReviewManually() {
+        guard let writeReviewURL = URL(string: "https://apps.apple.com/us/app/catchup-keep-in-touch/id1358023550?action=write-review") else {
+            fatalError("Expected a valid URL")
+        }
+        UIApplication.shared.open(writeReviewURL, options: [:], completionHandler: nil)
+    }
 }

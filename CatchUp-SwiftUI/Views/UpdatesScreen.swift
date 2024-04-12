@@ -33,6 +33,15 @@ struct UpdatesScreen: View {
 				}
 				
 				Group {
+                    Text("– New **Quarterly** and **Annually** notification options")
+
+                    Spacer()
+
+                    Text("***From version 3.0***:")
+                        .padding(.top)
+
+                    Spacer()
+
                     Text("– A grid of your next CatchUps")
 
                     Spacer()
@@ -57,6 +66,13 @@ struct UpdatesScreen: View {
 				}
                 
 				Spacer()
+
+                Button {
+                    Utils.requestReviewManually()
+                } label: {
+                    CalloutButtonView(buttonText: "Review on the App Store", buttonColor: .orange)
+                }
+                .padding(.vertical)
 			}
 		}
 		.padding([.top, .horizontal])
