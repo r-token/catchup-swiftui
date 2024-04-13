@@ -148,7 +148,10 @@ struct NotificationPreferenceView: View {
                 let year = Calendar.current.component(.year, from: newDate)
                 let month = Calendar.current.component(.month, from: newDate)
                 let day = Calendar.current.component(.day, from: newDate)
-                NotificationHelper.updateNotificationTime(for: contact, hour: 12, minute: 30)
+                let hour = Calendar.current.component(.hour, from: notificationPreferenceTime)
+                let minute = Calendar.current.component(.minute, from: notificationPreferenceTime)
+
+                NotificationHelper.updateNotificationTime(for: contact, hour: hour, minute: minute)
                 NotificationHelper.updateNotificationCustomDate(for: contact, month: month, day: day, year: year)
 
                 resetNotificationsForContact()
