@@ -52,7 +52,7 @@ struct NotificationPreferenceView: View {
                 // Month Picker
                 Picker(selection: $contact.notification_preference_custom_month, label: Text("What month?")) {
                     ForEach(0..<monthOptions.count, id: \.self) { index in
-                        Text(monthOptions[index].rawValue).tag(index)
+                        Text(monthOptions[index].rawValue).tag(index+1)
                     }
                 }
 
@@ -134,9 +134,14 @@ struct NotificationPreferenceView: View {
                 print("notificationPreferenceTime changed")
                 let calendar = Calendar.current
                 let components = calendar.dateComponents([.hour, .minute], from : newTime)
-                NotificationHelper.updateNotificationTime(for: contact, hour: components.hour!, minute: components.minute!)
-
-                resetNotificationsForContact()
+                
+                if let hour = components.hour, let minute = components.minute {
+                    NotificationHelper.setYearPreference(for: contact)
+                    NotificationHelper.updateNotificationTime(for: contact, hour: hour, minute: minute)
+                    resetNotificationsForContact()
+                } else {
+                    notificationPreferenceTime = initialTime
+                }
             }
         }
 
@@ -175,16 +180,16 @@ struct NotificationPreferenceView: View {
         let calendar = Calendar.current
         let timeComponents = DateComponents(
             calendar: calendar,
-            hour: Int(contact.notification_preference_hour),
-            minute: Int(contact.notification_preference_minute)
+            hour: contact.notification_preference_hour,
+            minute: contact.notification_preference_minute
         )
         let time = Calendar.current.date(from: timeComponents)
 
         let customDateComponents = DateComponents(
             calendar: calendar,
-            year: Int(contact.notification_preference_custom_year),
-            month: Int(contact.notification_preference_custom_month),
-            day: Int(contact.notification_preference_custom_day)
+            year: contact.notification_preference_custom_year,
+            month: contact.notification_preference_custom_month,
+            day: contact.notification_preference_custom_day
         )
         let customDate = Calendar.current.date(from: customDateComponents)
 

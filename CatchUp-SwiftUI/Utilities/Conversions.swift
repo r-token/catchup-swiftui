@@ -274,14 +274,7 @@ struct Converter {
 		var day: String
 		var year: String
 
-        var monthPreference: Int = 0
-        if contact.preferenceIsCustom() {
-            monthPreference = contact.notification_preference_custom_month
-        } else if contact.preferenceIsAnnually() {
-            monthPreference = contact.notification_preference_custom_month+1
-        }
-
-		switch monthPreference {
+		switch contact.notification_preference_custom_month {
 		case 1:
 			month = "January"
 			break
