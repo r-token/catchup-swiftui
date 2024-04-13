@@ -107,27 +107,31 @@ struct Converter {
         return image
     }
 	
-    static func convertNotificationPreferenceIntToString(preference: Int, contact: SelectedContact) -> String {
+    static func convertNotificationPreferenceToString(contact: SelectedContact) -> String {
 		let time = convertHourAndMinuteFromIntToString(for: contact)
 		let weekday = convertWeekdayFromIntToString(for: contact)
-		let customDate = convertCustomDateFromIntToString(for: contact)
-		
-		switch preference {
-		case 0:
-			return "No Reminder Set"
-		case 1:
-			return "Daily at \(time)"
-		case 2:
-			return "\(weekday)s at \(time)"
-		case 3:
-			return "Monthly on \(weekday)s"
-		case 4:
-			return customDate
-		default:
-			return "Unknown"
-		}
+
+        if contact.preferenceIsNever() {
+            return "No Reminder Set"
+        } else if contact.preferenceIsDaily() {
+            return "Daily at \(time)"
+        } else if contact.preferenceIsWeekly() {
+            return "\(weekday)s at \(time)"
+        } else if contact.preferenceIsMonthly() {
+            return "Monthly on \(weekday)s"
+        } else if contact.preferenceIsQuarterly() {
+            return ContactHelper.getFriendlyNextCatchUpTime(for: contact, forQuarterlyPreference: true)
+        } else if contact.preferenceIsAnnually() {
+            let customDate = convertCustomDateFromIntToString(for: contact, annuallyOrCustom: .annually)
+            return "Annually on \(customDate)"
+        } else if contact.preferenceIsCustom() {
+            let customDate = convertCustomDateFromIntToString(for: contact, annuallyOrCustom: .custom)
+            return customDate
+        }
+
+        return ""
 	}
-	
+
     static func convertWeekdayFromIntToString(for contact: SelectedContact) -> String {
 		let weekday: String
 		
@@ -165,9 +169,9 @@ struct Converter {
 		var hour: String
 		var suffix: String
 		
-		let am = "am"
-		let pm = "pm"
-		
+		let am = " AM"
+		let pm = " PM"
+
 		switch contact.notification_preference_hour {
 		case 0:
 			hour = "12:"
@@ -265,12 +269,19 @@ struct Converter {
 		return time
 	}
 	
-    static func convertCustomDateFromIntToString(for contact: SelectedContact) -> String {
+    static func convertCustomDateFromIntToString(for contact: SelectedContact, annuallyOrCustom: NotificationOption) -> String {
 		var month: String
 		var day: String
 		var year: String
-		
-		switch contact.notification_preference_custom_month {
+
+        var monthPreference: Int = 0
+        if contact.preferenceIsCustom() {
+            monthPreference = contact.notification_preference_custom_month
+        } else if contact.preferenceIsAnnually() {
+            monthPreference = contact.notification_preference_custom_month+1
+        }
+
+		switch monthPreference {
 		case 1:
 			month = "January"
 			break
@@ -327,8 +338,15 @@ struct Converter {
 		day = formatter.string(from: dayDate)
 		year = String(contact.notification_preference_custom_year)
 		
-		let customDate = ("\(month) \(day), \(year)")
-		
-		return customDate
+        if annuallyOrCustom == .annually {
+            let customDate = ("\(month) \(day)")
+            return customDate
+        } else if annuallyOrCustom == .custom {
+            let customDate = ("\(month) \(day), \(year)")
+            return customDate
+        } else {
+            let customDate = ("\(month) \(day), \(year)")
+            return customDate
+        }
 	}
 }

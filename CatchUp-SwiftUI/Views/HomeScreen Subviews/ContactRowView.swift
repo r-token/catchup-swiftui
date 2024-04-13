@@ -22,7 +22,7 @@ struct ContactRowView: View {
             VStack(alignment: .leading, spacing: 2) {
                 Text(contact.name)
                     .font(.headline)
-                Text(Converter.convertNotificationPreferenceIntToString(preference: Int(contact.notification_preference), contact: contact))
+                Text(Converter.convertNotificationPreferenceToString(contact: contact))
                     .font(.caption)
 
                     .if(Utils.isPhone()) { view in

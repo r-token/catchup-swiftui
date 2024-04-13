@@ -19,23 +19,7 @@ struct RemoveContactButton: View {
         Button {
             isShowingDeleteContactAlert = true
         } label: {
-            HStack {
-                Spacer()
-
-                Text("Remove \(contact.name)")
-
-                Spacer()
-            }
-            .fontWeight(.semibold)
-            .padding(.vertical, 12)
-            .foregroundStyle(.white)
-            .background(
-                RoundedRectangle(
-                    cornerRadius: 20,
-                    style: .continuous
-                )
-                .fill(.red)
-            )
+            CalloutButtonView(buttonText: "Remove \(contact.name)", buttonColor: .red)
         }
         .listRowBackground(Color.clear)
 

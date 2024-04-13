@@ -235,12 +235,17 @@ struct ContactHelper {
         contact.name.components(separatedBy: " ").first ?? contact.name
     }
 
-    static func getFriendlyNextCatchUpTime(for contact: SelectedContact) -> String {
+    static func getFriendlyNextCatchUpTime(for contact: SelectedContact, forQuarterlyPreference: Bool) -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
 
         if let date = dateFormatter.date(from: contact.next_notification_date_time) {
             let friendlyFormatter = DateFormatter()
+
+            if forQuarterlyPreference {
+                friendlyFormatter.dateFormat = "h:mm a"
+                return "Quarterly at \(friendlyFormatter.string(from: date))"
+            }
 
             if Calendar.current.isDateInToday(date) {
                 friendlyFormatter.dateFormat = "h:mm a"
@@ -277,6 +282,7 @@ struct ContactHelper {
         let notification_preference = 0
         let notification_preference_hour = currentHour
         let notification_preference_minute = currentMinute
+        let notification_preference_quarterly_set_time = Date()
         let notification_preference_weekday = 0
         let notification_preference_custom_year = currentYear
         let notification_preference_custom_month = currentMonth
@@ -304,6 +310,7 @@ struct ContactHelper {
             notification_preference_custom_year: notification_preference_custom_year,
             notification_preference_hour: notification_preference_hour,
             notification_preference_minute: notification_preference_minute,
+            notification_preference_quarterly_set_time: notification_preference_quarterly_set_time,
             notification_preference_weekday: notification_preference_weekday,
             notification_preference_week_of_month: currentWeekOfMonth,
             phone: phone,

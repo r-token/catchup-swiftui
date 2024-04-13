@@ -32,7 +32,7 @@ struct NextCatchUpsGridView: View {
                         Text(ContactHelper.getFirstName(for: contact))
                             .font(.headline)
 
-                        Text(ContactHelper.getFriendlyNextCatchUpTime(for: contact))
+                        Text(ContactHelper.getFriendlyNextCatchUpTime(for: contact, forQuarterlyPreference: false))
                             .foregroundStyle(.gray)
                             .font(.caption)
                     }

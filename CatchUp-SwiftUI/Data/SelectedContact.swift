@@ -27,6 +27,7 @@ class SelectedContact {
     var notification_preference_custom_year: Int = 0
     var notification_preference_hour: Int = 0
     var notification_preference_minute: Int = 0
+    var notification_preference_quarterly_set_time: Date = Date()
     var notification_preference_weekday: Int = 0
     var notification_preference_week_of_month: Int = 0
     var phone: String = ""
@@ -54,6 +55,7 @@ class SelectedContact {
         notification_preference_custom_year: Int,
         notification_preference_hour: Int,
         notification_preference_minute: Int,
+        notification_preference_quarterly_set_time: Date,
         notification_preference_weekday: Int,
         notification_preference_week_of_month: Int,
         phone: String,
@@ -79,6 +81,7 @@ class SelectedContact {
         self.notification_preference_custom_year = notification_preference_custom_year
         self.notification_preference_hour = notification_preference_hour
         self.notification_preference_minute = notification_preference_minute
+        self.notification_preference_quarterly_set_time = notification_preference_quarterly_set_time
         self.notification_preference_weekday = notification_preference_weekday
         self.notification_preference_week_of_month = notification_preference_week_of_month
         self.phone = phone
@@ -87,6 +90,34 @@ class SelectedContact {
         self.secondary_email = secondary_email
         self.secondary_phone = secondary_phone
         self.unread_badge_date_time = unread_badge_date_time
+    }
+
+    func preferenceIsNever() -> Bool {
+        notification_preference == 0
+    }
+
+    func preferenceIsDaily() -> Bool {
+        notification_preference == 1
+    }
+
+    func preferenceIsWeekly() -> Bool {
+        notification_preference == 2
+    }
+
+    func preferenceIsMonthly() -> Bool {
+        notification_preference == 3
+    }
+
+    func preferenceIsQuarterly() -> Bool {
+        notification_preference == 4
+    }
+
+    func preferenceIsAnnually() -> Bool {
+        notification_preference == 5
+    }
+
+    func preferenceIsCustom() -> Bool {
+        notification_preference == 6
     }
 
     static let sampleData = SelectedContact(
@@ -106,6 +137,7 @@ class SelectedContact {
         notification_preference_custom_year: 0,
         notification_preference_hour: 12,
         notification_preference_minute: 0,
+        notification_preference_quarterly_set_time: Date(),
         notification_preference_weekday: 3,
         notification_preference_week_of_month: 2,
         phone: "6363687771",

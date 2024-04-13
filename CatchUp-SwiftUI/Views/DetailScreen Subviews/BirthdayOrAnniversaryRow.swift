@@ -26,13 +26,10 @@ struct BirthdayOrAnniversaryRow: View {
             }
         } else if contact.next_notification_date_time == dayBeforeAnniversaryString() {
             VStack {
-                HStack {
-                    Spacer()
-                    Text("🧡 The day before your anniversary!")
-                        .foregroundStyle(.orange)
-                    Spacer()
-                }
-                .padding(.top, 2)
+                Text("💜 The day before their anniversary!")
+                    .foregroundStyle(.purple)
+                    .multilineTextAlignment(.leading)
+                    .padding(.top, 2)
 
                 Spacer()
             }
@@ -41,7 +38,7 @@ struct BirthdayOrAnniversaryRow: View {
 
     func dayBeforeAnniversaryString() -> String? {
         if ContactHelper.contactHasAnniversary(contact) {
-            return NotificationHelper.calculateDateFromComponents(NotificationHelper.getAnniversaryDateComponents(for: contact))
+            return NotificationHelper.calculateDateStringFromComponents(NotificationHelper.getAnniversaryDateComponents(for: contact))
         }
         
         return nil

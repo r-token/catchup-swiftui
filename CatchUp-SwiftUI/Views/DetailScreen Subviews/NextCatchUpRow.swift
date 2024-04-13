@@ -12,7 +12,7 @@ struct NextCatchUpRow: View {
     let nextCatchUpTime: String
 
     var body: some View {
-        HStack {
+        HStack(spacing: 0) {
             Text("Next CatchUp:")
 
             Spacer()
@@ -25,5 +25,5 @@ struct NextCatchUpRow: View {
 }
 
 #Preview {
-    NextCatchUpRow(nextCatchUpTime: "April 3 at 7:15 AM")
+    NextCatchUpRow(nextCatchUpTime: "December 29 at 7:15 AM")
 }

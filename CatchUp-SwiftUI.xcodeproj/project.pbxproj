@@ -22,6 +22,11 @@
 		F435D4352BBA3EB100C43586 /* BirthdayOrAnniversaryRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = F435D4342BBA3EB100C43586 /* BirthdayOrAnniversaryRow.swift */; };
 		F435D4372BBA4EC600C43586 /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F435D4362BBA4EC600C43586 /* DataController.swift */; };
 		F435D4392BBB7B7800C43586 /* NoContactSelectedScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = F435D4382BBB7B7800C43586 /* NoContactSelectedScreen.swift */; };
+		F443F8122BC3702100787A59 /* NotificationOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = F443F8112BC3702100787A59 /* NotificationOption.swift */; };
+		F443F8142BC371A400787A59 /* DayOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = F443F8132BC371A400787A59 /* DayOption.swift */; };
+		F443F8162BC3745F00787A59 /* TimePickerRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = F443F8152BC3745F00787A59 /* TimePickerRow.swift */; };
+		F443F8182BC3755F00787A59 /* MonthOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = F443F8172BC3755F00787A59 /* MonthOption.swift */; };
+		F479F52D2BC760650076E804 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = F479F52C2BC760650076E804 /* Constants.swift */; };
 		F4871DA1244FC43C00925392 /* NotificationHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4871DA0244FC43C00925392 /* NotificationHelper.swift */; };
 		F48E37F922C455C3008B0B8B /* HomeScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = F48E37F822C455C3008B0B8B /* HomeScreen.swift */; };
 		F48E37FB22C455CB008B0B8B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F48E37FA22C455CB008B0B8B /* Assets.xcassets */; };
@@ -36,6 +41,7 @@
 		F4BAD42D2B94E45D0009CD50 /* SelectedContact.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4BAD42C2B94E45D0009CD50 /* SelectedContact.swift */; };
 		F4BAD42F2B94E8740009CD50 /* CatchUpApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4BAD42E2B94E8740009CD50 /* CatchUpApp.swift */; };
 		F4BAD4312B94F5680009CD50 /* ModelContext+sqliteCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4BAD4302B94F5680009CD50 /* ModelContext+sqliteCommand.swift */; };
+		F4D5E68E2BC9F96E003E9F61 /* CalloutButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4D5E68D2BC9F96E003E9F61 /* CalloutButtonView.swift */; };
 		F4F7535D2BB0956800B20090 /* NextCatchUpsGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F7535C2BB0956800B20090 /* NextCatchUpsGridView.swift */; };
 		F4F7535F2BB0969A00B20090 /* ContactPictureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F7535E2BB0969A00B20090 /* ContactPictureView.swift */; };
 		F4F753652BB11FA300B20090 /* View+if.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F753642BB11FA300B20090 /* View+if.swift */; };
@@ -56,6 +62,11 @@
 		F435D4342BBA3EB100C43586 /* BirthdayOrAnniversaryRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BirthdayOrAnniversaryRow.swift; sourceTree = "<group>"; };
 		F435D4362BBA4EC600C43586 /* DataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
 		F435D4382BBB7B7800C43586 /* NoContactSelectedScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoContactSelectedScreen.swift; sourceTree = "<group>"; };
+		F443F8112BC3702100787A59 /* NotificationOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationOption.swift; sourceTree = "<group>"; };
+		F443F8132BC371A400787A59 /* DayOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayOption.swift; sourceTree = "<group>"; };
+		F443F8152BC3745F00787A59 /* TimePickerRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimePickerRow.swift; sourceTree = "<group>"; };
+		F443F8172BC3755F00787A59 /* MonthOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthOption.swift; sourceTree = "<group>"; };
+		F479F52C2BC760650076E804 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		F4871DA0244FC43C00925392 /* NotificationHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationHelper.swift; sourceTree = "<group>"; };
 		F48E37EE22C455C3008B0B8B /* CatchUp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CatchUp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F48E37F822C455C3008B0B8B /* HomeScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeScreen.swift; sourceTree = "<group>"; };
@@ -73,6 +84,7 @@
 		F4BAD42C2B94E45D0009CD50 /* SelectedContact.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedContact.swift; sourceTree = "<group>"; };
 		F4BAD42E2B94E8740009CD50 /* CatchUpApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatchUpApp.swift; sourceTree = "<group>"; };
 		F4BAD4302B94F5680009CD50 /* ModelContext+sqliteCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ModelContext+sqliteCommand.swift"; sourceTree = "<group>"; };
+		F4D5E68D2BC9F96E003E9F61 /* CalloutButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalloutButtonView.swift; sourceTree = "<group>"; };
 		F4F7535C2BB0956800B20090 /* NextCatchUpsGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NextCatchUpsGridView.swift; sourceTree = "<group>"; };
 		F4F7535E2BB0969A00B20090 /* ContactPictureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactPictureView.swift; sourceTree = "<group>"; };
 		F4F753642BB11FA300B20090 /* View+if.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+if.swift"; sourceTree = "<group>"; };
@@ -100,6 +112,7 @@
 				F4AD59AF244CA12C00296568 /* AboutScreen.swift */,
 				14BE3AD62459F610004F72DE /* UpdatesScreen.swift */,
 				F435D4382BBB7B7800C43586 /* NoContactSelectedScreen.swift */,
+				F4D5E68C2BC9F956003E9F61 /* Multiscreen Subviews */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -126,8 +139,19 @@
 				F435D4302BB7E1D300C43586 /* NextCatchUpRow.swift */,
 				F435D4322BB8E7E700C43586 /* RemoveContactButton.swift */,
 				F435D4342BBA3EB100C43586 /* BirthdayOrAnniversaryRow.swift */,
+				F443F8152BC3745F00787A59 /* TimePickerRow.swift */,
 			);
 			path = "DetailScreen Subviews";
+			sourceTree = "<group>";
+		};
+		F443F8102BC3700700787A59 /* Enums */ = {
+			isa = PBXGroup;
+			children = (
+				F443F8112BC3702100787A59 /* NotificationOption.swift */,
+				F443F8132BC371A400787A59 /* DayOption.swift */,
+				F443F8172BC3755F00787A59 /* MonthOption.swift */,
+			);
+			path = Enums;
 			sourceTree = "<group>";
 		};
 		F4871DA2244FC44800925392 /* Utilities */ = {
@@ -137,6 +161,7 @@
 				14BE3AD224593556004F72DE /* Utils.swift */,
 				F494F95724424A03003CE7B5 /* ContactHelper.swift */,
 				F4871DA0244FC43C00925392 /* NotificationHelper.swift */,
+				F479F52C2BC760650076E804 /* Constants.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -206,8 +231,17 @@
 			children = (
 				F435D4362BBA4EC600C43586 /* DataController.swift */,
 				F4BAD42C2B94E45D0009CD50 /* SelectedContact.swift */,
+				F443F8102BC3700700787A59 /* Enums */,
 			);
 			path = Data;
+			sourceTree = "<group>";
+		};
+		F4D5E68C2BC9F956003E9F61 /* Multiscreen Subviews */ = {
+			isa = PBXGroup;
+			children = (
+				F4D5E68D2BC9F96E003E9F61 /* CalloutButtonView.swift */,
+			);
+			path = "Multiscreen Subviews";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -288,6 +322,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F4A9B8552442A179001D8C55 /* ContactPhoto.swift in Sources */,
+				F479F52D2BC760650076E804 /* Constants.swift in Sources */,
 				F4118B4B2B9E912E001BC8C7 /* OpenContactPickerButtonView.swift in Sources */,
 				F4A9B8572442A1F7001D8C55 /* GradientView.swift in Sources */,
 				F4A9B85B2443FFF3001D8C55 /* Conversions.swift in Sources */,
@@ -297,15 +332,19 @@
 				F4871DA1244FC43C00925392 /* NotificationHelper.swift in Sources */,
 				F4F7535D2BB0956800B20090 /* NextCatchUpsGridView.swift in Sources */,
 				F4118B4D2B9EA11A001BC8C7 /* NameAndPreferenceStack.swift in Sources */,
+				F443F8182BC3755F00787A59 /* MonthOption.swift in Sources */,
 				F494F95824424A03003CE7B5 /* ContactHelper.swift in Sources */,
 				F4118B4F2B9EA168001BC8C7 /* ContactInfoView.swift in Sources */,
 				F435D42F2BB78A6F00C43586 /* NotificationPreferenceView.swift in Sources */,
+				F443F8122BC3702100787A59 /* NotificationOption.swift in Sources */,
 				F4095B6424C66F87007163E3 /* SKProduct+localizedPrice.swift in Sources */,
 				F4BAD42F2B94E8740009CD50 /* CatchUpApp.swift in Sources */,
 				14BE3AD72459F610004F72DE /* UpdatesScreen.swift in Sources */,
 				F4AD59B0244CA12C00296568 /* AboutScreen.swift in Sources */,
 				F4BAD42D2B94E45D0009CD50 /* SelectedContact.swift in Sources */,
+				F443F8162BC3745F00787A59 /* TimePickerRow.swift in Sources */,
 				F48E37F922C455C3008B0B8B /* HomeScreen.swift in Sources */,
+				F4D5E68E2BC9F96E003E9F61 /* CalloutButtonView.swift in Sources */,
 				F435D4312BB7E1D300C43586 /* NextCatchUpRow.swift in Sources */,
 				F435D4332BB8E7E700C43586 /* RemoveContactButton.swift in Sources */,
 				F435D4352BBA3EB100C43586 /* BirthdayOrAnniversaryRow.swift in Sources */,
@@ -316,6 +355,7 @@
 				F4A9B8522442A0F5001D8C55 /* DetailScreen.swift in Sources */,
 				F4118B492B9E8FC7001BC8C7 /* ContactRowView.swift in Sources */,
 				F4118B452B9E68AE001BC8C7 /* ContactPickerDelegate.swift in Sources */,
+				F443F8142BC371A400787A59 /* DayOption.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -464,7 +504,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 3.0.0;
+				MARKETING_VERSION = 3.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.tokensolutions.CatchUp;
 				PRODUCT_NAME = CatchUp;
 				SUPPORTS_MACCATALYST = NO;
@@ -492,7 +532,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 3.0.0;
+				MARKETING_VERSION = 3.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.tokensolutions.CatchUp;
 				PRODUCT_NAME = CatchUp;
 				SUPPORTS_MACCATALYST = NO;
