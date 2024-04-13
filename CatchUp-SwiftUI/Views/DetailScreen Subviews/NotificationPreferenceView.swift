@@ -163,9 +163,9 @@ struct NotificationPreferenceView: View {
         dataController.selectedContact = contact
         setInitialNotificateDateTime()
 
-        if contact.notification_preference == 2 { // weekly
+        if contact.preferenceIsWeekly() {
             whatDayText = "What day?"
-        } else if contact.notification_preference == 3 { // monthly
+        } else if contact.preferenceIsMonthly() {
             whatDayText = "What day? We'll pick a random week."
         }
 
