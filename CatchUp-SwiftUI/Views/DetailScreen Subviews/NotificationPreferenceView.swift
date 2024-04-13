@@ -21,7 +21,6 @@ struct NotificationPreferenceView: View {
     @State private var notificationPreferenceCustomDate = Date()
 
     @State private var whatDayText = ""
-    @State private var viewDidAppear = false
 
     @Bindable var contact: SelectedContact
 
