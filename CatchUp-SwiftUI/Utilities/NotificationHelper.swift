@@ -103,22 +103,22 @@ struct NotificationHelper {
         } else if contact.preferenceIsWeekly() || contact.preferenceIsMonthly() {
             components.hour = contact.notification_preference_hour
             components.minute = contact.notification_preference_minute
-            components.weekday = contact.notification_preference_weekday + 1
+            components.weekday = contact.notification_preference_weekday+1
             if contact.notification_preference_week_of_month != 0 {
-                components.weekOfMonth = contact.notification_preference_week_of_month + 1
+                components.weekOfMonth = contact.notification_preference_week_of_month+1
             }
         } else if contact.preferenceIsQuarterly() {
-            print("Quarterly is handled separately by UNTimeIntervalNotificationTrigger")
+            print("Quarterly is handled separately by UNTimeIntervalNotificationTrigger. Fallthrough.")
         } else if contact.preferenceIsAnnually() || contact.preferenceIsCustom() {
-            components.hour = contact.notification_preference_hour
             components.minute = contact.notification_preference_minute
-            if contact.preferenceIsAnnually() {
-                components.month = contact.notification_preference_custom_month + 1
-            } else if contact.preferenceIsCustom() {
-                components.month = contact.notification_preference_custom_month
-            }
+            components.hour = contact.notification_preference_hour
             components.day = contact.notification_preference_custom_day
-            components.year = contact.notification_preference_custom_year
+            components.month = contact.notification_preference_custom_month
+            if contact.preferenceIsAnnually() {
+                components.year = nil
+            } else if contact.preferenceIsCustom() {
+                components.year = contact.notification_preference_custom_year
+            }
         }
 
         var soonestUpcomingNotificationDateString = ""
@@ -163,12 +163,12 @@ struct NotificationHelper {
             dateComponents.weekOfMonth = contact.notification_preference_week_of_month
         } else if contact.preferenceIsAnnually() || contact.preferenceIsCustom() {
             if contact.preferenceIsAnnually() {
-                dateComponents.month = contact.notification_preference_custom_month+1
+                dateComponents.year = nil
             } else if contact.preferenceIsCustom() {
-                dateComponents.month = contact.notification_preference_custom_month
+                dateComponents.year = contact.notification_preference_custom_year
             }
+            dateComponents.month = contact.notification_preference_custom_month
             dateComponents.day = contact.notification_preference_custom_day
-            dateComponents.year = contact.notification_preference_custom_year
             dateComponents.hour = contact.notification_preference_hour
             dateComponents.minute = contact.notification_preference_minute
         }
@@ -399,7 +399,6 @@ struct NotificationHelper {
             return formattedDate
         }
 
-        // print("returning Unknown")
         return "Unknown"
     }
 
@@ -407,12 +406,9 @@ struct NotificationHelper {
         var contactDateComponents = NotificationHelper.getNotificationDateComponents(for: contact)
         contactDateComponents.year = Calendar.current.component(.year, from: Date())
         if let nextNotificationDate = Calendar.current.date(from: contactDateComponents) {
-            print("nextNotificationDate for bee: \(nextNotificationDate)")
             if nextNotificationDate < Date() {
-                print("\(Date()) for bee is greater than \(nextNotificationDate)")
-                contact.notification_preference_custom_year = Calendar.current.component(.year, from: Date()) + 1
+                contact.notification_preference_custom_year = Calendar.current.component(.year, from: Date())+1
             } else {
-                print("\(Date()) for bee is less than \(nextNotificationDate)")
                 contact.notification_preference_custom_year = Calendar.current.component(.year, from: Date())
             }
             print("set \(contact.name)'s year preference to \(contact.notification_preference_custom_year)")
