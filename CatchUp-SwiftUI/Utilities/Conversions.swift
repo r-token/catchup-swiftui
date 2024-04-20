@@ -136,25 +136,25 @@ struct Converter {
 		let weekday: String
 		
 		switch contact.notification_preference_weekday {
-		case 0:
+		case 1:
 			weekday = "Sunday"
 			break
-		case 1:
+		case 2:
 			weekday = "Monday"
 			break
-		case 2:
+		case 3:
 			weekday = "Tuesday"
 			break
-		case 3:
+		case 4:
 			weekday = "Wednesday"
 			break
-		case 4:
+		case 5:
 			weekday = "Thursday"
 			break
-		case 5:
+		case 6:
 			weekday = "Friday"
 			break
-		case 6:
+		case 7:
 			weekday = "Saturday"
 			break
 		default:

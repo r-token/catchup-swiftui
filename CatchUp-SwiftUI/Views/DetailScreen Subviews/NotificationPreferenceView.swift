@@ -43,7 +43,7 @@ struct NotificationPreferenceView: View {
                 // Day of the Week Picker
                 Picker(selection: $contact.notification_preference_weekday, label: Text(whatDayText)) {
                     ForEach(0..<dayOptions.count, id: \.self) { index in
-                        Text(dayOptions[index].rawValue).tag(index)
+                        Text(dayOptions[index].rawValue).tag(index+1)
                     }
                 }
 
@@ -93,13 +93,13 @@ struct NotificationPreferenceView: View {
             if newValue != initialNotificationPreference {
                 print("contact.notification_preference changed")
                 initialNotificationPreference = 999
-                contact.notification_preference_week_of_month = .random(in: 2..<5)
 
                 if newValue == 2 { // weekly
                     whatDayText = "What day?"
                     contact.notification_preference_week_of_month = 0
                 } else if newValue == 3 { // monthly
                     whatDayText = "What day? We'll pick a random week."
+                    contact.notification_preference_week_of_month = .random(in: 2..<5)
                 } else if newValue == 4 { // quarterly
                     contact.notification_preference_quarterly_set_time = Date()
                     print("scheduling quarterly time interval notification")
