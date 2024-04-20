@@ -103,9 +103,9 @@ struct NotificationHelper {
         } else if contact.preferenceIsWeekly() || contact.preferenceIsMonthly() {
             components.hour = contact.notification_preference_hour
             components.minute = contact.notification_preference_minute
-            components.weekday = contact.notification_preference_weekday+1
+            components.weekday = contact.notification_preference_weekday
             if contact.notification_preference_week_of_month != 0 {
-                components.weekOfMonth = contact.notification_preference_week_of_month+1
+                components.weekOfMonth = contact.notification_preference_week_of_month
             }
         } else if contact.preferenceIsQuarterly() {
             print("Quarterly is handled separately by UNTimeIntervalNotificationTrigger. Fallthrough.")
@@ -154,12 +154,11 @@ struct NotificationHelper {
         } else if contact.preferenceIsWeekly() {
             dateComponents.hour = contact.notification_preference_hour
             dateComponents.minute = contact.notification_preference_minute
-            // weekday units are 1-7, I store them as 0-6 though. Need to add 1
-            dateComponents.weekday = contact.notification_preference_weekday+1
+            dateComponents.weekday = contact.notification_preference_weekday
         } else if contact.preferenceIsMonthly() {
             dateComponents.hour = contact.notification_preference_hour
             dateComponents.minute = contact.notification_preference_minute
-            dateComponents.weekday = contact.notification_preference_weekday+1
+            dateComponents.weekday = contact.notification_preference_weekday
             dateComponents.weekOfMonth = contact.notification_preference_week_of_month
         } else if contact.preferenceIsAnnually() || contact.preferenceIsCustom() {
             if contact.preferenceIsAnnually() {
