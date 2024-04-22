@@ -41,7 +41,7 @@ struct ContactInfoView: View {
     }
 
     var body: some View {
-        if ContactHelper.contactHasPhone(contact) {
+        if contact.hasPhone() {
             VStack(alignment: .leading, spacing: 3) {
                 Text("Phone")
                     .font(.caption)
@@ -52,7 +52,8 @@ struct ContactInfoView: View {
                 .foregroundStyle(.blue)
             }
         }
-        if ContactHelper.contactHasSecondaryPhone(contact) {
+
+        if contact.hasSecondaryPhone() {
             VStack(alignment: .leading, spacing: 3) {
                 Text("Secondary Phone")
                     .font(.caption)
@@ -63,7 +64,8 @@ struct ContactInfoView: View {
                 .foregroundStyle(.blue)
             }
         }
-        if ContactHelper.contactHasEmail(contact) {
+
+        if contact.hasEmail() {
             VStack(alignment: .leading, spacing: 3) {
                 Text("Email")
                     .font(.caption)
@@ -86,7 +88,8 @@ struct ContactInfoView: View {
                 Button("Cancel", role: .cancel) {}
             }
         }
-        if ContactHelper.contactHasSecondaryEmail(contact) {
+
+        if contact.hasSecondaryEmail() {
             VStack(alignment: .leading, spacing: 3) {
                 Text("Secondary Email")
                     .font(.caption)
@@ -99,7 +102,8 @@ struct ContactInfoView: View {
                 .foregroundStyle(.blue)
             }
         }
-        if ContactHelper.contactHasAddress(contact) {
+
+        if contact.hasAddress() {
             VStack(alignment: .leading, spacing: 3) {
                 Text("Address")
                     .font(.caption)
@@ -109,7 +113,8 @@ struct ContactInfoView: View {
                 .foregroundStyle(.blue)
             }
         }
-        if ContactHelper.contactHasSecondaryAddress(contact) {
+
+        if contact.hasSecondaryAddress() {
             VStack(alignment: .leading, spacing: 3) {
                 Text("Secondary Address")
                     .font(.caption)
@@ -119,7 +124,8 @@ struct ContactInfoView: View {
                 .foregroundStyle(.blue)
             }
         }
-        if ContactHelper.contactHasBirthday(contact) {
+
+        if contact.hasBirthday() {
             VStack(alignment: .leading, spacing: 3) {
                 Text("Birthday")
                     .font(.caption)
@@ -133,7 +139,8 @@ struct ContactInfoView: View {
                 }
             }
         }
-        if ContactHelper.contactHasAnniversary(contact) {
+        
+        if contact.hasAnniversary() {
             VStack(alignment: .leading, spacing: 3) {
                 Text("Anniversary")
                     .font(.caption)

@@ -11,43 +11,8 @@ import UIKit
 import Contacts
 import CoreData
 
+// Functions for creating and updating a contact
 struct ContactHelper {
-    // MARK: Functions for DetailScreen
-    
-    static func contactHasPhone(_ contact: SelectedContact) -> Bool {
-        return contact.phone != "" ? true : false
-    }
-    
-    static func contactHasSecondaryPhone(_ contact: SelectedContact) -> Bool {
-        return contact.secondary_phone != "" ? true : false
-    }
-    
-    static func contactHasEmail(_ contact: SelectedContact) -> Bool {
-        return contact.email != "" ? true : false
-    }
-    
-    static func contactHasSecondaryEmail(_ contact: SelectedContact) -> Bool {
-        return contact.secondary_email != "" ? true : false
-    }
-    
-    static func contactHasAddress(_ contact: SelectedContact) -> Bool {
-        return contact.address != "" ? true : false
-    }
-    
-    static func contactHasSecondaryAddress(_ contact: SelectedContact) -> Bool {
-        return contact.secondary_address != "" ? true : false
-    }
-
-    static func contactHasBirthday(_ contact: SelectedContact) -> Bool {
-        return contact.birthday != "" ? true : false
-    }
-
-    static func contactHasAnniversary(_ contact: SelectedContact) -> Bool {
-        return contact.anniversary != "" ? true : false
-    }
-
-    // MARK: Functions for ContactPickerViewController
-    
     static func encodeContactPicture(for contact: CNContact) -> String {
 		let picture: String
 		
@@ -283,7 +248,7 @@ struct ContactHelper {
         let notification_preference_hour = currentHour
         let notification_preference_minute = currentMinute
         let notification_preference_quarterly_set_time = Date()
-        let notification_preference_weekday = 0
+        let notification_preference_weekday = 1
         let notification_preference_custom_year = currentYear
         let notification_preference_custom_month = currentMonth
         let notification_preference_custom_day = currentDay

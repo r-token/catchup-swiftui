@@ -28,7 +28,7 @@ class SelectedContact {
     var notification_preference_hour: Int = 0
     var notification_preference_minute: Int = 0
     var notification_preference_quarterly_set_time: Date = Date()
-    var notification_preference_weekday: Int = 0
+    var notification_preference_weekday: Int = 1
     var notification_preference_week_of_month: Int = 0
     var phone: String = ""
     var picture: String = ""
@@ -118,6 +118,46 @@ class SelectedContact {
 
     func preferenceIsCustom() -> Bool {
         notification_preference == 6
+    }
+
+    func hasPhone() -> Bool {
+        phone != "" ? true : false
+    }
+
+    func hasSecondaryPhone() -> Bool {
+        secondary_phone != "" ? true : false
+    }
+
+    func hasEmail() -> Bool {
+        email != "" ? true : false
+    }
+
+    func hasSecondaryEmail() -> Bool {
+        secondary_email != "" ? true : false
+    }
+
+    func hasAddress() -> Bool {
+        address != "" ? true : false
+    }
+
+    func hasSecondaryAddress() -> Bool {
+        secondary_address != "" ? true : false
+    }
+
+    func hasBirthday() -> Bool {
+        birthday != "" ? true : false
+    }
+
+    func hasAnniversary() -> Bool {
+        anniversary != "" ? true : false
+    }
+
+    func hasContactInfo() -> Bool {
+        if hasPhone() || hasSecondaryPhone() || hasEmail() || hasSecondaryEmail() || hasAddress() || hasSecondaryAddress() || hasBirthday() || hasAnniversary() {
+            return true
+        } else {
+            return false
+        }
     }
 
     static let sampleData = SelectedContact(

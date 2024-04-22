@@ -12,8 +12,8 @@ struct NotificationPreferenceView: View {
     @Environment(DataController.self) var dataController
     @Environment(\.modelContext) var modelContext
 
-    @State private var initialNotificationPreference = 0
-    @State private var initialNotificationPreferenceWeekday = 0
+    @State private var initialNotificationPreference = 0 // Never
+    @State private var initialNotificationPreferenceWeekday = 1 // Sunday
     @State private var initialNotificationPreferenceTime = Date()
     @State private var initialNotificationPreferenceCustomDate = Date()
 
