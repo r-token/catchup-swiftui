@@ -61,6 +61,7 @@ struct HomeScreen : View {
                     }
                 } else {
                     Text("No CatchUps yet! Tap the 'Add Contacts' button to add some.")
+                        .foregroundStyle(.gray)
                 }
             }
             .refreshable {

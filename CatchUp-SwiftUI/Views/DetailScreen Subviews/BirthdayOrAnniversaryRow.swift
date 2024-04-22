@@ -37,7 +37,7 @@ struct BirthdayOrAnniversaryRow: View {
     }
 
     func dayBeforeAnniversaryString() -> String? {
-        if ContactHelper.contactHasAnniversary(contact) {
+        if contact.hasAnniversary() {
             return NotificationHelper.calculateDateStringFromComponents(NotificationHelper.getAnniversaryDateComponents(for: contact))
         }
         

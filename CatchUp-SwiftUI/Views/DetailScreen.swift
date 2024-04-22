@@ -37,8 +37,11 @@ struct DetailScreen: View {
                 Section("Notification Preference") {
                     NotificationPreferenceView(contact: contact)
                 }
-                Section("Contact Information") {
-                    ContactInfoView(contact: contact)
+
+                if contact.hasContactInfo() {
+                    Section("Contact Information") {
+                        ContactInfoView(contact: contact)
+                    }
                 }
 
                 RemoveContactButton(contact: contact)

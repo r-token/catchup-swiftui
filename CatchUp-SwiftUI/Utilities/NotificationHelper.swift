@@ -21,11 +21,11 @@ struct NotificationHelper {
                 addGeneralNotification(for: contact)
             }
             
-            if ContactHelper.contactHasBirthday(contact) {
+            if contact.hasBirthday() {
                 addBirthdayNotification(for: contact)
             }
             
-            if ContactHelper.contactHasAnniversary(contact) {
+            if contact.hasAnniversary() {
                 addAnniversaryNotification(for: contact)
             }
         }
@@ -128,14 +128,14 @@ struct NotificationHelper {
             soonestUpcomingNotificationDateString = calculateDateStringFromComponents(components)
         }
 
-        if ContactHelper.contactHasBirthday(contact) && !contact.preferenceIsNever() {
+        if contact.hasBirthday() && !contact.preferenceIsNever() {
             let birthdayDateString = calculateDateStringFromComponents(getBirthdayDateComponents(for: contact))
             if birthdayDateString < soonestUpcomingNotificationDateString {
                 soonestUpcomingNotificationDateString = birthdayDateString
             }
         }
 
-        if ContactHelper.contactHasAnniversary(contact) && !contact.preferenceIsNever() {
+        if contact.hasAnniversary() && !contact.preferenceIsNever() {
             let anniversaryDateString = calculateDateStringFromComponents(getAnniversaryDateComponents(for: contact))
             if anniversaryDateString < soonestUpcomingNotificationDateString {
                 soonestUpcomingNotificationDateString = anniversaryDateString
@@ -339,11 +339,11 @@ struct NotificationHelper {
     static func removeExistingNotifications(for contact: SelectedContact) {
         removeGeneralNotification(for: contact)
         
-        if ContactHelper.contactHasBirthday(contact) {
+        if contact.hasBirthday() {
             removeBirthdayNotification(for: contact)
         }
         
-        if ContactHelper.contactHasAnniversary(contact) {
+        if contact.hasAnniversary() {
             removeAnniversaryNotification(for: contact)
         }
     }
