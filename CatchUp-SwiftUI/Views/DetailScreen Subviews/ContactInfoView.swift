@@ -7,28 +7,31 @@
 //
 
 import MapKit
+import PhoneNumberKit
 import SwiftUI
 
 struct ContactInfoView: View {
     @State private var isShowingEmailAlert = false
     @State private var emailString = ""
     @State private var emailUrlForAlert: URL?
+    @State private var isShowingInvalidPhoneNumberAlert = false
 
+    let phoneNumberKit = PhoneNumberKit()
     let contact: SelectedContact
 
     var formattedPrimaryPhoneNumber: String {
-        Converter.getFormattedPhoneNumber(from: contact.phone)
+        Converter.getFormattedPhoneNumber(from: contact.phone, with: phoneNumberKit)
     }
 
     var formattedSecondaryPhoneNumber: String {
-        Converter.getFormattedPhoneNumber(from: contact.secondary_phone)
+        Converter.getFormattedPhoneNumber(from: contact.secondary_phone, with: phoneNumberKit)
     }
 
-    var tappablePrimaryPhoneNumber: URL {
+    var tappablePrimaryPhoneNumber: URL? {
         Converter.getTappablePhoneNumber(from: contact.phone)
     }
 
-    var tappableSecondaryPhoneNumber: URL {
+    var tappableSecondaryPhoneNumber: URL? {
         Converter.getTappablePhoneNumber(from: contact.secondary_phone)
     }
 
@@ -47,10 +50,19 @@ struct ContactInfoView: View {
                     .font(.caption)
 
                 Button(formattedPrimaryPhoneNumber) {
-                    UIApplication.shared.open(tappablePrimaryPhoneNumber)
+                    if let tappablePrimaryPhoneNumber {
+                        UIApplication.shared.open(tappablePrimaryPhoneNumber)
+                    } else {
+                        isShowingInvalidPhoneNumberAlert = true
+                    }
                 }
                 .foregroundStyle(.blue)
             }
+            .alert("Phone number is invalid", isPresented: $isShowingInvalidPhoneNumberAlert, actions: {
+                Button("OK", role: .cancel) {}
+            }, message: {
+                Text("Could not dial this phone number. Ensure the number is correct in your Contacts app.")
+            })
         }
 
         if contact.hasSecondaryPhone() {
@@ -59,7 +71,11 @@ struct ContactInfoView: View {
                     .font(.caption)
 
                 Button(formattedSecondaryPhoneNumber) {
-                    UIApplication.shared.open(tappableSecondaryPhoneNumber)
+                    if let tappableSecondaryPhoneNumber {
+                        UIApplication.shared.open(tappableSecondaryPhoneNumber)
+                    } else {
+                        isShowingInvalidPhoneNumberAlert = true
+                    }
                 }
                 .foregroundStyle(.blue)
             }

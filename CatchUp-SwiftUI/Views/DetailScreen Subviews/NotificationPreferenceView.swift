@@ -23,6 +23,7 @@ struct NotificationPreferenceView: View {
     @State private var whatDayText = ""
 
     @Bindable var contact: SelectedContact
+    @Binding var shouldSetPreferenceViewState: Bool
 
     let notificationOptions: [NotificationOption] = NotificationOption.allCases
     let dayOptions: [DayOption] = DayOption.allCases
@@ -82,7 +83,10 @@ struct NotificationPreferenceView: View {
             }
         }
         .onAppear {
-            setInitialState()
+            if shouldSetPreferenceViewState {
+                shouldSetPreferenceViewState = false
+                setInitialState()
+            }
         }
 
         .onChange(of: contact) {
@@ -211,5 +215,5 @@ struct NotificationPreferenceView: View {
 }
 
 #Preview {
-    NotificationPreferenceView(contact: SelectedContact.sampleData)
+    NotificationPreferenceView(contact: SelectedContact.sampleData, shouldSetPreferenceViewState: .constant(true))
 }

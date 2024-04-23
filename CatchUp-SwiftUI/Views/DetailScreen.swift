@@ -12,6 +12,8 @@ struct DetailScreen: View {
     @Environment(DataController.self) var dataController
     @Bindable var contact: SelectedContact
 
+    @State private var shouldSetPreferenceViewState = true
+
     var nextCatchUpTime: String {
         print("recalculating nextCatchUpTime")
         return ContactHelper.getFriendlyNextCatchUpTime(for: contact, forQuarterlyPreference: false)
@@ -35,7 +37,7 @@ struct DetailScreen: View {
                     BirthdayOrAnniversaryRow(contact: contact)
                 }
                 Section("Notification Preference") {
-                    NotificationPreferenceView(contact: contact)
+                    NotificationPreferenceView(contact: contact, shouldSetPreferenceViewState: $shouldSetPreferenceViewState)
                 }
 
                 if contact.hasContactInfo() {
