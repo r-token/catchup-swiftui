@@ -168,27 +168,19 @@ struct ContactHelper {
 		var anniversaryString: String
 		
 		let anniversary = contact.dates.filter { date -> Bool in
-			
 			guard let label = date.label else {
 				return false
 			}
-			
 			return label.contains("Anniversary")
-			
-			} .first?.value as DateComponents?
+        } .first?.value as DateComponents?
 		
-		if anniversary?.date != nil {
-			
+        if let anniversaryDate = anniversary?.date {
 			let formatter = DateFormatter()
 			formatter.dateFormat = "MM-dd"
 			formatter.locale = Locale(identifier: "en_US_POSIX")
 			formatter.timeZone = TimeZone(secondsFromGMT: 0)
-			
-			anniversaryString = formatter.string(from: (anniversary?.date!)!)
-			
-			let anniversaryDate = formatter.date(from: anniversaryString)!
+
 			anniversaryString = formatter.string(from: anniversaryDate)
-			
 		} else {
 			anniversaryString = ""
 		}

@@ -12,31 +12,31 @@ import PhoneNumberKit
 
 struct Converter {
     // MARK: Only used in DetailScreen
-    static func getFormattedPhoneNumber(from phoneNumber: String) -> String {
-        let phoneNumberKit = PhoneNumberKit()
-
+    static func getFormattedPhoneNumber(from phoneNumber: String, with phoneNumberKit: PhoneNumberKit) -> String {
         print("formatting phone number: \(phoneNumber)")
 
         do {
             let parsedPhoneNumber = try phoneNumberKit.parse(phoneNumber.trimmingCharacters(in: .whitespacesAndNewlines))
-            let formattedPhoneNumber = phoneNumberKit.format(parsedPhoneNumber, toType: .national)
+            let formattedPhoneNumber = phoneNumberKit.format(parsedPhoneNumber, toType: .international)
             return formattedPhoneNumber
-        }
-        catch {
-            print("PhoneNumberKit Parse Error: \(error)")
+        } catch {
+            print("PhoneNumberKit parse error: \(error)")
             return phoneNumber
         }
     }
     
-    static func getTappablePhoneNumber(from phoneNumber: String) -> URL {
+    static func getTappablePhoneNumber(from phoneNumber: String) -> URL? {
         print("getting tappable phone number: \(phoneNumber)")
 
         let tel = "tel://"
         let cleanNumber = phoneNumber.replacingOccurrences(of: "[^\\d+]", with: "", options: [.regularExpression])
         let formattedString = tel + cleanNumber
-        let tappableNumber = URL(string: formattedString)!
-        
-        return tappableNumber
+
+        if let tappableNumber = URL(string: formattedString) {
+            return tappableNumber
+        } else {
+            return nil
+        }
     }
     
     static func getTappableEmail(from emailAddress: String) -> URL {
@@ -97,14 +97,21 @@ struct Converter {
     }
     
     
-    // MARK: Used in HomeScreen and DetailScreen
-    
+    // MARK: Used in ContactPictureView and DetailScreen
+
     static func getContactPicture(from string: String) -> Image {
-        let imageData = NSData(base64Encoded: string)
-        let uiImage = UIImage(data: imageData! as Data)!
-        let image = Image(uiImage: uiImage)
-        
-        return image
+        if let imageData = NSData(base64Encoded: string) {
+            if let uiImage = UIImage(data: imageData as Data) {
+                let image = Image(uiImage: uiImage)
+                return image
+            } else {
+                let image = Image(uiImage: UIImage(named: "DefaultPhoto")!)
+                return image
+            }
+        } else {
+            let image = Image(uiImage: UIImage(named: "DefaultPhoto")!)
+            return image
+        }
     }
 	
     static func convertNotificationPreferenceToString(contact: SelectedContact) -> String {
@@ -324,10 +331,10 @@ struct Converter {
 		dateComponents.day = Int(contact.notification_preference_custom_day)
 		dateComponents.year = Int(contact.notification_preference_custom_year)
 		
-		let dateTime = Calendar.current.date(from: dateComponents)
-		let dateString = formatter.string(from: dateTime!)
-		let dayDate = formatter.date(from: dateString)!
-		
+        guard let dateTime = Calendar.current.date(from: dateComponents) else { return "Unknown" }
+        let dateString = formatter.string(from: dateTime)
+        guard let dayDate = formatter.date(from: dateString) else { return "Unknown" }
+
 		day = formatter.string(from: dayDate)
 		year = String(contact.notification_preference_custom_year)
 		
