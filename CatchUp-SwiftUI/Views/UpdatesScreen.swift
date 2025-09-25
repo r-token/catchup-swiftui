@@ -37,6 +37,10 @@ struct UpdatesScreen: View {
 
                     Spacer()
 
+                    Text("– Enable contact list searching")
+
+                    Spacer()
+
                     Text("– Various bug fixes and performance improvements")
 
                     Spacer()
