@@ -12,7 +12,7 @@ import PhoneNumberKit
 
 struct Converter {
     // MARK: Only used in DetailScreen
-    static func getFormattedPhoneNumber(from phoneNumber: String, with phoneNumberKit: PhoneNumberKit) -> String {
+    static func getFormattedPhoneNumber(from phoneNumber: String, with phoneNumberKit: PhoneNumberUtility) -> String {
         print("formatting phone number: \(phoneNumber)")
 
         do {
@@ -113,7 +113,8 @@ struct Converter {
             return image
         }
     }
-	
+
+    @MainActor
     static func convertNotificationPreferenceToString(contact: SelectedContact) -> String {
 		let time = convertHourAndMinuteFromIntToString(for: contact)
 		let weekday = convertWeekdayFromIntToString(for: contact)
@@ -139,6 +140,7 @@ struct Converter {
         return ""
 	}
 
+    @MainActor
     static func convertWeekdayFromIntToString(for contact: SelectedContact) -> String {
 		let weekday: String
 		
@@ -171,7 +173,8 @@ struct Converter {
 		
 		return weekday
 	}
-	
+
+    @MainActor
     static func convertHourAndMinuteFromIntToString(for contact: SelectedContact) -> String {
 		var hour: String
 		var suffix: String
@@ -275,7 +278,8 @@ struct Converter {
 		
 		return time
 	}
-	
+
+    @MainActor
     static func convertCustomDateFromIntToString(for contact: SelectedContact, annuallyOrCustom: NotificationOption) -> String {
 		var month: String
 		var day: String

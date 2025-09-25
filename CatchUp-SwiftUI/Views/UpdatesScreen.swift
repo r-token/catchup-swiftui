@@ -33,7 +33,15 @@ struct UpdatesScreen: View {
 				}
 				
 				Group {
-                    Text("– New **Quarterly** and **Annually** notification options")
+                    Text("– Support for iOS 26 and Liquid Glass")
+
+                    Spacer()
+
+                    Text("– Enable contact list searching")
+
+                    Spacer()
+
+                    Text("– Various bug fixes and performance improvements")
 
                     Spacer()
 
