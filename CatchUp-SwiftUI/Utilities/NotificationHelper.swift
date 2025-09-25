@@ -449,14 +449,9 @@ struct NotificationHelper {
         print("resetting notifications")
         UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
 
-        // Create notifications concurrently
-        await withTaskGroup(of: Void.self) { group in
-            for contact in selectedContacts {
-                if contact.notification_preference != 0 {
-                    group.addTask {
-                        await NotificationHelper.createNewNotification(for: contact)
-                    }
-                }
+        for contact in selectedContacts {
+            if contact.notification_preference != 0 {
+                await NotificationHelper.createNewNotification(for: contact)
             }
         }
 
