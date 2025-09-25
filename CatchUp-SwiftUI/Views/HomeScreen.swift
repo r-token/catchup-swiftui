@@ -67,6 +67,9 @@ struct HomeScreen : View {
                 await NotificationHelper.resetNotifications(for: selectedContacts, delayTime: 0)
                 await ContactHelper.updateSelectedContacts(selectedContacts)
             }
+			.safeAreaInset(edge: .bottom) {
+				Color.clear.frame(height: 40)
+			}
             .onChange(of: contactPicker.chosenContact) {
                 if let contact = contactPicker.chosenContact {
                     saveSelectedContact(for: [contact])
