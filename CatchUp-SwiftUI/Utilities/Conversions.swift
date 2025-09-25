@@ -12,7 +12,7 @@ import PhoneNumberKit
 
 struct Converter {
     // MARK: Only used in DetailScreen
-    static func getFormattedPhoneNumber(from phoneNumber: String, with phoneNumberKit: PhoneNumberKit) -> String {
+    static func getFormattedPhoneNumber(from phoneNumber: String, with phoneNumberKit: PhoneNumberUtility) -> String {
         print("formatting phone number: \(phoneNumber)")
 
         do {

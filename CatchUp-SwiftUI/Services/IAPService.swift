@@ -24,7 +24,7 @@ enum IAPServiceAlertType{
 }
 
 final class IAPService: NSObject {
-    static let shared = IAPService()
+    @MainActor static let shared = IAPService()
     
     let graciousTipProductID = "gracious_tip_0.99"
     let generousTipProductID = "generous_tip_1.99"

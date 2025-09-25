@@ -16,7 +16,7 @@ struct ContactInfoView: View {
     @State private var emailUrlForAlert: URL?
     @State private var isShowingInvalidPhoneNumberAlert = false
 
-    let phoneNumberKit = PhoneNumberKit()
+    let phoneNumberKit = PhoneNumberUtility()
     let contact: SelectedContact
 
     var formattedPrimaryPhoneNumber: String {

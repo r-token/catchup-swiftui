@@ -11,12 +11,10 @@ import SwiftUI
 
 @Observable
 class ContactPickerDelegate: NSObject, CNContactPickerDelegate {
-    var chosenContacts = [CNContact]()
+    var chosenContact: CNContact?
 
-    func contactPicker(_ picker: CNContactPickerViewController, didSelect contacts: [CNContact]) {
-        chosenContacts = contacts
-        for contact in chosenContacts {
-            print("selected contact: \(contact.givenName) \(contact.familyName)")
-        }
+    func contactPicker(_ picker: CNContactPickerViewController, didSelect contact: CNContact) {
+        chosenContact = contact
+        print("selected contact: \(contact.givenName) \(contact.familyName)")
     }
 }

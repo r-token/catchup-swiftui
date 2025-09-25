@@ -12,27 +12,31 @@ import UserNotifications
 import CoreData
 
 struct NotificationHelper {
-    @MainActor
-    static func createNewNotification(for contact: SelectedContact) {
+    static func createNewNotification(for contact: SelectedContact) async {
         updateNextNotificationDateTimeFor(contact: contact)
-        
-        let addRequest = {
-            if preferenceIsNotSetToNever(for: contact) {
-                addGeneralNotification(for: contact)
-            }
-            
-            if contact.hasBirthday() {
-                addBirthdayNotification(for: contact)
-            }
-            
-            if contact.hasAnniversary() {
-                addAnniversaryNotification(for: contact)
-            }
+
+        // Check authorization first
+        let isAuthorized = await checkNotificationAuthorizationStatusAndAddRequest()
+
+        guard isAuthorized else {
+            print("Notification authorization not granted")
+            return
         }
 
-        checkNotificationAuthorizationStatusAndAddRequest(action: addRequest)
+        // Add the notifications if authorized
+        if preferenceIsNotSetToNever(for: contact) {
+            addGeneralNotification(for: contact)
+        }
+
+        if contact.hasBirthday() {
+            addBirthdayNotification(for: contact)
+        }
+
+        if contact.hasAnniversary() {
+            addAnniversaryNotification(for: contact)
+        }
     }
-    
+
     static func preferenceIsNotSetToNever(for contact: SelectedContact) -> Bool {
         return contact.notification_preference != 0 ? true : false
     }
@@ -76,19 +80,23 @@ struct NotificationHelper {
         scheduleNotification(for: contact, isBirthdayOrAnniversary: true, dateComponents: anniversaryDateComponents, identifier: anniversaryIdentifier, content: anniversaryNotificationContent)
     }
     
-    static func checkNotificationAuthorizationStatusAndAddRequest(action: @escaping() -> Void) {
-        UNUserNotificationCenter.current().getNotificationSettings { settings in
-            if settings.authorizationStatus == .authorized {
-                action()
-            } else {
-                UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { success, error in
-                    if success {
-                        print("Scheduled new notification(s)")
-                        action()
-                    } else {
-                        print("User isn't allowing notifications :(")
-                    }
+    static func checkNotificationAuthorizationStatusAndAddRequest() async -> Bool {
+        let settings = await UNUserNotificationCenter.current().notificationSettings()
+
+        if settings.authorizationStatus == .authorized {
+            return true
+        } else {
+            do {
+                let granted = try await UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound])
+                if granted {
+                    print("Notification authorization granted")
+                } else {
+                    print("User denied notification authorization")
                 }
+                return granted
+            } catch {
+                print("Error requesting notification authorization: \(error)")
+                return false
             }
         }
     }
@@ -364,7 +372,6 @@ struct NotificationHelper {
         UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [contact.anniversary_notification_id.uuidString])
     }
 
-    @MainActor
     static func updateNextNotificationDateTimeFor(contact: SelectedContact) {
         let nextNotificationDateTime = getNextNotificationDateFor(contact: contact)
         contact.next_notification_date_time = nextNotificationDateTime
@@ -414,21 +421,28 @@ struct NotificationHelper {
         }
     }
 
-    @MainActor
-    static func resetNotifications(for selectedContacts: [SelectedContact], delayTime: Double) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + delayTime) {
-            print("resetting notifications")
-            UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
+    static func resetNotifications(for selectedContacts: [SelectedContact], delayTime: Double) async {
+        try? await Task.sleep(for: .seconds(delayTime))
 
+        print("resetting notifications")
+        UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
+
+        // Create notifications concurrently
+        await withTaskGroup(of: Void.self) { group in
             for contact in selectedContacts {
                 if contact.notification_preference != 0 {
-                    NotificationHelper.createNewNotification(for: contact)
+                    group.addTask {
+                        await NotificationHelper.createNewNotification(for: contact)
+                    }
                 }
+            }
+        }
 
-                if contact.unread_badge_date_time == "" {
-                    print("updating unread badge date time for \(contact.name)")
-                    contact.unread_badge_date_time = contact.next_notification_date_time
-                }
+        // Update unread badge times
+        for contact in selectedContacts {
+            if contact.unread_badge_date_time == "" {
+                print("updating unread badge date time for \(contact.name)")
+                contact.unread_badge_date_time = contact.next_notification_date_time
             }
         }
     }

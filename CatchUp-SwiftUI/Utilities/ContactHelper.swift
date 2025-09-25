@@ -281,80 +281,73 @@ struct ContactHelper {
         return selectedContact
     }
 
-    static func updateSelectedContacts(_ selectedContacts: [SelectedContact]) {
+    static func updateSelectedContacts(_ selectedContacts: [SelectedContact]) async {
         for contact in selectedContacts {
-            updateSelectedContact(contact)
+            await updateSelectedContact(contact)
         }
     }
 
-    static func updateSelectedContact(_ selectedContact: SelectedContact?) {
+    static func updateSelectedContact(_ selectedContact: SelectedContact?) async {
         guard let selectedContact else { return }
 
-        getCNContactByName(selectedContact.name) { contact in
-            if let contact {
-                let nextNotificationDateTime = NotificationHelper.getNextNotificationDateFor(contact: selectedContact)
+        let contact = await getCNContactByName(selectedContact.name)
 
-                selectedContact.name = getContactName(for: contact)
-                selectedContact.phone = getContactPrimaryPhone(for: contact)
-                selectedContact.secondary_phone = getContactSecondaryPhone(for: contact)
-                selectedContact.email = getContactPrimaryEmail(for: contact)
-                selectedContact.secondary_email = getContactSecondaryEmail(for: contact)
-                selectedContact.address = getContactPrimaryAddress(for: contact)
-                selectedContact.secondary_address = getContactSecondaryAddress(for: contact)
-                selectedContact.picture = encodeContactPicture(for: contact)
-                selectedContact.birthday = getContactBirthday(for: contact)
-                selectedContact.anniversary = getContactAnniversary(for: contact)
-                selectedContact.next_notification_date_time = nextNotificationDateTime
-            } else {
-                print("No contact with name \(selectedContact.name) found")
-            }
+        if let contact {
+            let nextNotificationDateTime = NotificationHelper.getNextNotificationDateFor(contact: selectedContact)
+
+            selectedContact.name = getContactName(for: contact)
+            selectedContact.phone = getContactPrimaryPhone(for: contact)
+            selectedContact.secondary_phone = getContactSecondaryPhone(for: contact)
+            selectedContact.email = getContactPrimaryEmail(for: contact)
+            selectedContact.secondary_email = getContactSecondaryEmail(for: contact)
+            selectedContact.address = getContactPrimaryAddress(for: contact)
+            selectedContact.secondary_address = getContactSecondaryAddress(for: contact)
+            selectedContact.picture = encodeContactPicture(for: contact)
+            selectedContact.birthday = getContactBirthday(for: contact)
+            selectedContact.anniversary = getContactAnniversary(for: contact)
+            selectedContact.next_notification_date_time = nextNotificationDateTime
+        } else {
+            print("No contact with name \(selectedContact.name) found")
         }
     }
 
-    static func getCNContactByName(_ name: String, completion: @escaping (CNContact?) -> Void) {
+    static func getCNContactByName(_ name: String) async -> CNContact? {
         print("searching contact book for \(name)")
-        
-        let contactStore = CNContactStore()
-        let keysToFetch: [CNKeyDescriptor] = [
-            CNContactFormatter.descriptorForRequiredKeys(for: .fullName),
-            CNContactGivenNameKey as CNKeyDescriptor,
-            CNContactFamilyNameKey as CNKeyDescriptor,
-            CNContactPhoneNumbersKey as CNKeyDescriptor,
-            CNContactEmailAddressesKey as CNKeyDescriptor,
-            CNContactPostalAddressesKey as CNKeyDescriptor,
-            CNContactImageDataAvailableKey as CNKeyDescriptor,
-            CNContactImageDataKey as CNKeyDescriptor,
-            CNContactThumbnailImageDataKey as CNKeyDescriptor,
-            CNContactBirthdayKey as CNKeyDescriptor,
-            CNContactDatesKey as CNKeyDescriptor
-        ]
 
-        DispatchQueue.global(qos: .background).async {
-            var allContacts: [CNContact] = []
+        return await withCheckedContinuation { continuation in
+            let contactStore = CNContactStore()
+            let keysToFetch: [CNKeyDescriptor] = [
+                CNContactFormatter.descriptorForRequiredKeys(for: .fullName),
+                CNContactGivenNameKey as CNKeyDescriptor,
+                CNContactFamilyNameKey as CNKeyDescriptor,
+                CNContactPhoneNumbersKey as CNKeyDescriptor,
+                CNContactEmailAddressesKey as CNKeyDescriptor,
+                CNContactPostalAddressesKey as CNKeyDescriptor,
+                CNContactImageDataAvailableKey as CNKeyDescriptor,
+                CNContactImageDataKey as CNKeyDescriptor,
+                CNContactThumbnailImageDataKey as CNKeyDescriptor,
+                CNContactBirthdayKey as CNKeyDescriptor,
+                CNContactDatesKey as CNKeyDescriptor
+            ]
 
             do {
-                try contactStore.enumerateContacts(with: CNContactFetchRequest(keysToFetch: keysToFetch)) { (contact, stop) in
-                    allContacts.append(contact)
+                // Use predicate-based search - more efficient and avoids enumeration issues
+                let predicate = CNContact.predicateForContacts(matchingName: name)
+                let contacts = try contactStore.unifiedContacts(matching: predicate, keysToFetch: keysToFetch)
+
+                // Find exact match using formatter
+                let nameFormatter = CNContactFormatter()
+                nameFormatter.style = .fullName
+
+                let exactMatch = contacts.first { contact in
+                    nameFormatter.string(from: contact) == name
                 }
+
+                print("Found matching contact: \(exactMatch?.givenName ?? "Unknown")")
+                continuation.resume(returning: exactMatch)
             } catch {
-                print("Unable to fetch contacts")
-                DispatchQueue.main.async {
-                    completion(nil)
-                }
-                return
-            }
-
-            let nameFormatter = CNContactFormatter()
-            nameFormatter.style = .fullName
-
-            let filteredContacts = allContacts.filter { contact in
-                return nameFormatter.string(from: contact) == name
-            }
-
-            print("Found matching contact: \(filteredContacts.first?.givenName ?? "Unknown")")
-
-            DispatchQueue.main.async {
-                completion(filteredContacts.first)
+                print("Unable to fetch contacts: \(error)")
+                continuation.resume(returning: nil)
             }
         }
     }

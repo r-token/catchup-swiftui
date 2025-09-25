@@ -111,25 +111,33 @@ struct NotificationPreferenceView: View {
                     NotificationHelper.setYearPreference(for: contact)
                 }
 
-                resetNotificationsForContact()
+                Task {
+                    await resetNotificationsForContact()
+                }
             }
         }
 
         .onChange(of: contact.notification_preference_weekday) { initialValue, newValue in
             if newValue != initialNotificationPreferenceWeekday {
                 initialNotificationPreferenceWeekday = 999
-                resetNotificationsForContact()
+                Task {
+                    await resetNotificationsForContact()
+                }
             }
         }
 
         .onChange(of: contact.notification_preference_custom_month) {
             NotificationHelper.setYearPreference(for: contact)
-            resetNotificationsForContact()
+            Task {
+                await resetNotificationsForContact()
+            }
         }
 
         .onChange(of: contact.notification_preference_custom_day) {
             NotificationHelper.setYearPreference(for: contact)
-            resetNotificationsForContact()
+            Task {
+                await resetNotificationsForContact()
+            }
         }
 
         .onChange(of: notificationPreferenceTime) { initialTime, newTime in
@@ -142,7 +150,9 @@ struct NotificationPreferenceView: View {
                 if let hour = components.hour, let minute = components.minute {
                     NotificationHelper.setYearPreference(for: contact)
                     NotificationHelper.updateNotificationTime(for: contact, hour: hour, minute: minute)
-                    resetNotificationsForContact()
+                    Task {
+                        await resetNotificationsForContact()
+                    }
                 } else {
                     notificationPreferenceTime = initialTime
                 }
@@ -162,7 +172,9 @@ struct NotificationPreferenceView: View {
                 NotificationHelper.updateNotificationTime(for: contact, hour: hour, minute: minute)
                 NotificationHelper.updateNotificationCustomDate(for: contact, month: month, day: day, year: year)
 
-                resetNotificationsForContact()
+                Task {
+                    await resetNotificationsForContact()
+                }
             }
         }
     }
@@ -206,11 +218,10 @@ struct NotificationPreferenceView: View {
         notificationPreferenceCustomDate = customDate ?? Date()
     }
 
-    @MainActor
-    func resetNotificationsForContact() {
+    func resetNotificationsForContact() async {
         print("resetting notifications for \(contact.name)")
         NotificationHelper.removeExistingNotifications(for: contact)
-        NotificationHelper.createNewNotification(for: contact)
+        await NotificationHelper.createNewNotification(for: contact)
     }
 }
 

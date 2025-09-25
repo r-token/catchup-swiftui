@@ -160,7 +160,7 @@ class SelectedContact {
         }
     }
 
-    static let sampleData = SelectedContact(
+    @MainActor static let sampleData = SelectedContact(
         address: "2190 E 11th Ave",
         anniversary: "06/20/2020",
         anniversary_notification_id: UUID(),

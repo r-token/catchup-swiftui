@@ -37,6 +37,7 @@ struct Utils {
         }
     }
 
+    @MainActor
     static func fetchAvailableIAPs() {
         print("fetching IAPs")
         IAPService.shared.fetchAvailableProducts()

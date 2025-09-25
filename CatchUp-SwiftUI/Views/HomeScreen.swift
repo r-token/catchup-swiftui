@@ -35,7 +35,6 @@ struct HomeScreen : View {
         }
     }
 
-    @MainActor
 	init() {
         //Use this if NavigationBarTitle is with Large Font
 		UINavigationBar.appearance().largeTitleTextAttributes = [.foregroundColor: UIColor.systemOrange]
@@ -65,15 +64,15 @@ struct HomeScreen : View {
                 }
             }
             .refreshable {
-                NotificationHelper.resetNotifications(for: selectedContacts, delayTime: 0)
-                ContactHelper.updateSelectedContacts(selectedContacts)
+                await NotificationHelper.resetNotifications(for: selectedContacts, delayTime: 0)
+                await ContactHelper.updateSelectedContacts(selectedContacts)
             }
 
-            .onChange(of: contactPicker.chosenContacts) { initialContacts, contacts in
-                if !contacts.isEmpty {
-                    saveSelectedContact(for: contacts)
+            .onChange(of: contactPicker.chosenContact) {
+                if let contact = contactPicker.chosenContact {
+                    saveSelectedContact(for: [contact])
                 }
-                contactPicker.chosenContacts = []
+                contactPicker.chosenContact = nil
             }
 
             Button {
@@ -95,7 +94,9 @@ struct HomeScreen : View {
                     requestReview()
                 }
 
-                NotificationHelper.resetNotifications(for: selectedContacts, delayTime: 3)
+                Task {
+                    await NotificationHelper.resetNotifications(for: selectedContacts, delayTime: 3)
+                }
                 timesUserHasLaunchedApp += 1
             }
         }
@@ -137,7 +138,6 @@ struct HomeScreen : View {
         }
     }
 
-    @MainActor
     func openContactPicker() {
         let contactPicker = CNContactPickerViewController()
         contactPicker.delegate = self.contactPicker

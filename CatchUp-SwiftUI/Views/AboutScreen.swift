@@ -121,19 +121,16 @@ struct AboutScreen: View {
         }
     }
 
-    @MainActor
     func tappedSmallTip() {
         UINotificationFeedbackGenerator().notificationOccurred(.success)
         IAPService.shared.leaveATip(index: 0)
     }
 
-    @MainActor
 	func tappedMediumTip() {
         UINotificationFeedbackGenerator().notificationOccurred(.success)
 		IAPService.shared.leaveATip(index: 1)
     }
 	
-    @MainActor
 	func tappedLargeTip() {
         UINotificationFeedbackGenerator().notificationOccurred(.success)
 		IAPService.shared.leaveATip(index: 2)
