@@ -16,6 +16,7 @@ struct Utils {
         UNUserNotificationCenter.current().setBadgeCount(0)
     }
 
+    @MainActor
     static func clearUnreadBadge(for contact: SelectedContact) {
         contact.unread_badge_date_time = contact.next_notification_date_time
     }

@@ -39,11 +39,12 @@ struct NextCatchUpsGridView: View {
                 }
                 .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
                 .frame(minHeight: 55, maxHeight: 65)
-                .padding(10)
+                .padding(.horizontal, 10)
+                .padding(.vertical, 3)
                 .background(colorScheme == .light ? Color.white : Color(UIColor(red: 0.15, green: 0.15, blue: 0.15, alpha: 1)))
-                .cornerRadius(10)
-                .if(colorScheme == .light) { view in
-                    view.shadow(color: Color.gray.opacity(0.4), radius: 3, x: 0, y: 2)
+                .clipShape(Capsule())
+                .if(colorScheme == .light) {
+                    $0.shadow(color: Color.gray.opacity(0.4), radius: 3, x: 0, y: 2)
                 }
 
                 .onTapGesture {

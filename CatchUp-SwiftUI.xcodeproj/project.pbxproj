@@ -32,6 +32,7 @@
 		F48E37FB22C455CB008B0B8B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F48E37FA22C455CB008B0B8B /* Assets.xcassets */; };
 		F48E37FE22C455CB008B0B8B /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F48E37FD22C455CB008B0B8B /* Preview Assets.xcassets */; };
 		F494F95824424A03003CE7B5 /* ContactHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = F494F95724424A03003CE7B5 /* ContactHelper.swift */; };
+		F4979FC52E84DD6F00C7EAF9 /* GlassButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4979FC42E84DD6F00C7EAF9 /* GlassButton.swift */; };
 		F4A9B8522442A0F5001D8C55 /* DetailScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A9B8512442A0F5001D8C55 /* DetailScreen.swift */; };
 		F4A9B8552442A179001D8C55 /* ContactPhoto.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A9B8542442A179001D8C55 /* ContactPhoto.swift */; };
 		F4A9B8572442A1F7001D8C55 /* GradientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A9B8562442A1F7001D8C55 /* GradientView.swift */; };
@@ -74,6 +75,7 @@
 		F48E37FD22C455CB008B0B8B /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		F48E380222C455CB008B0B8B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F494F95724424A03003CE7B5 /* ContactHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactHelper.swift; sourceTree = "<group>"; };
+		F4979FC42E84DD6F00C7EAF9 /* GlassButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlassButton.swift; sourceTree = "<group>"; };
 		F4A9B8512442A0F5001D8C55 /* DetailScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailScreen.swift; sourceTree = "<group>"; };
 		F4A9B8542442A179001D8C55 /* ContactPhoto.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactPhoto.swift; sourceTree = "<group>"; };
 		F4A9B8562442A1F7001D8C55 /* GradientView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientView.swift; sourceTree = "<group>"; };
@@ -124,6 +126,7 @@
 				F4F7535E2BB0969A00B20090 /* ContactPictureView.swift */,
 				F4118B4A2B9E912E001BC8C7 /* OpenContactPickerButtonView.swift */,
 				F4F7535C2BB0956800B20090 /* NextCatchUpsGridView.swift */,
+				F4979FC42E84DD6F00C7EAF9 /* GlassButton.swift */,
 			);
 			path = "HomeScreen Subviews";
 			sourceTree = "<group>";
@@ -347,6 +350,7 @@
 				F4D5E68E2BC9F96E003E9F61 /* CalloutButtonView.swift in Sources */,
 				F435D4312BB7E1D300C43586 /* NextCatchUpRow.swift in Sources */,
 				F435D4332BB8E7E700C43586 /* RemoveContactButton.swift in Sources */,
+				F4979FC52E84DD6F00C7EAF9 /* GlassButton.swift in Sources */,
 				F435D4352BBA3EB100C43586 /* BirthdayOrAnniversaryRow.swift in Sources */,
 				F435D4372BBA4EC600C43586 /* DataController.swift in Sources */,
 				F4AD59AE244C9FF600296568 /* IAPService.swift in Sources */,

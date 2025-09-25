@@ -188,10 +188,12 @@ struct ContactHelper {
 		return anniversaryString
 	}
 
+    @MainActor
     static func getFirstName(for contact: SelectedContact) -> String {
         contact.name.components(separatedBy: " ").first ?? contact.name
     }
 
+    @MainActor
     static func getFriendlyNextCatchUpTime(for contact: SelectedContact, forQuarterlyPreference: Bool) -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
@@ -219,6 +221,7 @@ struct ContactHelper {
         }
     }
 
+    @MainActor
     static func createSelectedContact(contact: CNContact) -> SelectedContact {
         let currentMinute = Calendar.current.component(.minute, from: Date())
         let currentHour = Calendar.current.component(.hour, from: Date())
@@ -281,12 +284,14 @@ struct ContactHelper {
         return selectedContact
     }
 
+    @MainActor
     static func updateSelectedContacts(_ selectedContacts: [SelectedContact]) async {
         for contact in selectedContacts {
             await updateSelectedContact(contact)
         }
     }
 
+    @MainActor
     static func updateSelectedContact(_ selectedContact: SelectedContact?) async {
         guard let selectedContact else { return }
 

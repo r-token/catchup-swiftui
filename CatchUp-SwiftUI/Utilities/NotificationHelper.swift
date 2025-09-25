@@ -12,6 +12,7 @@ import UserNotifications
 import CoreData
 
 struct NotificationHelper {
+    @MainActor
     static func createNewNotification(for contact: SelectedContact) async {
         updateNextNotificationDateTimeFor(contact: contact)
 
@@ -37,10 +38,12 @@ struct NotificationHelper {
         }
     }
 
+    @MainActor
     static func preferenceIsNotSetToNever(for contact: SelectedContact) -> Bool {
         return contact.notification_preference != 0 ? true : false
     }
-    
+
+    @MainActor
     static func addGeneralNotification(for contact: SelectedContact) {
         let notificationContent = UNMutableNotificationContent()
         notificationContent.title = "👋 CatchUp with \(contact.name)"
@@ -54,6 +57,7 @@ struct NotificationHelper {
         scheduleNotification(for: contact, isBirthdayOrAnniversary: false, dateComponents: dateComponents, identifier: identifier, content: notificationContent)
     }
 
+    @MainActor
     static func addBirthdayNotification(for contact: SelectedContact) {
         let birthdayNotificationContent = UNMutableNotificationContent()
         birthdayNotificationContent.title = "🥳 Today is \(contact.name)'s birthday!"
@@ -66,7 +70,8 @@ struct NotificationHelper {
 
         scheduleNotification(for: contact, isBirthdayOrAnniversary: true, dateComponents: birthdayDateComponents, identifier: birthdayIdentifier, content: birthdayNotificationContent)
     }
-    
+
+    @MainActor
     static func addAnniversaryNotification(for contact: SelectedContact) {
         let anniversaryNotificationContent = UNMutableNotificationContent()
         anniversaryNotificationContent.title = "😍 Tomorrow is \(contact.name)'s anniversary!"
@@ -101,6 +106,7 @@ struct NotificationHelper {
         }
     }
 
+    @MainActor
     static func getNextNotificationDateFor(contact: SelectedContact) -> String {
         // Get next notification date for the general notification
         var components = DateComponents()
@@ -153,6 +159,7 @@ struct NotificationHelper {
         return soonestUpcomingNotificationDateString
     }
 
+    @MainActor
     static func getNotificationDateComponents(for contact: SelectedContact) -> DateComponents {
         var dateComponents = DateComponents()
 
@@ -185,6 +192,7 @@ struct NotificationHelper {
         return dateComponents
     }
 
+    @MainActor
     static func getNextNotificationDateForQuarterlyPreference(contact: SelectedContact) -> String {
         if contact.notification_preference_quarterly_set_time.addingTimeInterval(Constants.ninetyDaysInSeconds) < Date() {
             print("resetting quarterly notification preference")
@@ -197,6 +205,7 @@ struct NotificationHelper {
         return calculateDateStringFromDate(contact.notification_preference_quarterly_set_time)
     }
 
+    @MainActor
     static func getBirthdayDateComponents(for contact: SelectedContact) -> DateComponents {
         var birthdayDateComponents = DateComponents()
         
@@ -210,7 +219,8 @@ struct NotificationHelper {
         
         return birthdayDateComponents
     }
-    
+
+    @MainActor
     static func getAnniversaryDateComponents(for contact: SelectedContact) -> DateComponents {
         var anniversaryDateComponents = DateComponents()
         let formatter = DateFormatter()
@@ -230,7 +240,8 @@ struct NotificationHelper {
         
         return anniversaryDateComponents
     }
-    
+
+    @MainActor
     static func scheduleNotification(for contact: SelectedContact, isBirthdayOrAnniversary: Bool, dateComponents: DateComponents, identifier: UUID, content: UNMutableNotificationContent) {
         var calendarTrigger: UNCalendarNotificationTrigger?
         var timeIntervalTrigger: UNTimeIntervalNotificationTrigger?
@@ -314,20 +325,24 @@ struct NotificationHelper {
                 return "Keep in touch"
         }
     }
-    
+
+    @MainActor
     static func updateNotificationPreference(for contact: SelectedContact, selection: Int) {
         contact.notification_preference = selection
     }
-    
+
+    @MainActor
     static func updateNotificationTime(for contact: SelectedContact, hour: Int, minute: Int) {
         contact.notification_preference_hour = hour
         contact.notification_preference_minute = minute
     }
-    
+
+    @MainActor
     static func updateNotificationPreferenceWeekday(for contact: SelectedContact, weekday: Int) {
         contact.notification_preference_weekday = weekday
     }
-    
+
+    @MainActor
     static func updateNotificationCustomDate(for contact: SelectedContact, month: Int, day: Int, year: Int) {
         contact.notification_preference_custom_month = month
         contact.notification_preference_custom_day = day
@@ -343,7 +358,8 @@ struct NotificationHelper {
             }
         }
     }
-    
+
+    @MainActor
     static func removeExistingNotifications(for contact: SelectedContact) {
         removeGeneralNotification(for: contact)
         
@@ -355,7 +371,8 @@ struct NotificationHelper {
             removeAnniversaryNotification(for: contact)
         }
     }
-    
+
+    @MainActor
     static func removeGeneralNotification(for contact: SelectedContact) {
         UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [contact.notification_identifier.uuidString])
 
@@ -363,15 +380,18 @@ struct NotificationHelper {
             print("Pending requests after removing existing request: \(requests.count)")
         }
     }
-    
+
+    @MainActor
     static func removeBirthdayNotification(for contact: SelectedContact) {
         UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [contact.birthday_notification_id.uuidString])
     }
-    
+
+    @MainActor
     static func removeAnniversaryNotification(for contact: SelectedContact) {
         UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [contact.anniversary_notification_id.uuidString])
     }
 
+    @MainActor
     static func updateNextNotificationDateTimeFor(contact: SelectedContact) {
         let nextNotificationDateTime = getNextNotificationDateFor(contact: contact)
         contact.next_notification_date_time = nextNotificationDateTime
@@ -408,6 +428,7 @@ struct NotificationHelper {
         return "Unknown"
     }
 
+    @MainActor
     static func setYearPreference(for contact: SelectedContact) {
         var contactDateComponents = NotificationHelper.getNotificationDateComponents(for: contact)
         contactDateComponents.year = Calendar.current.component(.year, from: Date())
@@ -421,6 +442,7 @@ struct NotificationHelper {
         }
     }
 
+    @MainActor
     static func resetNotifications(for selectedContacts: [SelectedContact], delayTime: Double) async {
         try? await Task.sleep(for: .seconds(delayTime))
 

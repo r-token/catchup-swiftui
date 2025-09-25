@@ -41,7 +41,7 @@ struct HomeScreen : View {
     }
 	
     var body: some View {
-        VStack {
+        ZStack(alignment: .bottom) {
             List {
                 if selectedContacts.count > 0 {
                     if selectedContacts.contains(where: { $0.notification_preference != 0 }) {
@@ -67,7 +67,6 @@ struct HomeScreen : View {
                 await NotificationHelper.resetNotifications(for: selectedContacts, delayTime: 0)
                 await ContactHelper.updateSelectedContacts(selectedContacts)
             }
-
             .onChange(of: contactPicker.chosenContact) {
                 if let contact = contactPicker.chosenContact {
                     saveSelectedContact(for: [contact])
@@ -75,10 +74,13 @@ struct HomeScreen : View {
                 contactPicker.chosenContact = nil
             }
 
-            Button {
-                openContactPicker()
-            } label: {
-                OpenContactPickerButtonView()
+            VStack {
+                Spacer()
+                GlassButton {
+                    openContactPicker()
+                } label: {
+                    OpenContactPickerButtonView()
+                }
             }
         }
         .navigationBarTitle("CatchUp")
@@ -147,6 +149,7 @@ struct HomeScreen : View {
         window?.rootViewController?.present(contactPicker, animated: true, completion: nil)
     }
 
+    @MainActor
     func updateNextNotificationTime(for contacts: [SelectedContact]) {
         print("updating next notification time for all contacts")
         for contact in contacts {
@@ -155,7 +158,7 @@ struct HomeScreen : View {
         }
     }
 
-    // save selected contacts and their properties to SwiftData
+    @MainActor
     func saveSelectedContact(for contacts: [CNContact]) {
         for contact in contacts {
             let contactName = ContactHelper.getContactName(for: contact)
