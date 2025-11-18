@@ -429,9 +429,7 @@ struct NotificationHelper {
 
     static func getDateComponentsFromDate(_ date: Date) -> DateComponents {
         let calendar = Calendar.current
-        let newDate = date.addingTimeInterval(Constants.ninetyDaysInSeconds)
-
-        let dateComponents = calendar.dateComponents([.year, .month, .day, .hour, .minute, .second], from: newDate)
+        let dateComponents = calendar.dateComponents([.year, .month, .day, .hour, .minute, .second], from: date)
         return dateComponents
     }
 
