@@ -225,11 +225,14 @@ struct NotificationHelper {
     @MainActor
     static func nextQuarterlyFireDate(from anchor: Date, now: Date = Date()) -> Date {
         let ninetyDays = Constants.ninetyDaysInSeconds
-        var next = anchor
-        while next < now {
-            next = next.addingTimeInterval(ninetyDays)
-        }
-        return next
+        let elapsed = now.timeIntervalSince(anchor)
+        
+        // If anchor is in the future, return it
+        guard elapsed > 0 else { return anchor }
+        
+        // Calculate how many quarters have passed and add one more to get the next future date
+        let quartersElapsed = ceil(elapsed / ninetyDays)
+        return anchor.addingTimeInterval(quartersElapsed * ninetyDays)
     }
 
     @MainActor
@@ -401,7 +404,6 @@ struct NotificationHelper {
 
     @MainActor
     static func removeGeneralNotification(for contact: SelectedContact) {
-        // UNUserNotificationCenter operations are already async/non-blocking
         UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [contact.notification_identifier.uuidString])
 
         UNUserNotificationCenter.current().getPendingNotificationRequests { requests in

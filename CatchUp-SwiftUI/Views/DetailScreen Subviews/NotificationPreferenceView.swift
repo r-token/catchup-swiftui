@@ -213,7 +213,7 @@ struct NotificationPreferenceView: View {
         resetTask?.cancel()
         resetTask = Task {
             // 300ms debounce to batch rapid changes
-            try? await Task.sleep(nanoseconds: 300_000_000)
+            try? await Task.sleep(for: .seconds(0.3))
             guard !Task.isCancelled else { return }
             await resetNotificationsForContact()
         }
