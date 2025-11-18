@@ -106,6 +106,8 @@ struct HomeScreen : View {
                 }
 
                 Task {
+                    // One-time migration to clean up legacy notifications
+                    await NotificationHelper.migrateLegacyNotifications()
                     await NotificationHelper.resetNotifications(for: selectedContacts, delayTime: 3)
                 }
                 timesUserHasLaunchedApp += 1

@@ -221,22 +221,20 @@ struct NotificationPreferenceView: View {
 
     @MainActor
     func resetNotificationsForContact() async {
-        // If Never, remove general and refresh the next date string without scheduling
-        if contact.preferenceIsNever() {
-            NotificationHelper.removeGeneralNotification(for: contact)
-            contact.next_notification_date_time = NotificationHelper.getNextNotificationDateFor(contact: contact)
-            return
-        }
-
         // Ensure we have authorization before scheduling
         let authorized = await NotificationHelper.checkNotificationAuthorizationStatusAndAddRequest()
         guard authorized else { return }
-
-        // Replace only the general notification (birthday/anniversary remain untouched)
-        NotificationHelper.removeGeneralNotification(for: contact)
-        NotificationHelper.addGeneralNotification(for: contact)
-
-        // Update the contact's next notification date string once
+        
+        // Remove only the general notification using stable identifier
+        let center = UNUserNotificationCenter.current()
+        await center.remove([NotificationID.general(contact)])
+        
+        // If not Never, schedule a new general notification with stable identifier
+        if !contact.preferenceIsNever() {
+            NotificationHelper.addGeneralNotification(for: contact)
+        }
+        
+        // Update the contact's next notification date string
         contact.next_notification_date_time = NotificationHelper.getNextNotificationDateFor(contact: contact)
     }
 }

@@ -11,6 +11,21 @@ import SwiftUI
 import UserNotifications
 import CoreData
 
+/// Actor to serialize notification reset operations and prevent race conditions
+actor NotificationResetGate {
+    static let shared = NotificationResetGate()
+    private var isResetting = false
+    
+    func runExclusive<T>(_ operation: @Sendable () async -> T) async -> T {
+        while isResetting {
+            try? await Task.sleep(for: .milliseconds(50))
+        }
+        isResetting = true
+        defer { isResetting = false }
+        return await operation()
+    }
+}
+
 struct NotificationHelper {
     @MainActor
     static func createNewNotification(for contact: SelectedContact) async {
@@ -57,10 +72,32 @@ struct NotificationHelper {
         notificationContent.sound = UNNotificationSound.default
         notificationContent.badge = 1
 
-        let identifier = UUID()
-        let dateComponents = getNotificationDateComponents(for: contact)
-
-        scheduleNotification(for: contact, isBirthdayOrAnniversary: false, dateComponents: dateComponents, identifier: identifier, content: notificationContent)
+        let identifier = NotificationID.general(contact)
+        
+        if contact.preferenceIsQuarterly() {
+            // Quarterly uses time interval trigger
+            let oneDay: Double = 86400
+            let timeInterval = oneDay * 90
+            scheduleNotification(
+                for: contact,
+                isBirthdayOrAnniversary: false,
+                dateComponents: nil,
+                timeInterval: timeInterval,
+                identifier: identifier,
+                content: notificationContent
+            )
+        } else {
+            // All other preferences use calendar trigger
+            let dateComponents = getNotificationDateComponents(for: contact)
+            scheduleNotification(
+                for: contact,
+                isBirthdayOrAnniversary: false,
+                dateComponents: dateComponents,
+                timeInterval: nil,
+                identifier: identifier,
+                content: notificationContent
+            )
+        }
     }
 
     @MainActor
@@ -71,10 +108,17 @@ struct NotificationHelper {
         birthdayNotificationContent.sound = UNNotificationSound.default
         birthdayNotificationContent.badge = 1
 
-        let birthdayIdentifier = UUID()
+        let birthdayIdentifier = NotificationID.birthday(contact)
         let birthdayDateComponents = getBirthdayDateComponents(for: contact)
 
-        scheduleNotification(for: contact, isBirthdayOrAnniversary: true, dateComponents: birthdayDateComponents, identifier: birthdayIdentifier, content: birthdayNotificationContent)
+        scheduleNotification(
+            for: contact,
+            isBirthdayOrAnniversary: true,
+            dateComponents: birthdayDateComponents,
+            timeInterval: nil,
+            identifier: birthdayIdentifier,
+            content: birthdayNotificationContent
+        )
     }
 
     @MainActor
@@ -85,10 +129,17 @@ struct NotificationHelper {
         anniversaryNotificationContent.sound = UNNotificationSound.default
         anniversaryNotificationContent.badge = 1
 
-        let anniversaryIdentifier = UUID()
+        let anniversaryIdentifier = NotificationID.anniversary(contact)
         let anniversaryDateComponents = getAnniversaryDateComponents(for: contact)
 
-        scheduleNotification(for: contact, isBirthdayOrAnniversary: true, dateComponents: anniversaryDateComponents, identifier: anniversaryIdentifier, content: anniversaryNotificationContent)
+        scheduleNotification(
+            for: contact,
+            isBirthdayOrAnniversary: true,
+            dateComponents: anniversaryDateComponents,
+            timeInterval: nil,
+            identifier: anniversaryIdentifier,
+            content: anniversaryNotificationContent
+        )
     }
     
     static func checkNotificationAuthorizationStatusAndAddRequest() async -> Bool {
@@ -272,39 +323,48 @@ struct NotificationHelper {
     }
 
     @MainActor
-    static func scheduleNotification(for contact: SelectedContact, isBirthdayOrAnniversary: Bool, dateComponents: DateComponents, identifier: UUID, content: UNMutableNotificationContent) {
-        var calendarTrigger: UNCalendarNotificationTrigger?
-        var timeIntervalTrigger: UNTimeIntervalNotificationTrigger?
-        var request: UNNotificationRequest
-
-        // quarterly notifications are handled by UNTimeIntervalNotificationTrigger instead of UNCalendarNotificationTrigger, so we handle them separately
-        if contact.preferenceIsQuarterly() && !isBirthdayOrAnniversary {
-            let oneDay: Double = 86400 // seconds
-            // set a recurring time interval for every 90 days
-            timeIntervalTrigger = UNTimeIntervalNotificationTrigger(timeInterval: (oneDay*90), repeats: true)
-            request = UNNotificationRequest(identifier: identifier.uuidString, content: content, trigger: timeIntervalTrigger)
+    static func scheduleNotification(
+        for contact: SelectedContact,
+        isBirthdayOrAnniversary: Bool,
+        dateComponents: DateComponents?,
+        timeInterval: TimeInterval?,
+        identifier: String,
+        content: UNMutableNotificationContent
+    ) {
+        // Set thread and category identifiers for grouping and filtering
+        content.threadIdentifier = NotificationID.thread(contact)
+        
+        if content.title.hasPrefix("👋") {
+            content.categoryIdentifier = "catchup.general"
+        } else if content.title.hasPrefix("🥳") {
+            content.categoryIdentifier = "catchup.birthday"
         } else {
-            calendarTrigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
-            request = UNNotificationRequest(identifier: identifier.uuidString, content: content, trigger: calendarTrigger)
+            content.categoryIdentifier = "catchup.anniversary"
         }
-
-        if content.title == "👋 CatchUp with \(contact.name)" {
-            contact.notification_identifier = identifier
-        } else if content.title == "🥳 Today is \(contact.name)'s birthday!" {
-            contact.birthday_notification_id = identifier
+        
+        // Create the appropriate trigger
+        let trigger: UNNotificationTrigger
+        if let timeInterval {
+            trigger = UNTimeIntervalNotificationTrigger(timeInterval: timeInterval, repeats: true)
+        } else if let dateComponents {
+            trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
         } else {
-            contact.anniversary_notification_id = identifier
+            assertionFailure("Missing trigger for notification")
+            return
         }
-
-        if let timeIntervalTrigger {
-            print("scheduling notification for \(contact.name) with time interval: \(timeIntervalTrigger.timeInterval)")
-        } else {
-            if let calendarTrigger {
-                print("scheduling notification for \(contact.name) with date components: \(calendarTrigger.dateComponents)")
-            }
-        }
-
+        
+        // Create and add the request with stable identifier
+        let request = UNNotificationRequest(identifier: identifier, content: content, trigger: trigger)
         UNUserNotificationCenter.current().add(request)
+        
+        // Keep legacy UUID fields updated for backwards compatibility (but don't use them for scheduling)
+        if content.title.hasPrefix("👋") {
+            contact.notification_identifier = UUID(uuidString: identifier.split(separator: ".").last.map(String.init) ?? "") ?? UUID()
+        } else if content.title.hasPrefix("🥳") {
+            contact.birthday_notification_id = UUID(uuidString: identifier.split(separator: ".").last.map(String.init) ?? "") ?? UUID()
+        } else {
+            contact.anniversary_notification_id = UUID(uuidString: identifier.split(separator: ".").last.map(String.init) ?? "") ?? UUID()
+        }
     }
     
     static func generateRandomNotificationBody() -> String {
@@ -469,24 +529,114 @@ struct NotificationHelper {
             print("set \(contact.name)'s year preference to \(contact.notification_preference_custom_year)")
         }
     }
+    
+    /// Purges all pending notifications for a contact, including legacy identifiers
+    /// This handles:
+    /// - Stable identifiers (general/birthday/anniversary)
+    /// - Legacy UUID-based identifiers
+    /// - Thread-based identifiers
+    /// - Title-based matching for old notifications
+    static func purgePendingForContact(_ contact: SelectedContact) async {
+        // Capture all needed values from contact before entering closure
+        let contactName = contact.name
+        let threadId = NotificationID.thread(contact)
+        let generalId = NotificationID.general(contact)
+        let birthdayId = NotificationID.birthday(contact)
+        let anniversaryId = NotificationID.anniversary(contact)
+        let legacyNotificationId = contact.notification_identifier.uuidString
+        let legacyBirthdayId = contact.birthday_notification_id.uuidString
+        let legacyAnniversaryId = contact.anniversary_notification_id.uuidString
+        
+        await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
+            UNUserNotificationCenter.current().getPendingNotificationRequests { allPending in
+                // Get all existing notification identifiers for this contact
+                let existingIds = Set(allPending.map(\.identifier))
+                
+                // Title-based matching for legacy notifications
+                let titles = [
+                    "👋 CatchUp with \(contactName)",
+                    "🥳 Today is \(contactName)'s birthday!",
+                    "😍 Tomorrow is \(contactName)'s anniversary!"
+                ]
+                
+                // Build candidate identifiers (stable + legacy)
+                let candidateIds = [
+                    generalId,
+                    birthdayId,
+                    anniversaryId,
+                    legacyNotificationId,
+                    legacyBirthdayId,
+                    legacyAnniversaryId
+                ]
+                
+                // Only include identifiers that actually exist, plus thread/title matches
+                let targetIdentifiers = Set(
+                    candidateIds.filter { existingIds.contains($0) }
+                    + allPending.filter { $0.content.threadIdentifier == threadId }.map(\.identifier)
+                    + allPending.filter { titles.contains($0.content.title) }.map(\.identifier)
+                )
+                
+                if !targetIdentifiers.isEmpty {
+                    UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: Array(targetIdentifiers))
+                }
+                
+                continuation.resume()
+            }
+        }
+    }
 
+    /// One-time migration to clean up all legacy notifications
+    @MainActor
+    static func migrateLegacyNotifications() async {
+        await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
+            UNUserNotificationCenter.current().getPendingNotificationRequests { requests in
+                // Find notifications without threadIdentifier (legacy)
+                let legacyNotifications = requests.filter { $0.content.threadIdentifier.isEmpty }
+                
+                if !legacyNotifications.isEmpty {
+                    // Nuclear option: remove everything to clean up legacy notifications
+                    UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
+                }
+                
+                continuation.resume()
+            }
+        }
+        
+        // Brief delay to ensure removal completes
+        try? await Task.sleep(nanoseconds: 200_000_000) // 200ms
+    }
+    
     @MainActor
     static func resetNotifications(for selectedContacts: [SelectedContact], delayTime: Double) async {
-        try? await Task.sleep(for: .seconds(delayTime))
-
-        print("resetting notifications")
-        UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
-
+        // Use actor gate to prevent concurrent resets
+        await NotificationResetGate.shared.runExclusive {
+            // Apply delay if specified (used on cold launch)
+            if delayTime > 0 {
+                try? await Task.sleep(for: .seconds(delayTime))
+            }
+        }
+        
+        // Now execute the reset on MainActor (outside the Sendable closure)
+        let center = UNUserNotificationCenter.current()
+        
+        // Phase 1: Purge all existing notifications for each contact
+        for contact in selectedContacts {
+            await purgePendingForContact(contact)
+        }
+        
+        // Phase 2: Re-schedule notifications with stable identifiers
         for contact in selectedContacts {
             if contact.notification_preference != 0 {
                 await NotificationHelper.createNewNotification(for: contact)
+            } else {
+                // Ensure no general notification remains if user disabled it
+                await center.remove([NotificationID.general(contact)])
             }
         }
-
+        
         // Update unread badge times
         for contact in selectedContacts {
-            if contact.unread_badge_date_time == "" {
-                print("updating unread badge date time for \(contact.name)")
+            if contact.unread_badge_date_time.isEmpty {
                 contact.unread_badge_date_time = contact.next_notification_date_time
             }
         }
