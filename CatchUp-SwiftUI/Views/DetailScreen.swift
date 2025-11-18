@@ -13,10 +13,11 @@ struct DetailScreen: View {
     @Bindable var contact: SelectedContact
 
     @State private var shouldSetPreferenceViewState = true
+    @State private var nextCatchUpTime: String = ""
 
-    var nextCatchUpTime: String {
-        print("recalculating nextCatchUpTime")
-        return ContactHelper.getFriendlyNextCatchUpTime(for: contact, forQuarterlyPreference: false)
+    @MainActor
+    private func refreshNextCatchUpTime() {
+        nextCatchUpTime = ContactHelper.getFriendlyNextCatchUpTime(for: contact, forQuarterlyPreference: false)
     }
 
     var body: some View {
@@ -53,7 +54,21 @@ struct DetailScreen: View {
             Utils.clearAppIconNotificationBadge()
             Utils.clearUnreadBadge(for: contact)
             dataController.selectedContact = contact
+            refreshNextCatchUpTime()
         }
+
+        .onChange(of: contact.notification_preference) { _, _ in refreshNextCatchUpTime() }
+        .onChange(of: contact.notification_preference_hour) { _, _ in refreshNextCatchUpTime() }
+        .onChange(of: contact.notification_preference_minute) { _, _ in refreshNextCatchUpTime() }
+        .onChange(of: contact.notification_preference_weekday) { _, _ in refreshNextCatchUpTime() }
+        .onChange(of: contact.notification_preference_week_of_month) { _, _ in refreshNextCatchUpTime() }
+        .onChange(of: contact.notification_preference_custom_day) { _, _ in refreshNextCatchUpTime() }
+        .onChange(of: contact.notification_preference_custom_month) { _, _ in refreshNextCatchUpTime() }
+        .onChange(of: contact.notification_preference_custom_year) { _, _ in refreshNextCatchUpTime() }
+        .onChange(of: contact.notification_preference_quarterly_set_time) { _, _ in refreshNextCatchUpTime() }
+        .onChange(of: contact.birthday) { _, _ in refreshNextCatchUpTime() }
+        .onChange(of: contact.anniversary) { _, _ in refreshNextCatchUpTime() }
+        .onChange(of: contact.next_notification_date_time) { _, _ in refreshNextCatchUpTime() }
 
         .onDisappear {
             dataController.selectedContact = nil

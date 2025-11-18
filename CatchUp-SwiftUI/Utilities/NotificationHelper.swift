@@ -14,6 +14,12 @@ import CoreData
 struct NotificationHelper {
     @MainActor
     static func createNewNotification(for contact: SelectedContact) async {
+        // If there's nothing to schedule, short-circuit early
+        if contact.preferenceIsNever() && !contact.hasBirthday() && !contact.hasAnniversary() {
+            contact.next_notification_date_time = ""
+            return
+        }
+
         updateNextNotificationDateTimeFor(contact: contact)
 
         // Check authorization first
@@ -108,6 +114,22 @@ struct NotificationHelper {
 
     @MainActor
     static func getNextNotificationDateFor(contact: SelectedContact) -> String {
+        // Early return for Never preference, only checking birthday/anniversary
+        if contact.preferenceIsNever() {
+            var soonest = ""
+            if contact.hasBirthday() {
+                let birthday = calculateDateStringFromComponents(getBirthdayDateComponents(for: contact))
+                soonest = birthday
+            }
+            if contact.hasAnniversary() {
+                let anniversary = calculateDateStringFromComponents(getAnniversaryDateComponents(for: contact))
+                if soonest.isEmpty || anniversary < soonest {
+                    soonest = anniversary
+                }
+            }
+            return soonest
+        }
+
         // Get next notification date for the general notification
         var components = DateComponents()
 
@@ -194,15 +216,20 @@ struct NotificationHelper {
 
     @MainActor
     static func getNextNotificationDateForQuarterlyPreference(contact: SelectedContact) -> String {
-        if contact.notification_preference_quarterly_set_time.addingTimeInterval(Constants.ninetyDaysInSeconds) < Date() {
-            print("resetting quarterly notification preference")
-            // reset the quarterly set time and reset the notification
-            contact.notification_preference_quarterly_set_time = Date()
-            NotificationHelper.removeGeneralNotification(for: contact)
-            NotificationHelper.addGeneralNotification(for: contact)
-        }
+        // Compute the next quarterly fire date without side effects
+        let anchor = contact.notification_preference_quarterly_set_time
+        let next = nextQuarterlyFireDate(from: anchor)
+        return calculateDateStringFromDate(next)
+    }
 
-        return calculateDateStringFromDate(contact.notification_preference_quarterly_set_time)
+    @MainActor
+    static func nextQuarterlyFireDate(from anchor: Date, now: Date = Date()) -> Date {
+        let ninetyDays = Constants.ninetyDaysInSeconds
+        var next = anchor
+        while next < now {
+            next = next.addingTimeInterval(ninetyDays)
+        }
+        return next
     }
 
     @MainActor
@@ -374,6 +401,7 @@ struct NotificationHelper {
 
     @MainActor
     static func removeGeneralNotification(for contact: SelectedContact) {
+        // UNUserNotificationCenter operations are already async/non-blocking
         UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [contact.notification_identifier.uuidString])
 
         UNUserNotificationCenter.current().getPendingNotificationRequests { requests in

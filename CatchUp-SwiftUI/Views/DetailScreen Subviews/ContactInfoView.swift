@@ -16,32 +16,15 @@ struct ContactInfoView: View {
     @State private var emailUrlForAlert: URL?
     @State private var isShowingInvalidPhoneNumberAlert = false
 
+    @State private var formattedPrimaryPhoneNumber = ""
+    @State private var formattedSecondaryPhoneNumber = ""
+    @State private var tappablePrimaryPhoneNumber: URL?
+    @State private var tappableSecondaryPhoneNumber: URL?
+    @State private var tappablePrimaryEmail: URL?
+    @State private var tappableSecondaryEmail: URL?
+
     let phoneNumberKit = PhoneNumberUtility()
     let contact: SelectedContact
-
-    var formattedPrimaryPhoneNumber: String {
-        Converter.getFormattedPhoneNumber(from: contact.phone, with: phoneNumberKit)
-    }
-
-    var formattedSecondaryPhoneNumber: String {
-        Converter.getFormattedPhoneNumber(from: contact.secondary_phone, with: phoneNumberKit)
-    }
-
-    var tappablePrimaryPhoneNumber: URL? {
-        Converter.getTappablePhoneNumber(from: contact.phone)
-    }
-
-    var tappableSecondaryPhoneNumber: URL? {
-        Converter.getTappablePhoneNumber(from: contact.secondary_phone)
-    }
-
-    var tappablePrimaryEmail: URL {
-        Converter.getTappableEmail(from: contact.email)
-    }
-
-    var tappableSecondaryEmail: URL {
-        Converter.getTappableEmail(from: contact.secondary_email)
-    }
 
     var body: some View {
         if contact.hasPhone() {
@@ -63,6 +46,13 @@ struct ContactInfoView: View {
             }, message: {
                 Text("Could not dial this phone number. Ensure the number is correct in your Contacts app.")
             })
+            .onAppear {
+                formatContactInfo()
+            }
+            .onChange(of: contact.phone) { _, _ in formatContactInfo() }
+            .onChange(of: contact.secondary_phone) { _, _ in formatContactInfo() }
+            .onChange(of: contact.email) { _, _ in formatContactInfo() }
+            .onChange(of: contact.secondary_email) { _, _ in formatContactInfo() }
         }
 
         if contact.hasSecondaryPhone() {
@@ -169,6 +159,27 @@ struct ContactInfoView: View {
                         .padding(.top, 3)
                 }
             }
+        }
+    }
+
+    private func formatContactInfo() {
+        // Only format non-empty fields to avoid unnecessary parsing errors
+        if contact.hasPhone() {
+            formattedPrimaryPhoneNumber = Converter.getFormattedPhoneNumber(from: contact.phone, with: phoneNumberKit)
+            tappablePrimaryPhoneNumber = Converter.getTappablePhoneNumber(from: contact.phone)
+        }
+        
+        if contact.hasSecondaryPhone() {
+            formattedSecondaryPhoneNumber = Converter.getFormattedPhoneNumber(from: contact.secondary_phone, with: phoneNumberKit)
+            tappableSecondaryPhoneNumber = Converter.getTappablePhoneNumber(from: contact.secondary_phone)
+        }
+        
+        if contact.hasEmail() {
+            tappablePrimaryEmail = Converter.getTappableEmail(from: contact.email)
+        }
+        
+        if contact.hasSecondaryEmail() {
+            tappableSecondaryEmail = Converter.getTappableEmail(from: contact.secondary_email)
         }
     }
 

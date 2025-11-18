@@ -89,10 +89,16 @@ struct HomeScreen : View {
         .navigationBarTitle("CatchUp")
 
         .onAppear {
-            clearNotificationBadgeAndCheckForUpdate()
+            // Always clear badge when returning to home
+            Utils.clearAppIconNotificationBadge()
 
             if isColdLaunch {
                 isColdLaunch = false
+                
+                // Only fetch IAPs and check version on cold launch
+                Utils.fetchAvailableIAPs()
+                checkForUpdate()
+                
                 NotificationHelper.requestAuthorizationForNotifications()
 
                 if timesUserHasLaunchedApp > 5 && Int.random(in: 1...3) == 2 {
@@ -181,12 +187,6 @@ struct HomeScreen : View {
         return false
     }
 
-    func clearNotificationBadgeAndCheckForUpdate() {
-        Utils.fetchAvailableIAPs()
-        Utils.clearAppIconNotificationBadge()
-
-        checkForUpdate()
-    }
     
     func removePendingNotificationsAndDeleteContact(at offsets: IndexSet) {
         for index in offsets {
