@@ -21,6 +21,7 @@ struct NotificationPreferenceView: View {
     @State private var notificationPreferenceCustomDate = Date()
 
     @State private var whatDayText = ""
+    @State private var resetTask: Task<Void, Never>?
 
     @Bindable var contact: SelectedContact
     @Binding var shouldSetPreferenceViewState: Bool
@@ -111,33 +112,25 @@ struct NotificationPreferenceView: View {
                     NotificationHelper.setYearPreference(for: contact)
                 }
 
-                Task {
-                    await resetNotificationsForContact()
-                }
+                scheduleDebouncedReset(reason: "preference")
             }
         }
 
         .onChange(of: contact.notification_preference_weekday) { initialValue, newValue in
             if newValue != initialNotificationPreferenceWeekday {
                 initialNotificationPreferenceWeekday = 999
-                Task {
-                    await resetNotificationsForContact()
-                }
+                scheduleDebouncedReset(reason: "weekday")
             }
         }
 
         .onChange(of: contact.notification_preference_custom_month) {
             NotificationHelper.setYearPreference(for: contact)
-            Task {
-                await resetNotificationsForContact()
-            }
+            scheduleDebouncedReset(reason: "customMonth")
         }
 
         .onChange(of: contact.notification_preference_custom_day) {
             NotificationHelper.setYearPreference(for: contact)
-            Task {
-                await resetNotificationsForContact()
-            }
+            scheduleDebouncedReset(reason: "customDay")
         }
 
         .onChange(of: notificationPreferenceTime) { initialTime, newTime in
@@ -150,9 +143,7 @@ struct NotificationPreferenceView: View {
                 if let hour = components.hour, let minute = components.minute {
                     NotificationHelper.setYearPreference(for: contact)
                     NotificationHelper.updateNotificationTime(for: contact, hour: hour, minute: minute)
-                    Task {
-                        await resetNotificationsForContact()
-                    }
+                    scheduleDebouncedReset(reason: "time")
                 } else {
                     notificationPreferenceTime = initialTime
                 }
@@ -172,9 +163,7 @@ struct NotificationPreferenceView: View {
                 NotificationHelper.updateNotificationTime(for: contact, hour: hour, minute: minute)
                 NotificationHelper.updateNotificationCustomDate(for: contact, month: month, day: day, year: year)
 
-                Task {
-                    await resetNotificationsForContact()
-                }
+                scheduleDebouncedReset(reason: "customDate")
             }
         }
     }
@@ -218,10 +207,35 @@ struct NotificationPreferenceView: View {
         notificationPreferenceCustomDate = customDate ?? Date()
     }
 
+    @MainActor
+    private func scheduleDebouncedReset(reason: String) {
+        // Cancel any in-flight reset when user continues editing
+        resetTask?.cancel()
+        resetTask = Task {
+            // 300ms debounce to batch rapid changes
+            try? await Task.sleep(for: .seconds(0.3))
+            guard !Task.isCancelled else { return }
+            await resetNotificationsForContact()
+        }
+    }
+
+    @MainActor
     func resetNotificationsForContact() async {
-        print("resetting notifications for \(contact.name)")
-        NotificationHelper.removeExistingNotifications(for: contact)
-        await NotificationHelper.createNewNotification(for: contact)
+        // Ensure we have authorization before scheduling
+        let authorized = await NotificationHelper.checkNotificationAuthorizationStatusAndAddRequest()
+        guard authorized else { return }
+        
+        // Remove only the general notification using stable identifier
+        let center = UNUserNotificationCenter.current()
+        await center.remove([NotificationID.general(contact)])
+        
+        // If not Never, schedule a new general notification with stable identifier
+        if !contact.preferenceIsNever() {
+            NotificationHelper.addGeneralNotification(for: contact)
+        }
+        
+        // Update the contact's next notification date string
+        contact.next_notification_date_time = NotificationHelper.getNextNotificationDateFor(contact: contact)
     }
 }
 
