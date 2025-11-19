@@ -1,5 +1,7 @@
 # CatchUp - Keep in Touch
 
+**[Featured on TapSmart](https://www.tapsmart.com/features/catchup-apps-roundup/)**
+
 **[Featured on Brett Terpstra's *Systematic* Podcast](https://esn.fm/systematic/218)** (around the 46:00 mark)
 
 **[Featured once in Germany on iPhone-Ticker.de](https://www.iphone-ticker.de/catchup-app-hilft-in-kontakt-zu-bleiben-160121/)**
