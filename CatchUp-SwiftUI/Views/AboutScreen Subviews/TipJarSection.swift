@@ -6,14 +6,13 @@
 //  Copyright © 2026 Token Solutions. All rights reserved.
 //
 
+import StoreKit
 import SwiftUI
 
 struct TipJarSection: View {
-    private let smallTip = IAPService.shared.getSmallTipAmount()
-    private let mediumTip = IAPService.shared.getMediumTipAmount()
-    private let largeTip = IAPService.shared.getLargeTipAmount()
-
+    private let iapService = IAPService.shared
     @State private var tipTrigger = 0
+    @State private var statusMessage: String?
 
     var body: some View {
         VStack(spacing: 15) {
@@ -25,18 +24,50 @@ struct TipJarSection: View {
                 .padding(.bottom)
 
             HStack {
-                TipButton(amount: smallTip, action: { leaveTip(at: 0) })
-                TipButton(amount: mediumTip, action: { leaveTip(at: 1) })
-                TipButton(amount: largeTip, action: { leaveTip(at: 2) })
+                TipButton(
+                    amount: displayPrice(for: IAPService.graciousTipProductID, fallback: "$0.99"),
+                    action: { purchase(productID: IAPService.graciousTipProductID) }
+                )
+                TipButton(
+                    amount: displayPrice(for: IAPService.generousTipProductID, fallback: "$1.99"),
+                    action: { purchase(productID: IAPService.generousTipProductID) }
+                )
+                TipButton(
+                    amount: displayPrice(for: IAPService.gratuitousTipProductID, fallback: "$4.99"),
+                    action: { purchase(productID: IAPService.gratuitousTipProductID) }
+                )
             }
             .padding(.bottom, 20)
         }
         .sensoryFeedback(.success, trigger: tipTrigger)
+        .task { await iapService.loadProducts() }
+        .onChange(of: iapService.purchaseStatus) { _, newValue in
+            guard let newValue else { return }
+            statusMessage = newValue.message
+            iapService.clearPurchaseStatus()
+        }
+        .alert(
+            "Thanks!",
+            isPresented: Binding(
+                get: { statusMessage != nil },
+                set: { if !$0 { statusMessage = nil } }
+            ),
+            presenting: statusMessage
+        ) { _ in
+            Button("OK", role: .cancel) { statusMessage = nil }
+        } message: { message in
+            Text(message)
+        }
     }
 
-    private func leaveTip(at index: Int) {
+    private func displayPrice(for productID: String, fallback: String) -> String {
+        iapService.displayPrice(for: productID) ?? fallback
+    }
+
+    private func purchase(productID: String) {
+        guard let product = iapService.product(for: productID) else { return }
         tipTrigger &+= 1
-        IAPService.shared.leaveATip(index: index)
+        Task { await iapService.purchase(product) }
     }
 }
 

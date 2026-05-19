@@ -39,12 +39,6 @@ struct Utils {
     }
 
     @MainActor
-    static func fetchAvailableIAPs() {
-        print("fetching IAPs")
-        IAPService.shared.fetchAvailableProducts()
-    }
-
-    @MainActor
     static func isPhone() -> Bool {
         return UIDevice.current.userInterfaceIdiom == .phone
     }

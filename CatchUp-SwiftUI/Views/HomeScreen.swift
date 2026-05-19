@@ -137,8 +137,7 @@ struct HomeScreen: View {
         guard isColdLaunch else { return }
         isColdLaunch = false
 
-        // Only fetch IAPs and check version on cold launch
-        Utils.fetchAvailableIAPs()
+        // Only check version on cold launch (IAPs load lazily when the tip jar appears)
         checkForUpdate()
 
         NotificationHelper.requestAuthorizationForNotifications()

@@ -6,133 +6,124 @@
 //  Copyright © 2020 Token Solutions. All rights reserved.
 //
 
-import UIKit
+import Foundation
 import StoreKit
 
-enum IAPServiceAlertType{
+enum IAPServiceAlertType {
     case disabled
     case restored
     case purchased
-    
-    func message() -> String{
+
+    var message: String {
         switch self {
-        case .disabled: return "It looks like in-app purchases are disabled for your device."
-        case .restored: return "You've successfully restored your purchase!"
-        case .purchased: return "Your tip was received. Thank you!"
+        case .disabled: "It looks like in-app purchases are disabled for your device."
+        case .restored: "You've successfully restored your purchase!"
+        case .purchased: "Your tip was received. Thank you!"
         }
     }
 }
 
-final class IAPService: NSObject {
-    @MainActor static let shared = IAPService()
-    
-    let graciousTipProductID = "gracious_tip_0.99"
-    let generousTipProductID = "generous_tip_1.99"
-    let gratuitousTipProductID = "gratuitous_tip_4.99"
-    
-    fileprivate var productID = ""
-    fileprivate var productsRequest = SKProductsRequest()
-    fileprivate var iapProducts = [SKProduct]()
-    
-    var purchaseStatusBlock: ((IAPServiceAlertType) -> Void)?
-    
-    // MARK: - MAKE PURCHASE OF A PRODUCT
-    func canMakePurchases() -> Bool {  return SKPaymentQueue.canMakePayments()  }
-    
-    func leaveATip(index: Int) {
-        if iapProducts.count == 0 {
-			print("No IAPs to purchase")
-			return
-		}
-        
-        if canMakePurchases() {
-            let product = iapProducts[index]
-            let payment = SKPayment(product: product)
-            SKPaymentQueue.default().add(self)
-            SKPaymentQueue.default().add(payment)
-            
-            print("IAP to purchase: \(product.productIdentifier)")
-            productID = product.productIdentifier
-        } else {
-            purchaseStatusBlock?(.disabled)
+@Observable
+@MainActor
+final class IAPService {
+    static let shared = IAPService()
+
+    static let graciousTipProductID = "gracious_tip_0.99"
+    static let generousTipProductID = "generous_tip_1.99"
+    static let gratuitousTipProductID = "gratuitous_tip_4.99"
+
+    private static let tipProductIDs: [String] = [
+        graciousTipProductID,
+        generousTipProductID,
+        gratuitousTipProductID,
+    ]
+
+    private(set) var products: [Product] = []
+    private(set) var purchaseStatus: IAPServiceAlertType?
+
+    private init() {
+        // The singleton lives until process exit, so these listeners run
+        // for the lifetime of the app — no cancellation or weak self needed.
+        Task {
+            // Drain any transactions that completed while the app was killed
+            // (Ask to Buy approval, family sharing, offer code redemption).
+            // Transaction.updates only emits new updates while the listener
+            // is alive, so this catches everything else.
+            for await update in Transaction.unfinished {
+                await process(transactionUpdate: update)
+            }
         }
-    }
-	
-	func getSmallTipAmount() -> String {
-        return iapProducts.first(where: { $0.productIdentifier == "gracious_tip_0.99" })?.localizedPrice ?? "$0.99"
-	}
-	
-	func getMediumTipAmount() -> String {
-        return iapProducts.first(where: { $0.productIdentifier == "generous_tip_1.99" })?.localizedPrice ?? "$1.99"
-	}
-	
-	func getLargeTipAmount() -> String {
-        return iapProducts.first(where: { $0.productIdentifier == "gratuitous_tip_4.99" })?.localizedPrice ?? "$4.99"
-	}
-    
-	// MARK: - RESTORE PURCHASE
-    func restorePurchase(){
-        SKPaymentQueue.default().add(self)
-        SKPaymentQueue.default().restoreCompletedTransactions()
-    }
-    
-    // MARK: - FETCH AVAILABLE IAP PRODUCTS
-    func fetchAvailableProducts(){
-        
-        // Put here your IAP Products ID's
-        let productIdentifiers = NSSet(objects: graciousTipProductID, generousTipProductID, gratuitousTipProductID)
-        
-        productsRequest = SKProductsRequest(productIdentifiers: productIdentifiers as! Set<String>)
-        productsRequest.delegate = self
-        productsRequest.start()
-    }
-}
 
-extension IAPService: SKProductsRequestDelegate, SKPaymentTransactionObserver{
-    // MARK: - REQUEST IAP PRODUCTS
-    func productsRequest (_ request:SKProductsRequest, didReceive response:SKProductsResponse) {
-        if (response.products.count > 0) {
-            let sortedProducts = response.products.sorted(by: { $0.price.decimalValue < $1.price.decimalValue })
-
-            iapProducts = sortedProducts
-            for product in iapProducts{
-                let numberFormatter = NumberFormatter()
-                numberFormatter.formatterBehavior = .behavior10_4
-                numberFormatter.numberStyle = .currency
-                numberFormatter.locale = product.priceLocale
-                let price1Str = numberFormatter.string(from: product.price)
-                print(product.localizedDescription + "\nfor just \(price1Str!)")
+        Task {
+            for await update in Transaction.updates {
+                await process(transactionUpdate: update)
             }
         }
     }
-    
-    func paymentQueueRestoreCompletedTransactionsFinished(_ queue: SKPaymentQueue) {
-        purchaseStatusBlock?(.restored)
+
+    func clearPurchaseStatus() {
+        purchaseStatus = nil
     }
-    
-    // MARK:- IAP PAYMENT QUEUE
-    func paymentQueue(_ queue: SKPaymentQueue, updatedTransactions transactions: [SKPaymentTransaction]) {
-        for transaction:AnyObject in transactions {
-            if let trans = transaction as? SKPaymentTransaction {
-                switch trans.transactionState {
-                case .purchased:
-                    print("purchased")
-                    SKPaymentQueue.default().finishTransaction(transaction as! SKPaymentTransaction)
-                    purchaseStatusBlock?(.purchased)
-                    break
-                    
-                case .failed:
-                    print("canceled or failed")
-                    SKPaymentQueue.default().finishTransaction(transaction as! SKPaymentTransaction)
-                    break
-                case .restored:
-                    print("restored")
-                    SKPaymentQueue.default().finishTransaction(transaction as! SKPaymentTransaction)
-                    break
-                    
-                default: break
+
+    var canMakePayments: Bool {
+        AppStore.canMakePayments
+    }
+
+    func loadProducts() async {
+        do {
+            let fetched = try await Product.products(for: Self.tipProductIDs)
+            products = fetched.sorted { $0.price < $1.price }
+        } catch {
+            print("Failed to load IAPs: \(error)")
+        }
+    }
+
+    func purchase(_ product: Product) async {
+        guard canMakePayments else {
+            purchaseStatus = .disabled
+            return
+        }
+
+        do {
+            let result = try await product.purchase()
+            switch result {
+            case .success(let verification):
+                if case .verified(let transaction) = verification {
+                    await transaction.finish()
+                    purchaseStatus = .purchased
                 }
-			}
-		}
+
+            case .userCancelled, .pending:
+                break
+
+            @unknown default:
+                break
+            }
+        } catch {
+            print("Purchase failed for \(product.id): \(error)")
+        }
+    }
+
+    func restorePurchases() async {
+        do {
+            try await AppStore.sync()
+            purchaseStatus = .restored
+        } catch {
+            print("Failed to restore purchases: \(error)")
+        }
+    }
+
+    func product(for productID: String) -> Product? {
+        products.first { $0.id == productID }
+    }
+
+    func displayPrice(for productID: String) -> String? {
+        product(for: productID)?.displayPrice
+    }
+
+    private func process(transactionUpdate result: VerificationResult<Transaction>) async {
+        guard case .verified(let transaction) = result else { return }
+        await transaction.finish()
+        purchaseStatus = .purchased
     }
 }
