@@ -17,18 +17,13 @@ struct NameAndPreferenceStack: View {
                 .font(.largeTitle)
                 .bold()
 
-            HStack(spacing: 0) {
-                Text("Preference: ")
-                    .foregroundStyle(.gray)
-
-                Text(Converter.convertNotificationPreferenceToString(contact: contact))
-                    .foregroundStyle(.gray)
-            }
+            Text("Preference: \(Converter.convertNotificationPreferenceToString(contact: contact))")
+                .foregroundStyle(.secondary)
         }
         .padding(.bottom, 5)
     }
 }
 
 #Preview {
-    NameAndPreferenceStack(contact: SelectedContact.sampleData)
+    NameAndPreferenceStack(contact: .sampleData)
 }

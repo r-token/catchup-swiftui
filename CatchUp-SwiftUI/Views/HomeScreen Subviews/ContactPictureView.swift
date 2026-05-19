@@ -16,10 +16,10 @@ struct ContactPictureView: View {
             .renderingMode(.original)
             .resizable()
             .frame(width: 45, height: 45, alignment: .leading)
-            .clipShape(Circle())
+            .clipShape(.circle)
     }
 }
 
 #Preview {
-    ContactPictureView(contact: SelectedContact.sampleData)
+    ContactPictureView(contact: .sampleData)
 }

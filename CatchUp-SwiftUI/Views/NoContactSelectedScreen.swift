@@ -10,28 +10,19 @@ import SwiftUI
 
 struct NoContactSelectedScreen: View {
     var body: some View {
-        HStack {
-            Spacer()
+        VStack {
+            Image("CatchUp")
+                .resizable()
+                .frame(width: 100, height: 100)
+                .clipShape(.rect(cornerRadius: 20))
+                .shadow(radius: 15)
+                .padding(.bottom)
+                .accessibilityHidden(true)
 
-            VStack {
-                Spacer()
-
-                Image("CatchUp")
-                    .resizable()
-                    .frame(width: 100, height: 100)
-                    .clipShape(RoundedRectangle(cornerRadius: 20))
-                    .shadow(radius: 15)
-                    .padding(.bottom)
-
-                Text("Select a contact from the left sidebar to get started.")
-                    .fontWeight(.semibold)
-
-                Spacer()
-                Spacer()
-            }
-
-            Spacer()
+            Text("Select a contact from the left sidebar to get started.")
+                .bold()
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }
 

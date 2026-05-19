@@ -9,30 +9,25 @@
 import SwiftUI
 
 struct GradientView: View {
-	@Environment(\.colorScheme) var colorScheme
-	
+    @Environment(\.colorScheme) private var colorScheme
+
     var body: some View {
-		if colorScheme == .light {
-			let colors = Gradient(colors: [.blue, .white])
-			let conic = RadialGradient(gradient: colors, center: .bottom, startRadius: 80, endRadius: 190)
-			
-			return Rectangle()
-				.fill(conic)
-			
-		} else { // colorScheme == .dark
-			let colors = Gradient(colors: [.blue, .black])
-			let conic = RadialGradient(gradient: colors, center: .bottom, startRadius: 40, endRadius: 190)
-			
-			return Rectangle()
-				.fill(conic)
-		}
-	}
+        Rectangle()
+            .fill(RadialGradient(
+                gradient: Gradient(colors: [.blue, isLight ? .white : .black]),
+                center: .bottom,
+                startRadius: isLight ? 80 : 40,
+                endRadius: 190
+            ))
+    }
+
+    private var isLight: Bool { colorScheme == .light }
 }
 
 #Preview {
     VStack {
         GradientView()
-            .edgesIgnoringSafeArea(.top)
+            .ignoresSafeArea(edges: .top)
             .frame(height: 150)
         Spacer()
     }

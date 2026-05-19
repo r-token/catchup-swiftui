@@ -6,11 +6,14 @@
 //  Copyright © 2024 Token Solutions. All rights reserved.
 //
 
-import MapKit
 import PhoneNumberKit
 import SwiftUI
 
 struct ContactInfoView: View {
+    @Environment(\.openURL) private var openURL
+
+    let contact: SelectedContact
+
     @State private var isShowingEmailAlert = false
     @State private var emailString = ""
     @State private var emailUrlForAlert: URL?
@@ -23,187 +26,104 @@ struct ContactInfoView: View {
     @State private var tappablePrimaryEmail: URL?
     @State private var tappableSecondaryEmail: URL?
 
-    let phoneNumberKit = PhoneNumberUtility()
-    let contact: SelectedContact
+    private let phoneNumberKit = PhoneNumberUtility()
 
     var body: some View {
-        if contact.hasPhone() {
-            VStack(alignment: .leading, spacing: 3) {
-                Text("Phone")
-                    .font(.caption)
-
-                Button(formattedPrimaryPhoneNumber) {
-                    if let tappablePrimaryPhoneNumber {
-                        UIApplication.shared.open(tappablePrimaryPhoneNumber)
-                    } else {
-                        isShowingInvalidPhoneNumberAlert = true
-                    }
-                }
-                .foregroundStyle(.blue)
-            }
-            .alert("Phone number is invalid", isPresented: $isShowingInvalidPhoneNumberAlert, actions: {
-                Button("OK", role: .cancel) {}
-            }, message: {
-                Text("Could not dial this phone number. Ensure the number is correct in your Contacts app.")
-            })
-            .onAppear {
-                formatContactInfo()
-            }
-            .onChange(of: contact.phone) { _, _ in formatContactInfo() }
-            .onChange(of: contact.secondary_phone) { _, _ in formatContactInfo() }
-            .onChange(of: contact.email) { _, _ in formatContactInfo() }
-            .onChange(of: contact.secondary_email) { _, _ in formatContactInfo() }
-        }
-
-        if contact.hasSecondaryPhone() {
-            VStack(alignment: .leading, spacing: 3) {
-                Text("Secondary Phone")
-                    .font(.caption)
-
-                Button(formattedSecondaryPhoneNumber) {
-                    if let tappableSecondaryPhoneNumber {
-                        UIApplication.shared.open(tappableSecondaryPhoneNumber)
-                    } else {
-                        isShowingInvalidPhoneNumberAlert = true
-                    }
-                }
-                .foregroundStyle(.blue)
-            }
-        }
-
-        if contact.hasEmail() {
-            VStack(alignment: .leading, spacing: 3) {
-                Text("Email")
-                    .font(.caption)
-
-                Button(contact.email) {
-                    emailString = contact.email
-                    emailUrlForAlert = tappablePrimaryEmail
-                    isShowingEmailAlert = true
-                }
-                .foregroundStyle(.blue)
+        Group {
+            if contact.hasPhone() {
+                PhoneInfoRow(
+                    title: "Phone",
+                    formattedNumber: formattedPrimaryPhoneNumber,
+                    tappableNumber: tappablePrimaryPhoneNumber,
+                    isShowingInvalidPhoneAlert: $isShowingInvalidPhoneNumberAlert
+                )
             }
 
-            .alert("Email \(emailString)?", isPresented: $isShowingEmailAlert) {
-                if let emailUrlForAlert {
-                    Button("Yes") {
-                        UIApplication.shared.open(emailUrlForAlert)
-                    }
-                }
+            if contact.hasSecondaryPhone() {
+                PhoneInfoRow(
+                    title: "Secondary Phone",
+                    formattedNumber: formattedSecondaryPhoneNumber,
+                    tappableNumber: tappableSecondaryPhoneNumber,
+                    isShowingInvalidPhoneAlert: $isShowingInvalidPhoneNumberAlert
+                )
+            }
 
-                Button("Cancel", role: .cancel) {}
+            if contact.hasEmail() {
+                EmailInfoRow(title: "Email", email: contact.email) {
+                    presentEmailAlert(for: contact.email, url: tappablePrimaryEmail)
+                }
+            }
+
+            if contact.hasSecondaryEmail() {
+                EmailInfoRow(title: "Secondary Email", email: contact.secondary_email) {
+                    presentEmailAlert(for: contact.secondary_email, url: tappableSecondaryEmail)
+                }
+            }
+
+            if contact.hasAddress() {
+                AddressInfoRow(title: "Address", address: contact.address)
+            }
+
+            if contact.hasSecondaryAddress() {
+                AddressInfoRow(title: "Secondary Address", address: contact.secondary_address)
+            }
+
+            if contact.hasBirthday() {
+                BirthdayInfoRow(contact: contact)
+            }
+
+            if contact.hasAnniversary() {
+                AnniversaryInfoRow(contact: contact)
             }
         }
-
-        if contact.hasSecondaryEmail() {
-            VStack(alignment: .leading, spacing: 3) {
-                Text("Secondary Email")
-                    .font(.caption)
-
-                Button(contact.secondary_email) {
-                    emailString = contact.secondary_email
-                    emailUrlForAlert = tappableSecondaryEmail
-                    isShowingEmailAlert = true
-                }
-                .foregroundStyle(.blue)
-            }
+        .alert("Phone number is invalid", isPresented: $isShowingInvalidPhoneNumberAlert) {
+        } message: {
+            Text("Could not dial this phone number. Ensure the number is correct in your Contacts app.")
         }
-
-        if contact.hasAddress() {
-            VStack(alignment: .leading, spacing: 3) {
-                Text("Address")
-                    .font(.caption)
-                Button(contact.address) {
-                    openAddressInMaps(address: contact.address)
+        .alert("Email \(emailString)?", isPresented: $isShowingEmailAlert) {
+            if let emailUrlForAlert {
+                Button("Yes") {
+                    openURL(emailUrlForAlert)
                 }
-                .foregroundStyle(.blue)
             }
+            Button("Cancel", role: .cancel) {}
         }
-
-        if contact.hasSecondaryAddress() {
-            VStack(alignment: .leading, spacing: 3) {
-                Text("Secondary Address")
-                    .font(.caption)
-                Button(contact.secondary_address) {
-                    openAddressInMaps(address: contact.secondary_address)
-                }
-                .foregroundStyle(.blue)
-            }
-        }
-
-        if contact.hasBirthday() {
-            VStack(alignment: .leading, spacing: 3) {
-                Text("Birthday")
-                    .font(.caption)
-                Text(Converter.getFormattedBirthdayOrAnniversary(from: contact.birthday))
-                if !contact.preferenceIsNever() {
-                    Text("🥳 We will notify you on their birthday")
-                        .foregroundStyle(.orange)
-                        .multilineTextAlignment(.leading)
-                        .font(.callout)
-                        .padding(.top, 3)
-                }
-            }
-        }
-        
-        if contact.hasAnniversary() {
-            VStack(alignment: .leading, spacing: 3) {
-                Text("Anniversary")
-                    .font(.caption)
-                Text(Converter.getFormattedBirthdayOrAnniversary(from: contact.anniversary))
-                if !contact.preferenceIsNever() {
-                    Text("💜 We will notify you the day before their anniversary")
-                        .foregroundStyle(.purple)
-                        .multilineTextAlignment(.leading)
-                        .font(.callout)
-                        .padding(.top, 3)
-                }
-            }
+        .task(id: contactInfoSignature) {
+            formatContactInfo()
         }
     }
 
+    private var contactInfoSignature: String {
+        "\(contact.phone)|\(contact.secondary_phone)|\(contact.email)|\(contact.secondary_email)"
+    }
+
+    private func presentEmailAlert(for email: String, url: URL?) {
+        emailString = email
+        emailUrlForAlert = url
+        isShowingEmailAlert = true
+    }
+
     private func formatContactInfo() {
-        // Only format non-empty fields to avoid unnecessary parsing errors
         if contact.hasPhone() {
             formattedPrimaryPhoneNumber = Converter.getFormattedPhoneNumber(from: contact.phone, with: phoneNumberKit)
             tappablePrimaryPhoneNumber = Converter.getTappablePhoneNumber(from: contact.phone)
         }
-        
+
         if contact.hasSecondaryPhone() {
             formattedSecondaryPhoneNumber = Converter.getFormattedPhoneNumber(from: contact.secondary_phone, with: phoneNumberKit)
             tappableSecondaryPhoneNumber = Converter.getTappablePhoneNumber(from: contact.secondary_phone)
         }
-        
+
         if contact.hasEmail() {
             tappablePrimaryEmail = Converter.getTappableEmail(from: contact.email)
         }
-        
+
         if contact.hasSecondaryEmail() {
             tappableSecondaryEmail = Converter.getTappableEmail(from: contact.secondary_email)
-        }
-    }
-
-    func openAddressInMaps(address: String){
-        let geocoder = CLGeocoder()
-        geocoder.geocodeAddressString(address) { (placemarks, error) in
-            guard let placemarks = placemarks?.first else {
-                return
-            }
-
-            let location = placemarks.location?.coordinate
-
-            if let lat = location?.latitude, let long = location?.longitude{
-                let destination = MKMapItem(placemark: MKPlacemark(coordinate: CLLocationCoordinate2D(latitude: lat, longitude: long)))
-                destination.name = address
-
-                MKMapItem.openMaps(
-                    with: [destination]
-                )
-            }
         }
     }
 }
 
 #Preview {
-    ContactInfoView(contact: SelectedContact.sampleData)
+    ContactInfoView(contact: .sampleData)
 }

@@ -9,26 +9,21 @@
 import SwiftUI
 
 struct DetailScreen: View {
-    @Environment(DataController.self) var dataController
+    @Environment(DataController.self) private var dataController
     @Bindable var contact: SelectedContact
 
     @State private var shouldSetPreferenceViewState = true
     @State private var nextCatchUpTime: String = ""
 
-    @MainActor
-    private func refreshNextCatchUpTime() {
-        nextCatchUpTime = ContactHelper.getFriendlyNextCatchUpTime(for: contact, forQuarterlyPreference: false)
-    }
-
     var body: some View {
-		VStack {
-			GradientView()
-				.edgesIgnoringSafeArea(.top)
-				.frame(height: 75)
-			
+        VStack {
+            GradientView()
+                .ignoresSafeArea(edges: .top)
+                .frame(height: 75)
+
             ContactPhoto(image: Converter.getContactPicture(from: contact.picture))
-				.offset(x: 0, y: -110)
-				.padding(.bottom, -110)
+                .offset(x: 0, y: -110)
+                .padding(.bottom, -110)
 
             NameAndPreferenceStack(contact: contact)
 
@@ -37,8 +32,12 @@ struct DetailScreen: View {
                     NextCatchUpRow(nextCatchUpTime: nextCatchUpTime)
                     BirthdayOrAnniversaryRow(contact: contact)
                 }
+
                 Section("Notification Preference") {
-                    NotificationPreferenceView(contact: contact, shouldSetPreferenceViewState: $shouldSetPreferenceViewState)
+                    NotificationPreferenceView(
+                        contact: contact,
+                        shouldSetPreferenceViewState: $shouldSetPreferenceViewState
+                    )
                 }
 
                 if contact.hasContactInfo() {
@@ -49,35 +48,47 @@ struct DetailScreen: View {
 
                 RemoveContactButton(contact: contact)
             }
-		}
+        }
+        .toolbarTitleDisplayMode(.inline)
         .onAppear {
             Utils.clearAppIconNotificationBadge()
             Utils.clearUnreadBadge(for: contact)
             dataController.selectedContact = contact
             refreshNextCatchUpTime()
         }
-
-        .onChange(of: contact.notification_preference) { _, _ in refreshNextCatchUpTime() }
-        .onChange(of: contact.notification_preference_hour) { _, _ in refreshNextCatchUpTime() }
-        .onChange(of: contact.notification_preference_minute) { _, _ in refreshNextCatchUpTime() }
-        .onChange(of: contact.notification_preference_weekday) { _, _ in refreshNextCatchUpTime() }
-        .onChange(of: contact.notification_preference_week_of_month) { _, _ in refreshNextCatchUpTime() }
-        .onChange(of: contact.notification_preference_custom_day) { _, _ in refreshNextCatchUpTime() }
-        .onChange(of: contact.notification_preference_custom_month) { _, _ in refreshNextCatchUpTime() }
-        .onChange(of: contact.notification_preference_custom_year) { _, _ in refreshNextCatchUpTime() }
-        .onChange(of: contact.notification_preference_quarterly_set_time) { _, _ in refreshNextCatchUpTime() }
-        .onChange(of: contact.birthday) { _, _ in refreshNextCatchUpTime() }
-        .onChange(of: contact.anniversary) { _, _ in refreshNextCatchUpTime() }
-        .onChange(of: contact.next_notification_date_time) { _, _ in refreshNextCatchUpTime() }
-
         .onDisappear {
             dataController.selectedContact = nil
         }
+        .onChange(of: notificationStateSignature) {
+            refreshNextCatchUpTime()
+        }
+    }
 
-        .navigationBarTitleDisplayMode(.inline)
+    @MainActor
+    private func refreshNextCatchUpTime() {
+        nextCatchUpTime = ContactHelper.getFriendlyNextCatchUpTime(for: contact, forQuarterlyPreference: false)
+    }
+
+    private var notificationStateSignature: String {
+        [
+            String(contact.notification_preference),
+            String(contact.notification_preference_hour),
+            String(contact.notification_preference_minute),
+            String(contact.notification_preference_weekday),
+            String(contact.notification_preference_week_of_month),
+            String(contact.notification_preference_custom_day),
+            String(contact.notification_preference_custom_month),
+            String(contact.notification_preference_custom_year),
+            contact.notification_preference_quarterly_set_time.description,
+            contact.birthday,
+            contact.anniversary,
+            contact.next_notification_date_time
+        ]
+        .joined(separator: "|")
     }
 }
 
 #Preview {
-    DetailScreen(contact: SelectedContact.sampleData)
+    DetailScreen(contact: .sampleData)
+        .environment(DataController())
 }
