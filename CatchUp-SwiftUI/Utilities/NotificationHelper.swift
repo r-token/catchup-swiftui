@@ -29,7 +29,6 @@ actor NotificationResetGate {
 struct NotificationHelper {
     @MainActor
     static func createNewNotification(for contact: SelectedContact) async {
-        // If there's nothing to schedule, short-circuit early
         if contact.preferenceIsNever() && !contact.hasBirthday() && !contact.hasAnniversary() {
             contact.next_notification_date_time = ""
             return
@@ -37,23 +36,15 @@ struct NotificationHelper {
 
         updateNextNotificationDateTimeFor(contact: contact)
 
-        // Check authorization first
         let isAuthorized = await checkNotificationAuthorizationStatusAndAddRequest()
+        guard isAuthorized else { return }
 
-        guard isAuthorized else {
-            print("Notification authorization not granted")
-            return
-        }
-
-        // Add the notifications if authorized
         if preferenceIsNotSetToNever(for: contact) {
             addGeneralNotification(for: contact)
         }
-
         if contact.hasBirthday() {
             addBirthdayNotification(for: contact)
         }
-
         if contact.hasAnniversary() {
             addAnniversaryNotification(for: contact)
         }
@@ -353,18 +344,8 @@ struct NotificationHelper {
             return
         }
         
-        // Create and add the request with stable identifier
         let request = UNNotificationRequest(identifier: identifier, content: content, trigger: trigger)
         UNUserNotificationCenter.current().add(request)
-        
-        // Keep legacy UUID fields updated for backwards compatibility (but don't use them for scheduling)
-        if content.title.hasPrefix("👋") {
-            contact.notification_identifier = UUID(uuidString: identifier.split(separator: ".").last.map(String.init) ?? "") ?? UUID()
-        } else if content.title.hasPrefix("🥳") {
-            contact.birthday_notification_id = UUID(uuidString: identifier.split(separator: ".").last.map(String.init) ?? "") ?? UUID()
-        } else {
-            contact.anniversary_notification_id = UUID(uuidString: identifier.split(separator: ".").last.map(String.init) ?? "") ?? UUID()
-        }
     }
     
     static func generateRandomNotificationBody() -> String {
@@ -449,36 +430,13 @@ struct NotificationHelper {
         }
     }
 
+    /// Removes every pending and delivered notification belonging to a contact,
+    /// using the stable identifier scheme. Call this before deleting a contact from
+    /// SwiftData; deletion-via-await ensures the cancellation lands in iOS's queue
+    /// before the source-of-truth row disappears.
     @MainActor
-    static func removeExistingNotifications(for contact: SelectedContact) {
-        removeGeneralNotification(for: contact)
-        
-        if contact.hasBirthday() {
-            removeBirthdayNotification(for: contact)
-        }
-        
-        if contact.hasAnniversary() {
-            removeAnniversaryNotification(for: contact)
-        }
-    }
-
-    @MainActor
-    static func removeGeneralNotification(for contact: SelectedContact) {
-        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [contact.notification_identifier.uuidString])
-
-        UNUserNotificationCenter.current().getPendingNotificationRequests { requests in
-            print("Pending requests after removing existing request: \(requests.count)")
-        }
-    }
-
-    @MainActor
-    static func removeBirthdayNotification(for contact: SelectedContact) {
-        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [contact.birthday_notification_id.uuidString])
-    }
-
-    @MainActor
-    static func removeAnniversaryNotification(for contact: SelectedContact) {
-        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [contact.anniversary_notification_id.uuidString])
+    static func removeExistingNotifications(for contact: SelectedContact) async {
+        await purgePendingForContact(contact)
     }
 
     @MainActor
@@ -530,115 +488,138 @@ struct NotificationHelper {
         }
     }
     
-    /// Purges all pending notifications for a contact, including legacy identifiers
-    /// This handles:
-    /// - Stable identifiers (general/birthday/anniversary)
-    /// - Legacy UUID-based identifiers
-    /// - Thread-based identifiers
-    /// - Title-based matching for old notifications
+    /// Purges all pending and delivered notifications for a single contact.
+    /// Matches by stable identifier, by thread identifier, and (defensively) by
+    /// legacy UUID fields and by title — so it cleans up notifications scheduled
+    /// by any previous version of the app.
+    @MainActor
     static func purgePendingForContact(_ contact: SelectedContact) async {
-        // Capture all needed values from contact before entering closure
         let contactName = contact.name
         let threadId = NotificationID.thread(contact)
-        let generalId = NotificationID.general(contact)
-        let birthdayId = NotificationID.birthday(contact)
-        let anniversaryId = NotificationID.anniversary(contact)
-        let legacyNotificationId = contact.notification_identifier.uuidString
-        let legacyBirthdayId = contact.birthday_notification_id.uuidString
-        let legacyAnniversaryId = contact.anniversary_notification_id.uuidString
-        
-        await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
-            UNUserNotificationCenter.current().getPendingNotificationRequests { allPending in
-                // Get all existing notification identifiers for this contact
-                let existingIds = Set(allPending.map(\.identifier))
-                
-                // Title-based matching for legacy notifications
-                let titles = [
-                    "👋 CatchUp with \(contactName)",
-                    "🥳 Today is \(contactName)'s birthday!",
-                    "😍 Tomorrow is \(contactName)'s anniversary!"
-                ]
-                
-                // Build candidate identifiers (stable + legacy)
-                let candidateIds = [
-                    generalId,
-                    birthdayId,
-                    anniversaryId,
-                    legacyNotificationId,
-                    legacyBirthdayId,
-                    legacyAnniversaryId
-                ]
-                
-                // Only include identifiers that actually exist, plus thread/title matches
-                let targetIdentifiers = Set(
-                    candidateIds.filter { existingIds.contains($0) }
-                    + allPending.filter { $0.content.threadIdentifier == threadId }.map(\.identifier)
-                    + allPending.filter { titles.contains($0.content.title) }.map(\.identifier)
-                )
-                
-                if !targetIdentifiers.isEmpty {
-                    UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: Array(targetIdentifiers))
-                }
-                
-                continuation.resume()
-            }
+        let stableIds: Set<String> = [
+            NotificationID.general(contact),
+            NotificationID.birthday(contact),
+            NotificationID.anniversary(contact)
+        ]
+        let legacyIds: Set<String> = [
+            contact.notification_identifier.uuidString,
+            contact.birthday_notification_id.uuidString,
+            contact.anniversary_notification_id.uuidString
+        ]
+        let legacyTitles: Set<String> = [
+            "👋 CatchUp with \(contactName)",
+            "🥳 Today is \(contactName)'s birthday!",
+            "😍 Tomorrow is \(contactName)'s anniversary!"
+        ]
+
+        let center = UNUserNotificationCenter.current()
+        let pending = await center.pendingNotificationRequests()
+        let delivered = await center.deliveredNotifications()
+
+        let matchesContact: (UNNotificationRequest) -> Bool = { request in
+            if stableIds.contains(request.identifier) { return true }
+            if legacyIds.contains(request.identifier) { return true }
+            if request.content.threadIdentifier == threadId { return true }
+            if legacyTitles.contains(request.content.title) { return true }
+            return false
+        }
+
+        let pendingTargets = pending.filter(matchesContact).map(\.identifier)
+        let deliveredTargets = delivered.map(\.request).filter(matchesContact).map(\.identifier)
+
+        if !pendingTargets.isEmpty {
+            center.removePendingNotificationRequests(withIdentifiers: pendingTargets)
+        }
+        if !deliveredTargets.isEmpty {
+            center.removeDeliveredNotifications(withIdentifiers: deliveredTargets)
         }
     }
 
-    /// One-time migration to clean up all legacy notifications
+    /// Reconciles iOS's notification queue against the current SwiftData contact set.
+    /// Cancels every pending or delivered notification whose embedded contact UUID
+    /// doesn't match an existing contact, as well as any notification whose
+    /// identifier doesn't follow the stable scheme at all (legacy entries).
+    ///
+    /// Run on every cold launch as defense-in-depth: if a removal ever fails to
+    /// land — for any reason — the next launch reconciles it. The operation is
+    /// idempotent and surgical (it does not touch valid notifications).
     @MainActor
-    static func migrateLegacyNotifications() async {
-        await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
-            UNUserNotificationCenter.current().getPendingNotificationRequests { requests in
-                // Find notifications without threadIdentifier (legacy)
-                let legacyNotifications = requests.filter { $0.content.threadIdentifier.isEmpty }
-                
-                if !legacyNotifications.isEmpty {
-                    // Nuclear option: remove everything to clean up legacy notifications
-                    UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
-                }
-                
-                continuation.resume()
+    static func cleanupOrphanedNotifications(for selectedContacts: [SelectedContact]) async {
+        let validContactIds = Set(selectedContacts.map { $0.id.uuidString })
+        let center = UNUserNotificationCenter.current()
+        let pending = await center.pendingNotificationRequests()
+        let delivered = await center.deliveredNotifications()
+
+        let isOrphan: (UNNotificationRequest) -> Bool = { request in
+            let embedded = NotificationID.extractContactUUID(from: request.identifier)
+                ?? NotificationID.extractContactUUID(from: request.content.threadIdentifier)
+            if let embedded {
+                return !validContactIds.contains(embedded)
             }
+            // No recognizable stable-scheme contact UUID — treat as legacy.
+            return true
         }
-        
-        // Brief delay to ensure removal completes
-        try? await Task.sleep(nanoseconds: 200_000_000) // 200ms
+
+        let pendingOrphans = pending.filter(isOrphan).map(\.identifier)
+        let deliveredOrphans = delivered.map(\.request).filter(isOrphan).map(\.identifier)
+
+        if !pendingOrphans.isEmpty {
+            center.removePendingNotificationRequests(withIdentifiers: pendingOrphans)
+        }
+        if !deliveredOrphans.isEmpty {
+            center.removeDeliveredNotifications(withIdentifiers: deliveredOrphans)
+        }
     }
-    
+
+    /// One-time "nuclear" reset: cancels every pending and delivered notification
+    /// belonging to this app, then re-schedules from the current SwiftData contact
+    /// set as the single source of truth. Used once on next launch (gated by
+    /// `@AppStorage`) to recover from notifications stranded by past builds whose
+    /// removal code targeted the wrong identifiers.
+    @MainActor
+    static func performOneTimeNuclearReset(for selectedContacts: [SelectedContact]) async {
+        let center = UNUserNotificationCenter.current()
+        center.removeAllPendingNotificationRequests()
+        center.removeAllDeliveredNotifications()
+
+        // Give the system a moment to settle before re-scheduling.
+        try? await Task.sleep(for: .milliseconds(200))
+
+        // `createNewNotification` short-circuits for contacts with nothing to
+        // schedule, so we can iterate the full set without an extra filter.
+        for contact in selectedContacts {
+            await createNewNotification(for: contact)
+        }
+    }
+
     @MainActor
     static func resetNotifications(for selectedContacts: [SelectedContact], delayTime: Double) async {
-        // Use actor gate to prevent concurrent resets
+        // Serialize concurrent resets and apply an optional pre-delay (cold launch).
         await NotificationResetGate.shared.runExclusive {
-            // Apply delay if specified (used on cold launch)
             if delayTime > 0 {
                 try? await Task.sleep(for: .seconds(delayTime))
             }
         }
-        
-        // Now execute the reset on MainActor (outside the Sendable closure)
+
         let center = UNUserNotificationCenter.current()
-        
-        // Phase 1: Purge all existing notifications for each contact
+
+        // Phase 1: Purge all existing notifications for each contact.
         for contact in selectedContacts {
             await purgePendingForContact(contact)
         }
-        
-        // Phase 2: Re-schedule notifications with stable identifiers
+
+        // Phase 2: Re-schedule notifications with stable identifiers.
         for contact in selectedContacts {
             if contact.notification_preference != 0 {
                 await NotificationHelper.createNewNotification(for: contact)
             } else {
-                // Ensure no general notification remains if user disabled it
+                // Ensure no general notification remains if user disabled it.
                 await center.remove([NotificationID.general(contact)])
             }
         }
-        
-        // Update unread badge times
-        for contact in selectedContacts {
-            if contact.unread_badge_date_time.isEmpty {
-                contact.unread_badge_date_time = contact.next_notification_date_time
-            }
+
+        for contact in selectedContacts where contact.unread_badge_date_time.isEmpty {
+            contact.unread_badge_date_time = contact.next_notification_date_time
         }
     }
 }

@@ -21,6 +21,8 @@ struct HomeScreen : View {
 
     @AppStorage("savedVersion") var savedVersion = "2.0.0"
     @AppStorage("timesUserHasLaunchedApp") var timesUserHasLaunchedApp = 0
+    // Bump the suffix to trigger a fresh full reset on the next launch (e.g. "_v4").
+    @AppStorage("hasPerformedNuclearNotificationReset_v3") var hasPerformedNuclearNotificationReset = false
 
     @State private var isColdLaunch = true
 	@State private var isShowingUpdatesSheet = false
@@ -105,10 +107,21 @@ struct HomeScreen : View {
                     requestReview()
                 }
 
-                Task {
-                    // One-time migration to clean up legacy notifications
-                    await NotificationHelper.migrateLegacyNotifications()
-                    await NotificationHelper.resetNotifications(for: selectedContacts, delayTime: 3)
+                Task { @MainActor in
+                    if !hasPerformedNuclearNotificationReset {
+                        // One-time recovery: wipe every pending/delivered notification
+                        // for this app and re-schedule from the current SwiftData
+                        // contact set. Cleans up orphans left by past builds whose
+                        // delete path targeted the wrong identifier.
+                        await NotificationHelper.performOneTimeNuclearReset(for: selectedContacts)
+                        hasPerformedNuclearNotificationReset = true
+                    } else {
+                        // Defense-in-depth on every cold launch: cancel anything
+                        // whose identifier no longer corresponds to a contact in
+                        // SwiftData, then re-schedule for everyone who survives.
+                        await NotificationHelper.cleanupOrphanedNotifications(for: selectedContacts)
+                        await NotificationHelper.resetNotifications(for: selectedContacts, delayTime: 3)
+                    }
                 }
                 timesUserHasLaunchedApp += 1
             }
@@ -191,11 +204,12 @@ struct HomeScreen : View {
 
     
     func removePendingNotificationsAndDeleteContact(at offsets: IndexSet) {
-        for index in offsets {
-            let contact = selectedContacts[index]
-            
-            NotificationHelper.removeExistingNotifications(for: contact)
-            modelContext.delete(contact)
+        let contactsToDelete = offsets.map { selectedContacts[$0] }
+        Task { @MainActor in
+            for contact in contactsToDelete {
+                await NotificationHelper.removeExistingNotifications(for: contact)
+                modelContext.delete(contact)
+            }
         }
     }
     

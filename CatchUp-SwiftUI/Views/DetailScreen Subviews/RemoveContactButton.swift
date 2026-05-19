@@ -33,9 +33,15 @@ struct RemoveContactButton: View {
     }
 
     func deleteContactAndDismiss() {
-        NotificationHelper.removeExistingNotifications(for: contact)
-        modelContext.delete(contact)
-        dismiss()
+        // Await the purge so iOS has cancelled every scheduled request for this
+        // contact before SwiftData deletes the row — otherwise the row is gone
+        // by the time we'd retry, and the orphan would persist until the next
+        // cold-launch reconciliation.
+        Task { @MainActor in
+            await NotificationHelper.removeExistingNotifications(for: contact)
+            modelContext.delete(contact)
+            dismiss()
+        }
     }
 }
 
