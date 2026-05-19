@@ -9,7 +9,6 @@
 import SwiftUI
 import UIKit
 import Contacts
-import CoreData
 
 // Functions for creating and updating a contact
 struct ContactHelper {

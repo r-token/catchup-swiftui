@@ -36,6 +36,7 @@ struct RemoveContactButton: View {
         Task { @MainActor in
             await NotificationHelper.removeExistingNotifications(for: contact)
             modelContext.delete(contact)
+            try? modelContext.save()
             dismiss()
         }
     }

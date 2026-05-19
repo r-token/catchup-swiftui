@@ -9,18 +9,23 @@
 import Foundation
 import SwiftData
 
+@MainActor
 @Observable
 class DataController {
     var selectedContact: SelectedContact?
 
-    @MainActor
     static let previewContainer: ModelContainer = {
         do {
             let config = ModelConfiguration(isStoredInMemoryOnly: true)
             let container = try ModelContainer(for: SelectedContact.self, configurations: config)
 
-            for i in 1...9 {
+            let sampleNames = [
+                "Ryan Token", "Jordan Smith", "Avery Lee", "Riley Chen",
+                "Morgan Patel", "Casey Nguyen", "Quinn Garcia", "Drew Kim", "Sam Brown"
+            ]
+            for name in sampleNames {
                 let contact = SelectedContact.sampleData
+                contact.name = name
                 container.mainContext.insert(contact)
             }
 

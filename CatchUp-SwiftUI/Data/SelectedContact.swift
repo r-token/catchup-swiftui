@@ -12,6 +12,8 @@ import SwiftData
 
 @Model
 class SelectedContact {
+    #Index<SelectedContact>([\.name], [\.next_notification_date_time])
+
     var address: String = ""
     var anniversary: String = ""
     var anniversary_notification_id: UUID = UUID()
@@ -160,31 +162,36 @@ class SelectedContact {
         }
     }
 
-    @MainActor static let sampleData = SelectedContact(
-        address: "2190 E 11th Ave",
-        anniversary: "06/20/2020",
-        anniversary_notification_id: UUID(),
-        birthday: "05/16/1994",
-        birthday_notification_id: UUID(),
-        email: "ryantoken13@gmail.com",
-        id: UUID(),
-        name: "Ryan Token",
-        next_notification_date_time: "",
-        notification_identifier: UUID(),
-        notification_preference: 0,
-        notification_preference_custom_day: 3,
-        notification_preference_custom_month: 0,
-        notification_preference_custom_year: 0,
-        notification_preference_hour: 12,
-        notification_preference_minute: 0,
-        notification_preference_quarterly_set_time: Date(),
-        notification_preference_weekday: 3,
-        notification_preference_week_of_month: 2,
-        phone: "6363687771",
-        picture: "photo-as-data-string",
-        secondary_address: "",
-        secondary_email: "",
-        secondary_phone: "",
-        unread_badge_date_time: ""
-    )
+    // A factory (not a stored static) so each call site — previews, the
+    // preview container loop — gets a distinct SwiftData instance instead of
+    // sharing one identity (which SwiftData would de-dupe on insert).
+    @MainActor static var sampleData: SelectedContact {
+        SelectedContact(
+            address: "2190 E 11th Ave",
+            anniversary: "06/20/2020",
+            anniversary_notification_id: UUID(),
+            birthday: "05/16/1994",
+            birthday_notification_id: UUID(),
+            email: "ryantoken13@gmail.com",
+            id: UUID(),
+            name: "Ryan Token",
+            next_notification_date_time: "",
+            notification_identifier: UUID(),
+            notification_preference: 0,
+            notification_preference_custom_day: 3,
+            notification_preference_custom_month: 0,
+            notification_preference_custom_year: 0,
+            notification_preference_hour: 12,
+            notification_preference_minute: 0,
+            notification_preference_quarterly_set_time: Date(),
+            notification_preference_weekday: 3,
+            notification_preference_week_of_month: 2,
+            phone: "6363687771",
+            picture: "photo-as-data-string",
+            secondary_address: "",
+            secondary_email: "",
+            secondary_phone: "",
+            unread_badge_date_time: ""
+        )
+    }
 }

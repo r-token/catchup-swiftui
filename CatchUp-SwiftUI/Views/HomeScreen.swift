@@ -17,7 +17,13 @@ struct HomeScreen: View {
     @Environment(\.requestReview) private var requestReview
 
     @Query(sort: \SelectedContact.name) private var selectedContacts: [SelectedContact]
-    @Query(sort: \SelectedContact.next_notification_date_time) private var nextCatchups: [SelectedContact]
+
+    // Filter at the SwiftData layer so empty `next_notification_date_time`
+    // rows don't get fetched into memory only to be discarded.
+    @Query(
+        filter: #Predicate<SelectedContact> { !$0.next_notification_date_time.isEmpty },
+        sort: \SelectedContact.next_notification_date_time
+    ) private var nextCatchups: [SelectedContact]
 
     @AppStorage("savedVersion") private var savedVersion = "2.0.0"
     @AppStorage("timesUserHasLaunchedApp") private var timesUserHasLaunchedApp = 0
@@ -37,7 +43,7 @@ struct HomeScreen: View {
     }
 
     private var filteredNextCatchups: [SelectedContact] {
-        Array(nextCatchups.lazy.filter { !$0.next_notification_date_time.isEmpty }.prefix(4))
+        Array(nextCatchups.prefix(4))
     }
 
     private var hasAnyNotificationPreference: Bool {
@@ -192,6 +198,9 @@ struct HomeScreen: View {
             let selectedContact = ContactHelper.createSelectedContact(contact: contact)
             modelContext.insert(selectedContact)
         }
+        // Autosave timing is unpredictable; persist immediately so a user who
+        // adds a contact and backgrounds the app keeps it on next launch.
+        try? modelContext.save()
     }
 
     private func contactAlreadyAdded(name: String) -> Bool {
@@ -205,6 +214,10 @@ struct HomeScreen: View {
                 await NotificationHelper.removeExistingNotifications(for: contact)
                 modelContext.delete(contact)
             }
+            // Force-flush the delete so the row can't reappear next launch if
+            // the user backgrounds the app before autosave fires — that would
+            // resurrect a contact whose notifications we just cancelled.
+            try? modelContext.save()
         }
     }
 
@@ -226,5 +239,9 @@ struct HomeScreen: View {
 }
 
 #Preview {
-    HomeScreen()
+    NavigationStack {
+        HomeScreen()
+    }
+    .modelContainer(DataController.previewContainer)
+    .environment(DataController())
 }

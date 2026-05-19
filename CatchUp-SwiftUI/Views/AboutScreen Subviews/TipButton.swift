@@ -18,7 +18,7 @@ struct TipButton: View {
             .foregroundStyle(.white)
             .padding()
             .background(tipGradient, in: .rect(cornerRadius: 20))
-            .shadow(radius: 15)
+            .shadow(radius: 10)
             .frame(maxWidth: .infinity)
     }
 
@@ -33,9 +33,9 @@ struct TipButton: View {
 
 #Preview {
     HStack {
-        TipButton(amount: "$1", action: {})
-        TipButton(amount: "$3", action: {})
-        TipButton(amount: "$5", action: {})
+        TipButton(amount: "$0.99", action: {})
+        TipButton(amount: "$1.99", action: {})
+        TipButton(amount: "$4.99", action: {})
     }
     .padding()
 }

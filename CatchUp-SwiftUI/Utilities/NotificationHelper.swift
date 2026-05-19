@@ -9,7 +9,6 @@
 import SwiftData
 import SwiftUI
 import UserNotifications
-import CoreData
 
 /// Actor to serialize notification reset operations and prevent race conditions
 actor NotificationResetGate {
