@@ -24,7 +24,6 @@ enum IAPServiceAlertType {
 }
 
 @Observable
-@MainActor
 final class IAPService {
     static let shared = IAPService()
 

@@ -165,7 +165,7 @@ class SelectedContact {
     // A factory (not a stored static) so each call site — previews, the
     // preview container loop — gets a distinct SwiftData instance instead of
     // sharing one identity (which SwiftData would de-dupe on insert).
-    @MainActor static var sampleData: SelectedContact {
+    static var sampleData: SelectedContact {
         SelectedContact(
             address: "2190 E 11th Ave",
             anniversary: "06/20/2020",

@@ -9,7 +9,6 @@
 import Foundation
 import SwiftData
 
-@MainActor
 @Observable
 class DataController {
     var selectedContact: SelectedContact?

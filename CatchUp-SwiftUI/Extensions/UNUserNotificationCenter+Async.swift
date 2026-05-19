@@ -10,7 +10,7 @@ import UserNotifications
 
 extension UNUserNotificationCenter {
     /// Removes pending and delivered notification requests with the given identifiers.
-    func remove(_ identifiers: [String]) async {
+    nonisolated func remove(_ identifiers: [String]) async {
         guard !identifiers.isEmpty else { return }
 
         self.removePendingNotificationRequests(withIdentifiers: identifiers)

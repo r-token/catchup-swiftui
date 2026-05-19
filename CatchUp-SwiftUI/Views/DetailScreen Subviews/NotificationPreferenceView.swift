@@ -86,6 +86,9 @@ struct NotificationPreferenceView: View {
         .onChange(of: notificationPreferenceCustomDate) { _, newDate in
             handleCustomDateChange(newDate: newDate)
         }
+        .onDisappear {
+            resetTask?.cancel()
+        }
     }
 
     private func handlePreferenceChange(newValue: Int) {
@@ -188,7 +191,6 @@ struct NotificationPreferenceView: View {
         notificationPreferenceCustomDate = customDate
     }
 
-    @MainActor
     private func scheduleDebouncedReset(reason: String) {
         // Cancel any in-flight reset when user continues editing
         resetTask?.cancel()
@@ -200,7 +202,6 @@ struct NotificationPreferenceView: View {
         }
     }
 
-    @MainActor
     private func resetNotificationsForContact() async {
         // Ensure we have authorization before scheduling
         let authorized = await NotificationHelper.checkNotificationAuthorizationStatusAndAddRequest()
@@ -212,7 +213,7 @@ struct NotificationPreferenceView: View {
 
         // If not Never, schedule a new general notification with stable identifier
         if !contact.preferenceIsNever() {
-            NotificationHelper.addGeneralNotification(for: contact)
+            await NotificationHelper.addGeneralNotification(for: contact)
         }
 
         // Update the contact's next notification date string

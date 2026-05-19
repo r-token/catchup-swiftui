@@ -8,6 +8,6 @@
 
 import Foundation
 
-struct Constants {
-    static let ninetyDaysInSeconds: TimeInterval = 7776000
+enum Constants {
+    nonisolated static let ninetyDaysInSeconds: TimeInterval = 7776000
 }

@@ -64,7 +64,6 @@ struct DetailScreen: View {
         }
     }
 
-    @MainActor
     private func refreshNextCatchUpTime() {
         nextCatchUpTime = ContactHelper.getFriendlyNextCatchUpTime(for: contact, forQuarterlyPreference: false)
     }

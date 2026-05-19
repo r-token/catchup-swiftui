@@ -18,10 +18,10 @@ struct HomeScreen: View {
 
     @Query(sort: \SelectedContact.name) private var selectedContacts: [SelectedContact]
 
-    // Filter at the SwiftData layer so empty `next_notification_date_time`
-    // rows don't get fetched into memory only to be discarded.
     @Query(
-        filter: #Predicate<SelectedContact> { !$0.next_notification_date_time.isEmpty },
+        filter: #Predicate<SelectedContact> {
+            $0.notification_preference != 0 && !$0.next_notification_date_time.isEmpty
+        },
         sort: \SelectedContact.next_notification_date_time
     ) private var nextCatchups: [SelectedContact]
 
@@ -108,7 +108,12 @@ struct HomeScreen: View {
         .navigationDestination(item: $tappedGridContact) { contact in
             DetailScreen(contact: contact)
         }
-        .onAppear(perform: handleAppear)
+        .onAppear {
+            Utils.clearAppIconNotificationBadge()
+        }
+        .task {
+            await runColdLaunchSetupIfNeeded()
+        }
         .onChange(of: scenePhase) { _, newPhase in
             if newPhase == .active {
                 Utils.clearAppIconNotificationBadge()
@@ -136,39 +141,36 @@ struct HomeScreen: View {
         }
     }
 
-    private func handleAppear() {
-        // Always clear badge when returning to home
-        Utils.clearAppIconNotificationBadge()
-
+    private func runColdLaunchSetupIfNeeded() async {
         guard isColdLaunch else { return }
         isColdLaunch = false
 
         // Only check version on cold launch (IAPs load lazily when the tip jar appears)
         checkForUpdate()
 
-        NotificationHelper.requestAuthorizationForNotifications()
-
+        // Request authorization through the async path; subsequent scheduling
+        // calls go through `checkNotificationAuthorizationStatusAndAddRequest`,
+        // which also requests authorization if needed.
         if timesUserHasLaunchedApp > 5 && Int.random(in: 1...3) == 2 {
             requestReview()
         }
 
-        Task { @MainActor in
-            if hasPerformedNuclearNotificationReset {
-                // Defense-in-depth on every cold launch: cancel anything
-                // whose identifier no longer corresponds to a contact in
-                // SwiftData, then re-schedule for everyone who survives.
-                await NotificationHelper.cleanupOrphanedNotifications(for: selectedContacts)
-                await NotificationHelper.resetNotifications(for: selectedContacts, delayTime: 3)
-            } else {
-                // One-time recovery: wipe every pending/delivered notification
-                // for this app and re-schedule from the current SwiftData
-                // contact set. Cleans up orphans left by past builds whose
-                // delete path targeted the wrong identifier.
-                await NotificationHelper.performOneTimeNuclearReset(for: selectedContacts)
-                hasPerformedNuclearNotificationReset = true
-            }
-        }
         timesUserHasLaunchedApp += 1
+
+        if hasPerformedNuclearNotificationReset {
+            // Defense-in-depth on every cold launch: cancel anything
+            // whose identifier no longer corresponds to a contact in
+            // SwiftData, then re-schedule for everyone who survives.
+            await NotificationHelper.cleanupOrphanedNotifications(for: selectedContacts)
+            await NotificationHelper.resetNotifications(for: selectedContacts, delayTime: 3)
+        } else {
+            // One-time recovery: wipe every pending/delivered notification
+            // for this app and re-schedule from the current SwiftData
+            // contact set. Cleans up orphans left by past builds whose
+            // delete path targeted the wrong identifier.
+            await NotificationHelper.performOneTimeNuclearReset(for: selectedContacts)
+            hasPerformedNuclearNotificationReset = true
+        }
     }
 
     private func openContactPicker() {
@@ -182,7 +184,6 @@ struct HomeScreen: View {
         rootViewController.present(picker, animated: true)
     }
 
-    @MainActor
     private func updateNextNotificationTime(for contacts: [SelectedContact]) {
         print("updating next notification time for all contacts")
         for contact in contacts {
@@ -190,7 +191,6 @@ struct HomeScreen: View {
         }
     }
 
-    @MainActor
     private func saveSelectedContact(for contacts: [CNContact]) {
         for contact in contacts {
             let contactName = ContactHelper.getContactName(for: contact)
@@ -200,7 +200,11 @@ struct HomeScreen: View {
         }
         // Autosave timing is unpredictable; persist immediately so a user who
         // adds a contact and backgrounds the app keeps it on next launch.
-        try? modelContext.save()
+        do {
+            try modelContext.save()
+        } catch {
+            assertionFailure("Failed to save after adding contacts: \(error)")
+        }
     }
 
     private func contactAlreadyAdded(name: String) -> Bool {
@@ -209,15 +213,17 @@ struct HomeScreen: View {
 
     private func removePendingNotificationsAndDeleteContact(at offsets: IndexSet) {
         let contactsToDelete = offsets.map { selectedContacts[$0] }
-        Task { @MainActor in
+        Task {
             for contact in contactsToDelete {
                 await NotificationHelper.removeExistingNotifications(for: contact)
                 modelContext.delete(contact)
             }
-            // Force-flush the delete so the row can't reappear next launch if
-            // the user backgrounds the app before autosave fires — that would
-            // resurrect a contact whose notifications we just cancelled.
-            try? modelContext.save()
+
+            do {
+                try modelContext.save()
+            } catch {
+                assertionFailure("Failed to save after deleting contacts: \(error)")
+            }
         }
     }
 
