@@ -9,81 +9,40 @@
 import SwiftUI
 
 struct UpdatesScreen: View {
+    private let currentVersionNotes: [String] = [
+        "Support for iOS 26 and Liquid Glass",
+        "Enable contact list searching",
+        "Various bug fixes and performance improvements"
+    ]
+
+    private let version3Notes: [String] = [
+        "A grid of your next CatchUps",
+        "Pull-to-refresh photo & contact information for your selected contacts",
+        "Unread indicators for contacts it's time to CatchUp with",
+        "Automatic cloud syncing with other Apple devices",
+        "UI redesign",
+        "Significant under-the-hood improvements"
+    ]
+
     var body: some View {
-		ScrollView {
-			VStack(alignment: .leading, spacing: 10) {
-				Group {
-					Spacer()
-						.frame(height: 10)
-					
-					Text("New Update")
-						.font(.largeTitle)
-						.bold()
-						.foregroundStyle(.orange)
+        ScrollView {
+            VStack(alignment: .leading, spacing: 10) {
+                UpdatesScreenHeader()
 
-					Text("Version \(Utils.getCurrentAppVersion())")
-						.font(.headline)
-						.foregroundStyle(.blue)
-					
-					Text("Release Notes:")
-						.font(.headline)
-					
-					Divider()
-					Spacer()
-				}
-				
-				Group {
-                    Text("– Support for iOS 26 and Liquid Glass")
+                ReleaseNotesSection(notes: currentVersionNotes)
 
-                    Spacer()
+                Text("***From version 3.0***:")
+                    .padding(.top)
 
-                    Text("– Enable contact list searching")
+                ReleaseNotesSection(notes: version3Notes)
 
-                    Spacer()
-
-                    Text("– Various bug fixes and performance improvements")
-
-                    Spacer()
-
-                    Text("***From version 3.0***:")
-                        .padding(.top)
-
-                    Spacer()
-
-                    Text("– A grid of your next CatchUps")
-
-                    Spacer()
-
-                    Text("– Pull-to-refresh photo & contact information for your selected contacts")
-
-                    Spacer()
-
-                    Text("– Unread indicators for contacts it's time to CatchUp with")
-
-                    Spacer()
-
-					Text("– Automatic cloud syncing with other Apple devices")
-
-					Spacer()
-
-                    Text("– UI redesign")
-
-                    Spacer()
-                    
-                    Text("– Significant under-the-hood improvements")
-				}
-                
-				Spacer()
-
-                Button {
-                    Utils.requestReviewManually()
-                } label: {
+                Button(action: Utils.requestReviewManually) {
                     CalloutButtonView(buttonText: "Review on the App Store", buttonColor: .orange)
                 }
                 .padding(.vertical)
-			}
-		}
-		.padding([.top, .horizontal])
+            }
+        }
+        .padding([.top, .horizontal])
     }
 }
 

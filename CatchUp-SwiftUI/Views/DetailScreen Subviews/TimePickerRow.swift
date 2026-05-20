@@ -12,17 +12,17 @@ struct TimePickerRow: View {
     @Binding var notificationPreferenceTime: Date
 
     var body: some View {
-        HStack {
-            Text("What time?")
-
-            Spacer()
-
-            DatePicker("What time?", selection: $notificationPreferenceTime, displayedComponents: .hourAndMinute)
-                .labelsHidden()
+        LabeledContent("What time?") {
+            DatePicker(
+                "What time?",
+                selection: $notificationPreferenceTime,
+                displayedComponents: .hourAndMinute
+            )
+            .labelsHidden()
         }
     }
 }
 
 #Preview {
-    TimePickerRow(notificationPreferenceTime: .constant(Date()))
+    TimePickerRow(notificationPreferenceTime: .constant(.now))
 }

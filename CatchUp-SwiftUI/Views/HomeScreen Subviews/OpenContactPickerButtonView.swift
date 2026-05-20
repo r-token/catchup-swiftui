@@ -10,14 +10,10 @@ import SwiftUI
 
 struct OpenContactPickerButtonView: View {
     var body: some View {
-        HStack(alignment: .center, spacing: 6) {
-            Image(systemName: "person.crop.circle.fill.badge.plus")
-
-            Text("Add Contacts")
-        }
-        .font(.headline)
-        .foregroundStyle(.blue)
-        .padding(10)
+        Label("Add Contacts", systemImage: "person.crop.circle.fill.badge.plus")
+            .font(.headline)
+            .foregroundStyle(.blue)
+            .padding(10)
     }
 }
 

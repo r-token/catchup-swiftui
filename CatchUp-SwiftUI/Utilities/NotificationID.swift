@@ -11,24 +11,38 @@ import Foundation
 /// Provides stable, deterministic notification identifiers based on contact IDs.
 /// Using the same identifier when scheduling a notification causes iOS to replace
 /// the existing notification, preventing duplicates.
+///
+/// Format:
+/// - Thread: `contact.<uuid>`
+/// - Per-kind:  `contact.<uuid>.general` | `.birthday` | `.anniversary`
 enum NotificationID {
-    /// Returns the thread identifier for a contact's notifications
+    static let prefix = "contact."
+
     static func thread(_ contact: SelectedContact) -> String {
-        "contact.\(contact.id.uuidString)"
+        "\(prefix)\(contact.id.uuidString)"
     }
-    
-    /// Returns the identifier for a contact's general (recurring) notification
+
     static func general(_ contact: SelectedContact) -> String {
         "\(thread(contact)).general"
     }
-    
-    /// Returns the identifier for a contact's birthday notification
+
     static func birthday(_ contact: SelectedContact) -> String {
         "\(thread(contact)).birthday"
     }
-    
-    /// Returns the identifier for a contact's anniversary notification
+
     static func anniversary(_ contact: SelectedContact) -> String {
         "\(thread(contact)).anniversary"
+    }
+
+    /// Extracts the contact UUID embedded in a stable notification identifier or thread.
+    /// Returns `nil` for any string that doesn't follow the stable scheme — those are
+    /// considered legacy and eligible for cleanup.
+    static func extractContactUUID(from string: String) -> String? {
+        guard string.hasPrefix(prefix) else { return nil }
+        let components = string.split(separator: ".", maxSplits: 2, omittingEmptySubsequences: false)
+        // Expect ["contact", "<uuid>", ...]
+        guard components.count >= 2 else { return nil }
+        let candidate = String(components[1])
+        return UUID(uuidString: candidate) != nil ? candidate : nil
     }
 }

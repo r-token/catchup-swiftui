@@ -9,14 +9,16 @@
 import SwiftUI
 
 struct ContactPhoto: View {
-    var image: Image
+    let image: Image
 
     var body: some View {
         image
-			.resizable()
-			.frame(width: 150, height: 150)
-            .clipShape(Circle())
-            .overlay(Circle().stroke(Color.white, lineWidth: 4))
+            .resizable()
+            .frame(width: 150, height: 150)
+            .clipShape(.circle)
+            .overlay {
+                Circle().stroke(Color.white, lineWidth: 4)
+            }
             .shadow(radius: 10)
     }
 }

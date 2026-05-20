@@ -11,67 +11,84 @@ import StoreKit
 import SwiftData
 import SwiftUI
 
-struct HomeScreen : View {
-    @Environment(\.modelContext) var modelContext
-    @Environment(\.scenePhase) var scenePhase
-    @Environment(\.requestReview) var requestReview
+struct HomeScreen: View {
+    @Environment(\.modelContext) private var modelContext
+    @Environment(\.scenePhase) private var scenePhase
+    @Environment(\.requestReview) private var requestReview
 
-    @Query(sort: \SelectedContact.name) var selectedContacts: [SelectedContact]
-    @Query(sort: \SelectedContact.next_notification_date_time) var nextCatchups: [SelectedContact]
+    @Query(sort: \SelectedContact.name) private var selectedContacts: [SelectedContact]
 
-    @AppStorage("savedVersion") var savedVersion = "2.0.0"
-    @AppStorage("timesUserHasLaunchedApp") var timesUserHasLaunchedApp = 0
+    @Query(
+        filter: #Predicate<SelectedContact> {
+            $0.notification_preference != 0 && !$0.next_notification_date_time.isEmpty
+        },
+        sort: \SelectedContact.next_notification_date_time
+    ) private var nextCatchups: [SelectedContact]
+
+    @AppStorage("savedVersion") private var savedVersion = "2.0.0"
+    @AppStorage("timesUserHasLaunchedApp") private var timesUserHasLaunchedApp = 0
+    // Bump the suffix to trigger a fresh full reset on the next launch (e.g. "_v4").
+    @AppStorage("hasPerformedNuclearNotificationReset_v3") private var hasPerformedNuclearNotificationReset = false
 
     @State private var isColdLaunch = true
-	@State private var isShowingUpdatesSheet = false
+    @State private var isShowingUpdatesSheet = false
     @State private var isShowingAboutSheet = false
-    @State private var shouldNavigateViaGrid = false
-    @State private var tappedGridContact: SelectedContact? = nil
+    @State private var tappedGridContact: SelectedContact?
     @State private var contactPicker = ContactPickerDelegate()
 
-    var filteredNextCatchups: [SelectedContact] {
-        withAnimation {
-            return Array(nextCatchups.filter({ $0.next_notification_date_time != "" }).prefix(4))
-        }
+    init() {
+        // No pure-SwiftUI API colors just the large nav title without
+        // also tinting toolbar items, so style it via the appearance proxy.
+        UINavigationBar.appearance().largeTitleTextAttributes = [.foregroundColor: UIColor.systemOrange]
     }
 
-	init() {
-        //Use this if NavigationBarTitle is with Large Font
-		UINavigationBar.appearance().largeTitleTextAttributes = [.foregroundColor: UIColor.systemOrange]
+    private var filteredNextCatchups: [SelectedContact] {
+        Array(nextCatchups.prefix(4))
     }
-	
+
+    private var hasAnyNotificationPreference: Bool {
+        selectedContacts.contains { $0.notification_preference != 0 }
+    }
+
     var body: some View {
         ZStack(alignment: .bottom) {
             List {
-                if selectedContacts.count > 0 {
-                    if selectedContacts.contains(where: { $0.notification_preference != 0 }) {
+                if selectedContacts.isEmpty {
+                    ContentUnavailableView(
+                        "No CatchUps Yet",
+                        systemImage: "person.crop.circle.badge.plus",
+                        description: Text("Tap the 'Add Contacts' button to add some.")
+                    )
+                    .listRowBackground(Color.clear)
+                } else {
+                    if hasAnyNotificationPreference {
                         Section("Next CatchUps") {
-                            NextCatchUpsGridView(nextCatchUps: filteredNextCatchups, shouldNavigateViaGrid: $shouldNavigateViaGrid, tappedGridContact: $tappedGridContact)
+                            NextCatchUpsGridView(
+                                nextCatchUps: filteredNextCatchups,
+                                tappedGridContact: $tappedGridContact
+                            )
                         }
                     }
 
                     Section("All CatchUps") {
                         ForEach(selectedContacts) { contact in
-                            NavigationLink(destination: DetailScreen(contact: contact)) {
+                            NavigationLink(value: contact) {
                                 ContactRowView(contact: contact)
                             }
                         }
                         .onDelete(perform: removePendingNotificationsAndDeleteContact)
                     }
-                } else {
-                    Text("No CatchUps yet! Tap the 'Add Contacts' button to add some.")
-                        .foregroundStyle(.gray)
                 }
             }
             .refreshable {
                 await NotificationHelper.resetNotifications(for: selectedContacts, delayTime: 0)
                 await ContactHelper.updateSelectedContacts(selectedContacts)
             }
-			.safeAreaInset(edge: .bottom) {
-				Color.clear.frame(height: 40)
-			}
-            .onChange(of: contactPicker.chosenContact) {
-                if let contact = contactPicker.chosenContact {
+            .safeAreaInset(edge: .bottom) {
+                Color.clear.frame(height: 40)
+            }
+            .onChange(of: contactPicker.chosenContact) { _, newValue in
+                if let contact = newValue {
                     saveSelectedContact(for: [contact])
                 }
                 contactPicker.chosenContact = nil
@@ -79,127 +96,138 @@ struct HomeScreen : View {
 
             VStack {
                 Spacer()
-                GlassButton {
-                    openContactPicker()
-                } label: {
+                GlassButton(action: openContactPicker) {
                     OpenContactPickerButtonView()
                 }
             }
         }
-        .navigationBarTitle("CatchUp")
-
-        .onAppear {
-            // Always clear badge when returning to home
-            Utils.clearAppIconNotificationBadge()
-
-            if isColdLaunch {
-                isColdLaunch = false
-                
-                // Only fetch IAPs and check version on cold launch
-                Utils.fetchAvailableIAPs()
-                checkForUpdate()
-                
-                NotificationHelper.requestAuthorizationForNotifications()
-
-                if timesUserHasLaunchedApp > 5 && Int.random(in: 1...3) == 2 {
-                    requestReview()
-                }
-
-                Task {
-                    // One-time migration to clean up legacy notifications
-                    await NotificationHelper.migrateLegacyNotifications()
-                    await NotificationHelper.resetNotifications(for: selectedContacts, delayTime: 3)
-                }
-                timesUserHasLaunchedApp += 1
-            }
+        .navigationTitle("CatchUp")
+        .navigationDestination(for: SelectedContact.self) { contact in
+            DetailScreen(contact: contact)
         }
-
-        .onChange(of: scenePhase) { initialPhase, newPhase in
+        .navigationDestination(item: $tappedGridContact) { contact in
+            DetailScreen(contact: contact)
+        }
+        .onAppear {
+            Utils.clearAppIconNotificationBadge()
+        }
+        .task {
+            await runColdLaunchSetupIfNeeded()
+        }
+        .onChange(of: scenePhase) { _, newPhase in
             if newPhase == .active {
                 Utils.clearAppIconNotificationBadge()
                 updateNextNotificationTime(for: selectedContacts)
             }
         }
-
         .sheet(isPresented: $isShowingUpdatesSheet) {
             UpdatesScreen()
         }
-
+        .sheet(isPresented: $isShowingAboutSheet) {
+            AboutScreen()
+        }
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
                 EditButton()
-                    .foregroundStyle(.blue)
+                    .tint(.blue)
             }
 
             ToolbarItem(placement: .topBarTrailing) {
-                Button {
+                Button("About", systemImage: "person.crop.square") {
                     isShowingAboutSheet = true
-                } label: {
-                    Image(systemName: "person.crop.square")
-                        .foregroundStyle(.blue)
                 }
-                .sheet(isPresented: $isShowingAboutSheet) {
-                    AboutScreen()
-                }
-            }
-        }
-
-        .navigationDestination(isPresented: $shouldNavigateViaGrid) {
-            if let tappedGridContact {
-                DetailScreen(contact: tappedGridContact)
+                .tint(.blue)
             }
         }
     }
 
-    func openContactPicker() {
-        let contactPicker = CNContactPickerViewController()
-        contactPicker.delegate = self.contactPicker
-        let scenes = UIApplication.shared.connectedScenes
-        let windowScenes = scenes.first as? UIWindowScene
-        let window = windowScenes?.windows.first
-        window?.rootViewController?.present(contactPicker, animated: true, completion: nil)
+    private func runColdLaunchSetupIfNeeded() async {
+        guard isColdLaunch else { return }
+        isColdLaunch = false
+
+        // Only check version on cold launch (IAPs load lazily when the tip jar appears)
+        checkForUpdate()
+
+        // Request authorization through the async path; subsequent scheduling
+        // calls go through `checkNotificationAuthorizationStatusAndAddRequest`,
+        // which also requests authorization if needed.
+        if timesUserHasLaunchedApp > 5 && Int.random(in: 1...3) == 2 {
+            requestReview()
+        }
+
+        timesUserHasLaunchedApp += 1
+
+        if hasPerformedNuclearNotificationReset {
+            // Defense-in-depth on every cold launch: cancel anything
+            // whose identifier no longer corresponds to a contact in
+            // SwiftData, then re-schedule for everyone who survives.
+            await NotificationHelper.cleanupOrphanedNotifications(for: selectedContacts)
+            await NotificationHelper.resetNotifications(for: selectedContacts, delayTime: 3)
+        } else {
+            // One-time recovery: wipe every pending/delivered notification
+            // for this app and re-schedule from the current SwiftData
+            // contact set. Cleans up orphans left by past builds whose
+            // delete path targeted the wrong identifier.
+            await NotificationHelper.performOneTimeNuclearReset(for: selectedContacts)
+            hasPerformedNuclearNotificationReset = true
+        }
     }
 
-    @MainActor
-    func updateNextNotificationTime(for contacts: [SelectedContact]) {
+    private func openContactPicker() {
+        let picker = CNContactPickerViewController()
+        picker.delegate = contactPicker
+
+        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+              let rootViewController = windowScene.windows.first?.rootViewController else {
+            return
+        }
+        rootViewController.present(picker, animated: true)
+    }
+
+    private func updateNextNotificationTime(for contacts: [SelectedContact]) {
         print("updating next notification time for all contacts")
         for contact in contacts {
-            let nextNotificationDateTime = NotificationHelper.getNextNotificationDateFor(contact: contact)
-            contact.next_notification_date_time = nextNotificationDateTime
+            contact.next_notification_date_time = NotificationHelper.getNextNotificationDateFor(contact: contact)
         }
     }
 
-    @MainActor
-    func saveSelectedContact(for contacts: [CNContact]) {
+    private func saveSelectedContact(for contacts: [CNContact]) {
         for contact in contacts {
             let contactName = ContactHelper.getContactName(for: contact)
-            if !contactAlreadyAdded(name: contactName) {
-                let selectedContact = ContactHelper.createSelectedContact(contact: contact)
-                modelContext.insert(selectedContact)
+            guard !contactAlreadyAdded(name: contactName) else { continue }
+            let selectedContact = ContactHelper.createSelectedContact(contact: contact)
+            modelContext.insert(selectedContact)
+        }
+        // Autosave timing is unpredictable; persist immediately so a user who
+        // adds a contact and backgrounds the app keeps it on next launch.
+        do {
+            try modelContext.save()
+        } catch {
+            assertionFailure("Failed to save after adding contacts: \(error)")
+        }
+    }
+
+    private func contactAlreadyAdded(name: String) -> Bool {
+        selectedContacts.contains { $0.name == name }
+    }
+
+    private func removePendingNotificationsAndDeleteContact(at offsets: IndexSet) {
+        let contactsToDelete = offsets.map { selectedContacts[$0] }
+        Task {
+            for contact in contactsToDelete {
+                await NotificationHelper.removeExistingNotifications(for: contact)
+                modelContext.delete(contact)
+            }
+
+            do {
+                try modelContext.save()
+            } catch {
+                assertionFailure("Failed to save after deleting contacts: \(error)")
             }
         }
     }
 
-    func contactAlreadyAdded(name: String) -> Bool {
-        for contact in selectedContacts {
-            if contact.name == name {
-                return true
-            }
-        }
-        return false
-    }
-
-    
-    func removePendingNotificationsAndDeleteContact(at offsets: IndexSet) {
-        for index in offsets {
-            let contact = selectedContacts[index]
-            
-            NotificationHelper.removeExistingNotifications(for: contact)
-            modelContext.delete(contact)
-        }
-    }
-    
-    func checkForUpdate() {
+    private func checkForUpdate() {
         let latestVersion = Utils.getCurrentAppVersion()
         print("latest version: \(latestVersion)")
 
@@ -207,15 +235,19 @@ struct HomeScreen : View {
             print("App is up to date!")
         } else {
             if Utils.updateIsMajor() && timesUserHasLaunchedApp > 0 {
-				// Toggle to show UpdatesScreen as a sheet
-				print("Major update detected, showing UpdatesScreen...")
-				isShowingUpdatesSheet = true
-			}
+                // Toggle to show UpdatesScreen as a sheet
+                print("Major update detected, showing UpdatesScreen...")
+                isShowingUpdatesSheet = true
+            }
             savedVersion = latestVersion
         }
     }
 }
 
 #Preview {
-    HomeScreen()
+    NavigationStack {
+        HomeScreen()
+    }
+    .modelContainer(DataController.previewContainer)
+    .environment(DataController())
 }

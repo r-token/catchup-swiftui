@@ -9,11 +9,26 @@
 import SwiftUI
 import UIKit
 import Contacts
-import CoreData
+
+/// Sendable snapshot of the fields we pull off `CNContact`, so a Contacts
+/// lookup can happen off the main actor and the values can be ferried back
+/// without dragging the non-Sendable `CNContact` across the boundary.
+struct ContactSnapshot: Sendable {
+    var name: String
+    var phone: String
+    var secondaryPhone: String
+    var email: String
+    var secondaryEmail: String
+    var address: String
+    var secondaryAddress: String
+    var picture: String
+    var birthday: String
+    var anniversary: String
+}
 
 // Functions for creating and updating a contact
 struct ContactHelper {
-    static func encodeContactPicture(for contact: CNContact) -> String {
+    nonisolated static func encodeContactPicture(for contact: CNContact) -> String {
 		let picture: String
 		
 		if contact.imageDataAvailable == true {
@@ -29,7 +44,7 @@ struct ContactHelper {
 		return picture
 	}
 
-    static func getContactName(for contact: CNContact) -> String {
+    nonisolated static func getContactName(for contact: CNContact) -> String {
 		var name:String
 		
 		//if they have a first and a last name
@@ -48,7 +63,7 @@ struct ContactHelper {
 		return name
 	}
 
-    static func getContactPrimaryPhone(for contact: CNContact) -> String {
+    nonisolated static func getContactPrimaryPhone(for contact: CNContact) -> String {
 		let userPhoneNumbers: [CNLabeledValue<CNPhoneNumber>] = contact.phoneNumbers
 		var phone: String
 		
@@ -63,7 +78,7 @@ struct ContactHelper {
 		return phone
 	}
 
-    static func getContactSecondaryPhone(for contact: CNContact) -> String {
+    nonisolated static func getContactSecondaryPhone(for contact: CNContact) -> String {
 		let userPhoneNumbers: [CNLabeledValue<CNPhoneNumber>] = contact.phoneNumbers
 		var secondary_phone: String
 			
@@ -77,7 +92,7 @@ struct ContactHelper {
 		return secondary_phone
 	}
 
-    static func getContactPrimaryEmail(for contact: CNContact) -> String {
+    nonisolated static func getContactPrimaryEmail(for contact: CNContact) -> String {
 		let emailAddresses = contact.emailAddresses
 		var email: String
 		
@@ -91,7 +106,7 @@ struct ContactHelper {
 		return email
 	}
 
-    static func getContactSecondaryEmail(for contact: CNContact) -> String {
+    nonisolated static func getContactSecondaryEmail(for contact: CNContact) -> String {
 		let emailAddresses = contact.emailAddresses
 		var secondary_email: String
 		
@@ -105,7 +120,7 @@ struct ContactHelper {
 		return secondary_email
 	}
 
-    static func getContactPrimaryAddress(for contact: CNContact) -> String {
+    nonisolated static func getContactPrimaryAddress(for contact: CNContact) -> String {
 		//contact postal address array
 		let addresses = contact.postalAddresses
 		var address: String
@@ -122,7 +137,7 @@ struct ContactHelper {
 		return address
 	}
 
-    static func getContactSecondaryAddress(for contact: CNContact) -> String {
+    nonisolated static func getContactSecondaryAddress(for contact: CNContact) -> String {
 		//contact postal address array
 		let addresses = contact.postalAddresses
 		var secondary_address: String
@@ -139,7 +154,7 @@ struct ContactHelper {
 		return secondary_address
 	}
 
-    static func getContactBirthday(for contact: CNContact) -> String {
+    nonisolated static func getContactBirthday(for contact: CNContact) -> String {
 		var birthdayString: String
 		
 		if contact.birthday != nil {
@@ -163,7 +178,7 @@ struct ContactHelper {
 		return birthdayString
 	}
 
-    static func getContactAnniversary(for contact: CNContact) -> String {
+    nonisolated static func getContactAnniversary(for contact: CNContact) -> String {
 		//check for anniversary and set value for anniversary and reminder preference
 		var anniversaryString: String
 		
@@ -188,12 +203,10 @@ struct ContactHelper {
 		return anniversaryString
 	}
 
-    @MainActor
     static func getFirstName(for contact: SelectedContact) -> String {
         contact.name.components(separatedBy: " ").first ?? contact.name
     }
 
-    @MainActor
     static func getFriendlyNextCatchUpTime(for contact: SelectedContact, forQuarterlyPreference: Bool) -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
@@ -221,7 +234,6 @@ struct ContactHelper {
         }
     }
 
-    @MainActor
     static func createSelectedContact(contact: CNContact) -> SelectedContact {
         let currentMinute = Calendar.current.component(.minute, from: Date())
         let currentHour = Calendar.current.component(.hour, from: Date())
@@ -284,76 +296,107 @@ struct ContactHelper {
         return selectedContact
     }
 
-    @MainActor
     static func updateSelectedContacts(_ selectedContacts: [SelectedContact]) async {
+        // Look up snapshots in parallel off the main actor, then apply on main.
+        let names = selectedContacts.map(\.name)
+
+        let snapshotsByName: [String: ContactSnapshot] = await withTaskGroup(
+            of: (String, ContactSnapshot?).self
+        ) { group in
+            for name in names {
+                group.addTask { (name, await getContactSnapshot(byName: name)) }
+            }
+            var result: [String: ContactSnapshot] = [:]
+            for await (name, snapshot) in group {
+                if let snapshot { result[name] = snapshot }
+            }
+            return result
+        }
+
         for contact in selectedContacts {
-            await updateSelectedContact(contact)
+            if let snapshot = snapshotsByName[contact.name] {
+                apply(snapshot, to: contact)
+            } else {
+                print("No contact with name \(contact.name) found")
+            }
         }
     }
 
-    @MainActor
     static func updateSelectedContact(_ selectedContact: SelectedContact?) async {
         guard let selectedContact else { return }
 
-        let contact = await getCNContactByName(selectedContact.name)
-
-        if let contact {
-            let nextNotificationDateTime = NotificationHelper.getNextNotificationDateFor(contact: selectedContact)
-
-            selectedContact.name = getContactName(for: contact)
-            selectedContact.phone = getContactPrimaryPhone(for: contact)
-            selectedContact.secondary_phone = getContactSecondaryPhone(for: contact)
-            selectedContact.email = getContactPrimaryEmail(for: contact)
-            selectedContact.secondary_email = getContactSecondaryEmail(for: contact)
-            selectedContact.address = getContactPrimaryAddress(for: contact)
-            selectedContact.secondary_address = getContactSecondaryAddress(for: contact)
-            selectedContact.picture = encodeContactPicture(for: contact)
-            selectedContact.birthday = getContactBirthday(for: contact)
-            selectedContact.anniversary = getContactAnniversary(for: contact)
-            selectedContact.next_notification_date_time = nextNotificationDateTime
+        if let snapshot = await getContactSnapshot(byName: selectedContact.name) {
+            apply(snapshot, to: selectedContact)
         } else {
             print("No contact with name \(selectedContact.name) found")
         }
     }
 
-    static func getCNContactByName(_ name: String) async -> CNContact? {
+    private static func apply(_ snapshot: ContactSnapshot, to selectedContact: SelectedContact) {
+        let nextNotificationDateTime = NotificationHelper.getNextNotificationDateFor(contact: selectedContact)
+
+        selectedContact.name = snapshot.name
+        selectedContact.phone = snapshot.phone
+        selectedContact.secondary_phone = snapshot.secondaryPhone
+        selectedContact.email = snapshot.email
+        selectedContact.secondary_email = snapshot.secondaryEmail
+        selectedContact.address = snapshot.address
+        selectedContact.secondary_address = snapshot.secondaryAddress
+        selectedContact.picture = snapshot.picture
+        selectedContact.birthday = snapshot.birthday
+        selectedContact.anniversary = snapshot.anniversary
+        selectedContact.next_notification_date_time = nextNotificationDateTime
+    }
+
+    /// Looks up a `CNContact` by name and returns a `Sendable` snapshot of its fields.
+    /// Runs on the concurrent pool so it doesn't block the main actor during the
+    /// synchronous `unifiedContacts` query.
+    @concurrent
+    nonisolated static func getContactSnapshot(byName name: String) async -> ContactSnapshot? {
         print("searching contact book for \(name)")
 
-        return await withCheckedContinuation { continuation in
-            let contactStore = CNContactStore()
-            let keysToFetch: [CNKeyDescriptor] = [
-                CNContactFormatter.descriptorForRequiredKeys(for: .fullName),
-                CNContactGivenNameKey as CNKeyDescriptor,
-                CNContactFamilyNameKey as CNKeyDescriptor,
-                CNContactPhoneNumbersKey as CNKeyDescriptor,
-                CNContactEmailAddressesKey as CNKeyDescriptor,
-                CNContactPostalAddressesKey as CNKeyDescriptor,
-                CNContactImageDataAvailableKey as CNKeyDescriptor,
-                CNContactImageDataKey as CNKeyDescriptor,
-                CNContactThumbnailImageDataKey as CNKeyDescriptor,
-                CNContactBirthdayKey as CNKeyDescriptor,
-                CNContactDatesKey as CNKeyDescriptor
-            ]
+        let contactStore = CNContactStore()
+        let keysToFetch: [CNKeyDescriptor] = [
+            CNContactFormatter.descriptorForRequiredKeys(for: .fullName),
+            CNContactGivenNameKey as CNKeyDescriptor,
+            CNContactFamilyNameKey as CNKeyDescriptor,
+            CNContactPhoneNumbersKey as CNKeyDescriptor,
+            CNContactEmailAddressesKey as CNKeyDescriptor,
+            CNContactPostalAddressesKey as CNKeyDescriptor,
+            CNContactImageDataAvailableKey as CNKeyDescriptor,
+            CNContactImageDataKey as CNKeyDescriptor,
+            CNContactThumbnailImageDataKey as CNKeyDescriptor,
+            CNContactBirthdayKey as CNKeyDescriptor,
+            CNContactDatesKey as CNKeyDescriptor
+        ]
 
-            do {
-                // Use predicate-based search - more efficient and avoids enumeration issues
-                let predicate = CNContact.predicateForContacts(matchingName: name)
-                let contacts = try contactStore.unifiedContacts(matching: predicate, keysToFetch: keysToFetch)
+        do {
+            let predicate = CNContact.predicateForContacts(matchingName: name)
+            let contacts = try contactStore.unifiedContacts(matching: predicate, keysToFetch: keysToFetch)
 
-                // Find exact match using formatter
-                let nameFormatter = CNContactFormatter()
-                nameFormatter.style = .fullName
+            let nameFormatter = CNContactFormatter()
+            nameFormatter.style = .fullName
 
-                let exactMatch = contacts.first { contact in
-                    nameFormatter.string(from: contact) == name
-                }
-
-                print("Found matching contact: \(exactMatch?.givenName ?? "Unknown")")
-                continuation.resume(returning: exactMatch)
-            } catch {
-                print("Unable to fetch contacts: \(error)")
-                continuation.resume(returning: nil)
+            guard let contact = contacts.first(where: { nameFormatter.string(from: $0) == name }) else {
+                return nil
             }
+
+            print("Found matching contact: \(contact.givenName)")
+            return ContactSnapshot(
+                name: getContactName(for: contact),
+                phone: getContactPrimaryPhone(for: contact),
+                secondaryPhone: getContactSecondaryPhone(for: contact),
+                email: getContactPrimaryEmail(for: contact),
+                secondaryEmail: getContactSecondaryEmail(for: contact),
+                address: getContactPrimaryAddress(for: contact),
+                secondaryAddress: getContactSecondaryAddress(for: contact),
+                picture: encodeContactPicture(for: contact),
+                birthday: getContactBirthday(for: contact),
+                anniversary: getContactAnniversary(for: contact)
+            )
+        } catch {
+            print("Unable to fetch contacts: \(error)")
+            return nil
         }
     }
 }

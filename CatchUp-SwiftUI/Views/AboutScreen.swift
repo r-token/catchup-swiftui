@@ -9,131 +9,40 @@
 import SwiftUI
 
 struct AboutScreen: View {
-	@State private var isShowingUpdateScreen = false
+    @State private var isShowingUpdateScreen = false
 
-	let smallTip = IAPService.shared.getSmallTipAmount()
-	let mediumTip = IAPService.shared.getMediumTipAmount()
-	let largeTip = IAPService.shared.getLargeTipAmount()
-	
     var body: some View {
-		ScrollView {
+        ScrollView {
             VStack(alignment: .center, spacing: 15) {
                 Spacer()
                     .frame(height: 75)
 
-                Group {
-                    Image("CatchUp")
-                        .resizable()
-                        .frame(width: 80, height: 80)
-                        .clipShape(RoundedRectangle(cornerRadius: 15))
-                        .shadow(radius: 10)
+                AboutScreenHeader()
 
-                    Text("CatchUp")
-                        .foregroundStyle(.orange)
-                        .font(.largeTitle)
-                        .bold()
-
-                    Text("Made with ❤️ by an independent developer")
-                        .multilineTextAlignment(.center)
-                        .padding(.horizontal)
-
+                OrangeDivider()
                     .padding(.bottom)
 
-                    Divider()
-                        .frame(height: 1)
-                        .background(Color.orange)
-                        .padding(.bottom)
+                TipJarSection()
 
-                    Text("Tip Jar")
-                        .font(.headline)
+                OrangeDivider()
 
-                    Text("CatchUp is free with no ads. If you find it useful, please consider supporting development by leaving a tip or review.")
-                        .multilineTextAlignment(.center)
-                        .padding(.bottom)
-
-                    HStack {
-                        Spacer()
-
-                        Button(smallTip) {
-                            tappedSmallTip()
-                        }
-                        .font(.headline)
-                        .foregroundStyle(.white)
-                        .padding()
-                        .background(RoundedRectangle(cornerRadius: 20).fill(LinearGradient(gradient: Gradient(colors: [.orange, .red]), startPoint: .top, endPoint: .bottom))
-                        )
-                        .shadow(radius: 15)
-
-                        Spacer()
-
-                        Button(mediumTip) {
-                            tappedMediumTip()
-                        }
-                        .font(.headline)
-                        .foregroundStyle(.white)
-                        .padding()
-                        .background(RoundedRectangle(cornerRadius: 20).fill(LinearGradient(gradient: Gradient(colors: [.orange, .red]), startPoint: .top, endPoint: .bottom))
-                        )
-                        .shadow(radius: 15)
-
-                        Spacer()
-
-                        Button(largeTip) {
-                            tappedLargeTip()
-                        }
-                        .font(.headline)
-                        .foregroundStyle(.white)
-                        .padding()
-                        .background(RoundedRectangle(cornerRadius: 20).fill(LinearGradient(gradient: Gradient(colors: [.orange, .red]), startPoint: .top, endPoint: .bottom))
-                        )
-                        .shadow(radius: 15)
-
-                        Spacer()
-                    }
-                    .padding(.bottom, 20)
-
-                    Divider()
-                        .frame(height: 1)
-                        .background(Color.orange)
-
-                    Button {
-                        Utils.requestReviewManually()
-                    } label: {
-                        CalloutButtonView(buttonText: "Review on the App Store", buttonColor: .orange)
-                    }
-                    .padding(.vertical)
+                Button(action: Utils.requestReviewManually) {
+                    CalloutButtonView(buttonText: "Review on the App Store", buttonColor: .orange)
                 }
+                .padding(.vertical)
 
-                Button {
+                Button("Show Latest Update Details") {
                     isShowingUpdateScreen = true
-                } label: {
-                    Text("Show Latest Update Details")
-                        .font(.headline)
-                        .foregroundStyle(.blue)
                 }
+                .font(.headline)
+                .foregroundStyle(.blue)
                 .padding(.bottom)
             }
         }
         .padding(.horizontal)
-
         .sheet(isPresented: $isShowingUpdateScreen) {
             UpdatesScreen()
         }
-    }
-
-    func tappedSmallTip() {
-        UINotificationFeedbackGenerator().notificationOccurred(.success)
-        IAPService.shared.leaveATip(index: 0)
-    }
-
-	func tappedMediumTip() {
-        UINotificationFeedbackGenerator().notificationOccurred(.success)
-		IAPService.shared.leaveATip(index: 1)
-    }
-	
-	func tappedLargeTip() {
-        UINotificationFeedbackGenerator().notificationOccurred(.success)
-		IAPService.shared.leaveATip(index: 2)
     }
 }
 

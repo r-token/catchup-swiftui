@@ -13,23 +13,12 @@ struct CalloutButtonView: View {
     let buttonColor: Color
 
     var body: some View {
-        HStack {
-            Spacer()
-
-            Text(buttonText)
-
-            Spacer()
-        }
-        .fontWeight(.semibold)
-        .padding(.vertical, 12)
-        .foregroundStyle(.white)
-        .background(
-            RoundedRectangle(
-                cornerRadius: 20,
-                style: .continuous
-            )
-            .fill(buttonColor)
-        )
+        Text(buttonText)
+            .bold()
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 12)
+            .foregroundStyle(.white)
+            .background(buttonColor, in: .rect(cornerRadius: 20))
     }
 }
 

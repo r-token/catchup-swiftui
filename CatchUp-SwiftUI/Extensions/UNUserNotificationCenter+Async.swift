@@ -9,15 +9,15 @@
 import UserNotifications
 
 extension UNUserNotificationCenter {
-    /// Removes pending notification requests and waits for completion
-    /// - Parameters:
-    ///   - identifiers: The notification identifiers to remove
-    func remove(_ identifiers: [String]) async {
+    /// Removes pending and delivered notification requests with the given identifiers.
+    nonisolated func remove(_ identifiers: [String]) async {
         guard !identifiers.isEmpty else { return }
-        
+
         self.removePendingNotificationRequests(withIdentifiers: identifiers)
-        
-        // Wait a moment for removal to complete
-        try? await Task.sleep(nanoseconds: 100_000_000) // 100ms
+        self.removeDeliveredNotifications(withIdentifiers: identifiers)
+
+        // Brief yield so the system has a moment to process the removals before
+        // any immediately-following scheduling call queries the queue again.
+        try? await Task.sleep(for: .milliseconds(50))
     }
 }

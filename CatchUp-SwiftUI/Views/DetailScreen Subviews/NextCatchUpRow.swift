@@ -12,15 +12,8 @@ struct NextCatchUpRow: View {
     let nextCatchUpTime: String
 
     var body: some View {
-        HStack(spacing: 0) {
-            Text("Next CatchUp:")
-
-            Spacer()
-
-            Text(nextCatchUpTime)
-                .foregroundStyle(.gray)
-        }
-        .listRowSeparator(.hidden)
+        LabeledContent("Next CatchUp:", value: nextCatchUpTime)
+            .listRowSeparator(.hidden)
     }
 }
 

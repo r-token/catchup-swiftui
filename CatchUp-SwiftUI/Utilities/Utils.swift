@@ -8,7 +8,6 @@
 
 import SwiftUI
 import Foundation
-import CoreData
 import UserNotifications
 
 struct Utils {
@@ -16,20 +15,19 @@ struct Utils {
         UNUserNotificationCenter.current().setBadgeCount(0)
     }
 
-    @MainActor
     static func clearUnreadBadge(for contact: SelectedContact) {
         contact.unread_badge_date_time = contact.next_notification_date_time
     }
 
-    static func getCurrentAppVersion() -> String {
+    nonisolated static func getCurrentAppVersion() -> String {
         let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"]
         let version = (appVersion as! String)
 
         print(version)
         return version
     }
-    
-    static func updateIsMajor() -> Bool {
+
+    nonisolated static func updateIsMajor() -> Bool {
         let version = getCurrentAppVersion()
         if version.suffix(2) == ".0" {
             return true
@@ -38,23 +36,14 @@ struct Utils {
         }
     }
 
-    @MainActor
-    static func fetchAvailableIAPs() {
-        print("fetching IAPs")
-        IAPService.shared.fetchAvailableProducts()
-    }
-
-    @MainActor
     static func isPhone() -> Bool {
         return UIDevice.current.userInterfaceIdiom == .phone
     }
 
-    @MainActor
     static func isiPadOrMac() -> Bool {
         return UIDevice.current.userInterfaceIdiom == .pad || UIDevice.current.userInterfaceIdiom == .mac
     }
 
-    @MainActor
     static func requestReviewManually() {
         guard let writeReviewURL = URL(string: "https://apps.apple.com/us/app/catchup-keep-in-touch/id1358023550?action=write-review") else {
             fatalError("Expected a valid URL")

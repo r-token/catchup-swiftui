@@ -9,8 +9,10 @@
 import SwiftUI
 
 struct ContactRowView: View {
-    @Environment(DataController.self) var dataController
-    @Environment(\.scenePhase) var scenePhase
+    @Environment(DataController.self) private var dataController
+    @Environment(\.scenePhase) private var scenePhase
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+
     let contact: SelectedContact
 
     @State private var shouldShowUnreadIndicator = false
@@ -22,15 +24,10 @@ struct ContactRowView: View {
             VStack(alignment: .leading, spacing: 2) {
                 Text(contact.name)
                     .font(.headline)
+
                 Text(Converter.convertNotificationPreferenceToString(contact: contact))
                     .font(.caption)
-
-                    .if(Utils.isPhone()) { view in
-                        view.foregroundStyle(.gray)
-                    }
-                    .if(Utils.isiPadOrMac()) { view in
-                        view.foregroundStyle(dataController.selectedContact == contact ? .white : .gray)
-                    }
+                    .foregroundStyle(subtitleStyle)
             }
 
             Spacer()
@@ -40,37 +37,44 @@ struct ContactRowView: View {
                     .foregroundStyle(.orange)
                     .frame(width: 15, height: 15)
                     .padding(.horizontal)
+                    .accessibilityLabel("Unread")
             }
         }
         .onAppear {
             shouldShowUnreadIndicator = determineIfShouldShowIndicator()
         }
-
-        .onChange(of: scenePhase) {
-            if scenePhase == .active {
+        .onChange(of: scenePhase) { _, newPhase in
+            if newPhase == .active {
                 shouldShowUnreadIndicator = determineIfShouldShowIndicator()
             }
         }
-
         .onChange(of: dataController.selectedContact) {
             shouldShowUnreadIndicator = determineIfShouldShowIndicator()
         }
     }
 
-    func determineIfShouldShowIndicator() -> Bool {
-        let today = Date.now
+    private var isHighlightedOnRegularWidth: Bool {
+        horizontalSizeClass == .regular && dataController.selectedContact == contact
+    }
+
+    private var subtitleStyle: AnyShapeStyle {
+        isHighlightedOnRegularWidth ? AnyShapeStyle(.white) : AnyShapeStyle(.secondary)
+    }
+
+    private func determineIfShouldShowIndicator() -> Bool {
+        guard !contact.unread_badge_date_time.isEmpty else { return false }
+        let formattedTodayDate = Self.storedDateFormatter.string(from: .now)
+        return formattedTodayDate >= contact.unread_badge_date_time
+    }
+
+    private static let storedDateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-        let formattedTodayDate = formatter.string(from: today)
-
-        if contact.unread_badge_date_time != "" && formattedTodayDate >= contact.unread_badge_date_time {
-            return true
-        } else {
-            return false
-        }
-    }
+        return formatter
+    }()
 }
 
 #Preview {
-    ContactRowView(contact: SelectedContact.sampleData)
+    ContactRowView(contact: .sampleData)
+        .environment(DataController())
 }
