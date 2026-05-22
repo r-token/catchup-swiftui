@@ -1,4 +1,4 @@
-# CatchUp - Keep in Touch
+# CatchUp: Keep in Touch
 
 **[Featured on TapSmart](https://www.tapsmart.com/features/catchup-apps-roundup/)**
 
